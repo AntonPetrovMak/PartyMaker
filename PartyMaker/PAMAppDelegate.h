@@ -1,5 +1,5 @@
 //
-//  AppDelegate.h
+//  PAMAppDelegate.h
 //  PartyMaker
 //
 //  Created by Petrov Anton on 03.02.16.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface PAMAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 

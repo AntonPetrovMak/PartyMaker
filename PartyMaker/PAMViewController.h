@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  PAMViewController.h
 //  PartyMaker
 //
 //  Created by Petrov Anton on 03.02.16.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface PAMViewController : UIViewController
 
 
 @end
