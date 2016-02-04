@@ -8,7 +8,7 @@
 
 #import "PAMAddEventViewController.h"
 
-@interface PAMAddEventViewController ()
+@interface PAMAddEventViewController () <UITextFieldDelegate>
 
 @property(strong,nonatomic) PAMAddEventViewController *createPartyView;
 
@@ -20,9 +20,14 @@
 @property(strong, nonatomic) UIButton *closeButton;
 @property(strong, nonatomic) UIButton *saveButton;
 
+@property(strong, nonatomic) UITextField *partyNameTextField;
+
+@property(strong, nonatomic) UILabel *startTimeLabel;
+@property(strong, nonatomic) UILabel *endTimeLabel;
+
 @end
 
-@implementation PAMAddEventViewController
+@implementation PAMAddEventViewController   
 
 #pragma mark - init
 
@@ -44,12 +49,12 @@
 #pragma mark - Hendles
 
 - (void) handleAddViewController:(UIBarButtonItem *) sender {
-    [self createPartyViewController];
+    [self creatingPartyViewController];
 }
 
 #pragma mark - UIToolbar
 
-- (void) onCancelTolbar {
+- (void) actionCancelTolbar {
     self.chooseButton.userInteractionEnabled = YES;
     __block __weak PAMAddEventViewController *weakSelf = self;
     [UIView animateWithDuration:0.3
@@ -62,22 +67,21 @@
                          if(finished) {
                              for (UIView *view in [weakSelf.viewWihtDatePicker subviews]){
                                  [view removeFromSuperview];
-                                 NSLog(@"%@", view );
                              }
                              [weakSelf.viewWihtDatePicker removeFromSuperview];
                          }
                      }];
 }
 
-- (void) onDoneTolbar {
+- (void) actionDoneTolbar {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat: @"MM.dd.yyyy"];
     [self.chooseButton setTitle: [dateFormatter stringFromDate:self.datePiker.date] forState:UIControlStateNormal];
-    [self onCancelTolbar];
+    [self actionCancelTolbar];
     NSLog(@"onCancelTolbar");
 }
 
-- (void) createToolbar {
+- (void) creatingToolbar {
      NSDictionary *attributesForItem = @{ NSFontAttributeName:[UIFont fontWithName:@"MyriadPro-Bold" size:15],
                                          NSForegroundColorAttributeName:[UIColor whiteColor]
                                          };
@@ -88,12 +92,12 @@
     UIBarButtonItem *itemCancel = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
                                                                    style:UIBarButtonItemStylePlain
                                                                   target:self
-                                                                  action:@selector(onCancelTolbar)];
+                                                                  action:@selector(actionCancelTolbar)];
     
     UIBarButtonItem *itemDone = [[UIBarButtonItem alloc] initWithTitle:@"Done"
                                                                  style:UIBarButtonItemStyleDone
                                                                 target:self
-                                                                action:@selector(onDoneTolbar)];
+                                                                action:@selector(actionDoneTolbar)];
     UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
                                                                                    target:nil
                                                                                    action:nil];
@@ -109,12 +113,12 @@
 
 #pragma mark - UIDatePicker
 
-- (void)onDateChanged:(UIDatePicker *) sender {
+- (void)actionDateChanged:(UIDatePicker *) sender {
     
    
 }
 
-- (void)createViewWihtDatePicker {
+- (void)creatingViewWihtDatePicker {
     UIView *viewWihtDatePicker = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.view.bounds), CGRectGetMaxX(self.view.bounds), 200)];
     self.viewWihtDatePicker = viewWihtDatePicker;
     [self.createPartyView.view addSubview:viewWihtDatePicker];
@@ -122,7 +126,7 @@
     UIDatePicker *datePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake(0, 44, CGRectGetMaxX(self.view.bounds), 156)];
     self.datePiker = datePicker;
     [datePicker addTarget:self
-                   action:@selector(onDateChanged:)
+                   action:@selector(actionDateChanged:)
          forControlEvents:UIControlEventValueChanged];
     [datePicker setMinimumDate:[NSDate date]];
     [datePicker setBackgroundColor:[UIColor whiteColor]];
@@ -130,44 +134,33 @@
     [viewWihtDatePicker addSubview:datePicker];
     [self.createPartyView.view addSubview:viewWihtDatePicker];
     
-    [self createToolbar];
+    [self creatingToolbar];
 }
 
 #pragma mark - UIButton
 
--(void)onButtonClicked:(UIButton *) button {
+-(void) chooseButtonClicked {
+    self.chooseButton.userInteractionEnabled = NO;
+    [self creatingViewWihtDatePicker];
+    __block __weak PAMAddEventViewController *weakSelf = self;
+    [UIView animateWithDuration:0.3
+                     animations:^{
+                         CGRect rect = weakSelf.viewWihtDatePicker.frame;
+                         rect.origin.y -= CGRectGetMaxY(weakSelf.viewWihtDatePicker.bounds);
+                         weakSelf.viewWihtDatePicker.frame = rect;
+                     }
+                     completion:^(BOOL finished) {
+                         
+                     }];
+}
+
+-(void)actionButtonClicked:(UIButton *) button {
     if([button isEqual:self.chooseButton]) {
-        self.chooseButton.userInteractionEnabled = NO;
-        [self createViewWihtDatePicker];
-        __block __weak PAMAddEventViewController *weakSelf = self;
-        [UIView animateWithDuration:0.3
-                         animations:^{
-                             CGRect rect = weakSelf.viewWihtDatePicker.frame;
-                             rect.origin.y -= CGRectGetMaxY(weakSelf.viewWihtDatePicker.bounds);
-                             weakSelf.viewWihtDatePicker.frame = rect;
-                         }
-                         completion:^(BOOL finished) {
-                             
-                         }];
+        [self chooseButtonClicked];
     }
 }
 
-/*- (void)createButton {
-    UIButton* chooseButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [chooseButton setFrame:CGRectMake(CGRectGetMaxX(self.createPartyView.view.bounds) - 200, 80, 190, 36)];
-    [chooseButton.titleLabel setFont: [UIFont fontWithName:@"MyriadPro-Bold" size:16]];
-    [chooseButton setTitle:@"CHOOSE DATE" forState:UIControlStateNormal];
-    [chooseButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [chooseButton setBackgroundColor:[UIColor colorWithRed:239/255.f green:177/255.f blue:27/255.f alpha:1]];
-    [chooseButton.layer setCornerRadius:5];
-    [chooseButton setTitleColor:[[UIColor whiteColor] colorWithAlphaComponent:0.3] forState:UIControlStateHighlighted];
-    
-    [chooseButton addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    self.chooseButton = chooseButton;
-    [self.createPartyView.view addSubview:chooseButton];
-}*/
-
-- (UIButton *)createButtonWithRect:(CGRect) rectButton title:(NSString *) title backgroundColor:(UIColor *) backgroundColor {
+-(UIButton *)newButtonWithRect:(CGRect) rectButton title:(NSString *) title backgroundColor:(UIColor *) backgroundColor {
     UIButton* button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setFrame:rectButton];
     [button.titleLabel setFont: [UIFont fontWithName:@"MyriadPro-Bold" size:16]];
@@ -177,31 +170,88 @@
     [button.layer setCornerRadius:5];
     [button setTitleColor:[[UIColor whiteColor] colorWithAlphaComponent:0.3] forState:UIControlStateHighlighted];
     
-    [button addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:@selector(actionButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.createPartyView.view addSubview:button];
     return button;
 }
 
+-(void) creatingButtons {
+    self.chooseButton = [self newButtonWithRect:CGRectMake(CGRectGetMaxX(self.createPartyView.view.bounds) - 200, 80, 190, 36)
+                                          title:@"CHOOSE DATE"
+                                backgroundColor:[UIColor colorWithRed:239/255.f green:177/255.f blue:27/255.f alpha:1]];
+    
+    self.saveButton = [self newButtonWithRect:CGRectMake(CGRectGetMaxX(self.createPartyView.view.bounds) - 200,
+                                                         CGRectGetMaxY(self.createPartyView.view.bounds) - 90, 190, 36)
+                                        title:@"SAVE"
+                              backgroundColor:[UIColor lightGrayColor]];
+    
+    self.closeButton = [self newButtonWithRect:CGRectMake(CGRectGetMaxX(self.createPartyView.view.bounds) - 200,
+                                                          CGRectGetMaxY(self.createPartyView.view.bounds) - 46, 190, 36)
+                                         title:@"CLOSE"
+                               backgroundColor:[UIColor lightGrayColor]];
+}
+
+#pragma mark - UITextFieldDelegate
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return NO;
+}
+
+- (void) creatingTextField {
+    UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.createPartyView.view.bounds) - 200, 126, 190, 36)];
+    self.partyNameTextField = textField;
+    [textField setPlaceholder:@"Your party name"];
+    [textField setTextAlignment:NSTextAlignmentCenter];
+    [textField setTextColor:[UIColor whiteColor]];
+    [textField setFont:[UIFont fontWithName:@"MariadPro-Regular" size:20]];
+    [textField setBackgroundColor: [UIColor grayColor]];
+    [textField setClearButtonMode:UITextFieldViewModeWhileEditing];
+    [textField setReturnKeyType:UIReturnKeyDone];
+    [textField.layer setCornerRadius:5];
+    textField.delegate = self.createPartyView;
+    [self.view addSubview:textField];
+    [self.createPartyView.view addSubview:textField];
+}
+
+#pragma mark - UISlider
+
+-(void)actionSlideChanged:(UISlider *) slider {
+    self.startTimeLabel.text = [NSString stringWithFormat:@"%d", (int)slider.value];
+}
+
+-(void) creatingSliders {
+    UISlider *startSlider = [[UISlider alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.createPartyView.view.bounds) - 200, 170, 190, 30)];
+    [startSlider setMinimumValueImage: [UIImage imageNamed:@"TimePopup"]];
+    startSlider.minimumTrackTintColor = [UIColor orangeColor];
+    startSlider.maximumTrackTintColor = [UIColor blackColor];
+    startSlider.thumbTintColor = [UIColor whiteColor];
+    startSlider.tintColor = [UIColor blackColor];
+    startSlider.value = 0;
+    startSlider.minimumValue = 0;
+    startSlider.maximumValue = 24*60 - 30;
+    [startSlider addTarget:self action:@selector(actionSlideChanged:) forControlEvents:UIControlEventValueChanged];
+    
+    UILabel *startTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,100, 70, 30)];
+    startTimeLabel.backgroundColor = [UIColor whiteColor];
+    startTimeLabel.text = @"0";
+    self.startTimeLabel = startTimeLabel;
+    [self.createPartyView.view addSubview:startTimeLabel];
+    [self.createPartyView.view addSubview:startSlider];
+    //[slider setMaximumValueImage: [UIImage imageNamed:@"TimePopup180"]];
+}
+
 #pragma mark - Other
 
--(void)createPartyViewController {
+-(void)creatingPartyViewController {
     PAMAddEventViewController *createPartyVC = [[PAMAddEventViewController alloc] init];
     createPartyVC.view = [[UIView alloc] initWithFrame:self.navigationController.view.frame];
     [createPartyVC.view setBackgroundColor:[UIColor colorWithRed:46/255.f green:49/255.f blue:56/255.f alpha:1]];
     createPartyVC.title = @"CREATE PARTY";
     self.createPartyView = createPartyVC;
-    self.chooseButton = [self createButtonWithRect:CGRectMake(CGRectGetMaxX(self.createPartyView.view.bounds) - 200, 80, 190, 36)
-                                             title:@"CHOOSE DATE"
-                                   backgroundColor:[UIColor colorWithRed:239/255.f green:177/255.f blue:27/255.f alpha:1]];
-    
-    self.closeButton = [self createButtonWithRect:CGRectMake(CGRectGetMaxX(self.createPartyView.view.bounds) - 200, 130, 190, 36)
-                                             title:@"CLOSE"
-                                   backgroundColor:[UIColor colorWithRed:239/255.f green:177/255.f blue:27/255.f alpha:1]];
-
-    
-    self.saveButton = [self createButtonWithRect:CGRectMake(CGRectGetMaxX(self.createPartyView.view.bounds) - 200, 190, 190, 36)
-                                             title:@"SAVE"
-                                   backgroundColor:[UIColor colorWithRed:239/255.f green:177/255.f blue:27/255.f alpha:1]];
+    [self creatingButtons];
+    [self creatingTextField];
+    [self creatingSliders];
     
     [self.navigationController pushViewController:createPartyVC animated:YES];
 }
