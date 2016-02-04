@@ -38,5 +38,10 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>MyriadProBold.ttf</string>
+		<string>MyriadProRegular.ttf</string>
+	</array>
 </dict>
 </plist>

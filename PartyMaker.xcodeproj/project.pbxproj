@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		833708A81C622A060006C9C9 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 833708A71C622A060006C9C9 /* Fonts */; };
 		833708B31C622C490006C9C9 /* PAMAddEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 833708B21C622C490006C9C9 /* PAMAddEventViewController.m */; };
 		836F47731C6221CE007F5ECC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 836F47721C6221CE007F5ECC /* main.m */; };
 		836F47761C6221CE007F5ECC /* PAMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 836F47751C6221CE007F5ECC /* PAMAppDelegate.m */; };
@@ -15,10 +14,11 @@
 		836F477C1C6221CE007F5ECC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 836F477A1C6221CE007F5ECC /* Main.storyboard */; };
 		836F477E1C6221CE007F5ECC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 836F477D1C6221CE007F5ECC /* Assets.xcassets */; };
 		836F47811C6221CE007F5ECC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 836F477F1C6221CE007F5ECC /* LaunchScreen.storyboard */; };
+		8397CA661C635C02006FDE42 /* MyriadProBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8397CA641C635C02006FDE42 /* MyriadProBold.ttf */; };
+		8397CA671C635C02006FDE42 /* MyriadProRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8397CA651C635C02006FDE42 /* MyriadProRegular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		833708A71C622A060006C9C9 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
 		833708B11C622C490006C9C9 /* PAMAddEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMAddEventViewController.h; sourceTree = "<group>"; };
 		833708B21C622C490006C9C9 /* PAMAddEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMAddEventViewController.m; sourceTree = "<group>"; };
 		836F476E1C6221CE007F5ECC /* PartyMaker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PartyMaker.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -31,6 +31,8 @@
 		836F477D1C6221CE007F5ECC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		836F47801C6221CE007F5ECC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		836F47821C6221CE007F5ECC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8397CA641C635C02006FDE42 /* MyriadProBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MyriadProBold.ttf; sourceTree = "<group>"; };
+		8397CA651C635C02006FDE42 /* MyriadProRegular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MyriadProRegular.ttf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,7 +75,7 @@
 				836F477D1C6221CE007F5ECC /* Assets.xcassets */,
 				836F477F1C6221CE007F5ECC /* LaunchScreen.storyboard */,
 				836F47821C6221CE007F5ECC /* Info.plist */,
-				833708A71C622A060006C9C9 /* Fonts */,
+				8397CA631C635BE8006FDE42 /* Font */,
 				836F47711C6221CE007F5ECC /* Supporting Files */,
 			);
 			path = PartyMaker;
@@ -85,6 +87,15 @@
 				836F47721C6221CE007F5ECC /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		8397CA631C635BE8006FDE42 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				8397CA641C635C02006FDE42 /* MyriadProBold.ttf */,
+				8397CA651C635C02006FDE42 /* MyriadProRegular.ttf */,
+			);
+			name = Font;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -145,9 +156,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				836F47811C6221CE007F5ECC /* LaunchScreen.storyboard in Resources */,
+				8397CA661C635C02006FDE42 /* MyriadProBold.ttf in Resources */,
 				836F477E1C6221CE007F5ECC /* Assets.xcassets in Resources */,
 				836F477C1C6221CE007F5ECC /* Main.storyboard in Resources */,
-				833708A81C622A060006C9C9 /* Fonts in Resources */,
+				8397CA671C635C02006FDE42 /* MyriadProRegular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
