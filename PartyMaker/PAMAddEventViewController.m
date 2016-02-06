@@ -13,8 +13,8 @@
 //@property(strong,nonatomic) PAMAddEventViewController *createPartyView;
 
 @property(weak, nonatomic) UIView *viewWihtDatePicker;
-@property(strong, nonatomic) UIDatePicker *datePiker;
-@property(strong, nonatomic) UIToolbar *toolbar;
+@property(weak, nonatomic) UIDatePicker *datePiker;
+@property(strong, nonatomic) NSDate *partyDate;
 
 @property(strong, nonatomic) UIButton *chooseButton;
 @property(strong, nonatomic) UIButton *closeButton;
@@ -43,6 +43,14 @@
 
 #pragma mark - init
 
+-(instancetype)init {
+    self = [super init];
+    if(!self) return nil;
+    self.arrayWithMainControllers = [[NSMutableArray alloc] init];
+    
+    return self;
+}
+
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
@@ -51,14 +59,6 @@
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
-}
-
--(instancetype)init {
-    self = [super init];
-    if(!self) return nil;
-    self.arrayWithMainControllers = [[NSMutableArray alloc] init];
-    //[self.navigationItem setHidesBackButton:YES];
-    return self;
 }
 
 -(void)viewDidLoad {
@@ -73,6 +73,7 @@
 
 -(void)creatingPartyViewController {
     PAMAddEventViewController *createPartyVC = [[PAMAddEventViewController alloc] init];
+    [createPartyVC.navigationItem setHidesBackButton:YES];
     createPartyVC.view = [[UIView alloc] initWithFrame:self.navigationController.view.frame];
     [createPartyVC.view setBackgroundColor:[UIColor colorWithRed:46/255.f green:49/255.f blue:56/255.f alpha:1]];
     createPartyVC.title = @"CREATE PARTY";
@@ -289,7 +290,6 @@
     
     toolbar.items = @[itemCancel, flexibleSpace, itemDone];
     [toolbar sizeToFit];
-    self.toolbar = toolbar;
     [self.viewWihtDatePicker addSubview:toolbar];
 }
 
@@ -367,6 +367,7 @@
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat: @"MM.dd.yyyy"];
     [self.chooseButton setTitle: [dateFormatter stringFromDate:self.datePiker.date] forState:UIControlStateNormal];
+    self.partyDate = self.datePiker.date;
     [self actionCancelDatePicker];
 }
 
@@ -418,14 +419,43 @@
 }
 
 -(void)closeButtonClicked {
-    [self moveCursor:self.saveButton];
+    [self moveCursor:self.closeButton];
     [self.navigationController popToRootViewControllerAnimated:YES];
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////[self.view removeFromSuperview];
 }
 
 -(void)saveButtonClicked {
-    
+    [self moveCursor:self.closeButton];
+    __weak PAMAddEventViewController *weakSelf = self;
+    if(!self.partyDate) {
+        
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error!"
+                                                                       message:@"You should enter a party date!"
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *actionOK = [UIAlertAction actionWithTitle:@"OK"
+                                                           style:UIAlertActionStyleDefault
+                                                         handler: ^(UIAlertAction* action) {
+                                                             [weakSelf chooseButtonClicked];
+                                                         }];
+        [alert addAction:actionOK];
+        [self presentViewController:alert animated:YES completion:nil];
+    }else if(!self.partyNameTextField.text.length) {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error!"
+                                                                       message:@"You should enter a party name!"
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *actionOK = [UIAlertAction actionWithTitle:@"OK"
+                                                           style:UIAlertActionStyleDefault
+                                                         handler: ^(UIAlertAction* action) {
+                                                             [weakSelf.partyNameTextField becomeFirstResponder];
+                                                         }];
+        [alert addAction:actionOK];
+        [self presentViewController:alert animated:YES completion:nil];
+    } else {
+        NSLog(@"Good!");
+    }
 }
-
 #pragma mark - UITextViewDelegate
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
