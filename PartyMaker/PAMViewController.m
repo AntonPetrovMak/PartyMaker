@@ -27,7 +27,7 @@
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc]
                                   initWithBarButtonSystemItem: UIBarButtonSystemItemAdd
                                   target:addEventViewController
-                                  action:@selector(handleAddViewController:)];
+                                  action:@selector(actionAddViewController:)];
     
     addEventViewController.navigationItem.rightBarButtonItem = addButton;
     addEventViewController.title = @"PARTY MAKER";

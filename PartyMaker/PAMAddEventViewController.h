@@ -10,6 +10,6 @@
 
 @interface PAMAddEventViewController : UIViewController
 
-- (void) handleAddViewController:(UIBarButtonItem *) sender;
+- (void) actionAddViewController:(UIBarButtonItem *) sender;
 
 @end

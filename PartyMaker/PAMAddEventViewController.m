@@ -33,56 +33,30 @@
 
 @property(strong, nonatomic) UITextView *descriptionTextView;
 
+@property(strong, nonatomic) NSMutableArray *arrayWithMainControllers;
+
+@property(strong, nonatomic) UIView *cursorView;
+
 @end
 
-@implementation PAMAddEventViewController   
+@implementation PAMAddEventViewController
 
 #pragma mark - init
 
--(void)keyboardWillShow:(NSNotification*)notification {
-    CGRect keyboardRect = [[[notification userInfo] objectForKey: UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    float duration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-    __block __weak PAMAddEventViewController *weakSelf = self;
-    [UIView animateWithDuration:duration
-                     animations:^{
-                         CGRect viewFrame = weakSelf.view.frame;
-                         viewFrame.origin.y -= keyboardRect.size.height;
-                         weakSelf.view.frame = viewFrame;
-                     }];
-}
-
--(void)keyboardWillHide:(NSNotification*)notification {
-    float duration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-    __block __weak PAMAddEventViewController *weakSelf = self;
-    [UIView animateWithDuration:duration
-                     animations:^{
-                         CGRect viewFrame = weakSelf.view.frame;
-                         viewFrame.origin.y = 0;
-                         weakSelf.view.frame = viewFrame;
-                     }];
-}
-
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    /*[[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillHide:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];*/
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    /*[[NSNotificationCenter defaultCenter] removeObserver:self];*/
+    
 }
 
 -(instancetype)init {
     self = [super init];
     if(!self) return nil;
+    self.arrayWithMainControllers = [[NSMutableArray alloc] init];
     //[self.navigationItem setHidesBackButton:YES];
     return self;
 }
@@ -95,6 +69,8 @@
     [super didReceiveMemoryWarning];
 }
 
+#pragma mark - Creating Controllers
+
 -(void)creatingPartyViewController {
     PAMAddEventViewController *createPartyVC = [[PAMAddEventViewController alloc] init];
     createPartyVC.view = [[UIView alloc] initWithFrame:self.navigationController.view.frame];
@@ -105,89 +81,106 @@
     [createPartyVC creatingSlidersWithLabels];
     [createPartyVC creatingScrollView];
     [createPartyVC creatingTextView];
-
+    [createPartyVC creatingStatusCursor];
+    
     [self.navigationController pushViewController:createPartyVC animated:YES];
 }
-#pragma mark - UITextView and UITextViewDelegate
 
-- (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
-    __block __weak PAMAddEventViewController *weakSelf = self;
-    [UIView animateWithDuration:0.3
-                     animations:^{
-                         CGRect viewFrame = weakSelf.view.frame;
-                         viewFrame.origin.y -= 250;
-                         weakSelf.view.frame = viewFrame;
-                     }];
-    return YES;
-}
-
-- (void)textViewDidEndEditing:(UITextView *)textView {
-    __block __weak PAMAddEventViewController *weakSelf = self;
-    [UIView animateWithDuration:0.2
-                     animations:^{
-                         CGRect viewFrame = weakSelf.view.frame;
-                         viewFrame.origin.y = 0;
-                         weakSelf.view.frame = viewFrame;
-                     }];
-}
-
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    NSString *string = [textView.text stringByReplacingCharactersInRange:range withString:text];
-    if (string.length>100) return NO;
-    return YES;
-}
-
-- (void)actionCancelTextView {
-    [self.descriptionTextView resignFirstResponder];
-}
-
--(void)actionDoneTextView {
-    [self.descriptionTextView resignFirstResponder];
-}
-
-- (void) creatingTextView {
-    UIView *viewLine = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 360, 190, 5)];
-    [viewLine setBackgroundColor:[UIColor colorWithRed:40/255.f green:132/255.f blue:175/255.f alpha:1]];
-    [self.view addSubview:viewLine];
+-(void)creatingStatusCursor {
+    NSString *statusName[] = {@"CHOOSE DATE",@"PARTY NAME", @"START", @"END", @"LOGO", @"DESCRIPTION", @"FINAL"};
+    [self.arrayWithMainControllers addObject:self.chooseButton];
+    [self.arrayWithMainControllers addObject:self.partyNameTextField];
+    [self.arrayWithMainControllers addObject:self.startSlider];
+    [self.arrayWithMainControllers addObject:self.endSlider];
+    [self.arrayWithMainControllers addObject:self.typeEventScrollView];
+    [self.arrayWithMainControllers addObject:self.descriptionTextView];
+    [self.arrayWithMainControllers addObject:self.closeButton];
     
-    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 365, 190, 100)];
-    [textView setFont:[UIFont fontWithName:@"MariadPro-Regular" size:18]];
-    [textView setBackgroundColor:[UIColor colorWithRed:35/255.f green:37/255.f blue:43/255.f alpha:1]];
-    [textView setTextColor:[UIColor whiteColor]];
-    textView.delegate = self;
+    float heightLine = [[self.arrayWithMainControllers lastObject] center].y - [[self.arrayWithMainControllers firstObject] center].y;
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(15-0.5, [[self.arrayWithMainControllers firstObject] center].y, 1, heightLine)];
+    [lineView setBackgroundColor: [UIColor colorWithRed:230/255.f green:224/255.f blue:213/255.f alpha:1]];
+    [self.view addSubview:lineView];
     
-    UIToolbar* toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, CGRectGetMaxX(self.view.bounds), 50)];
-    toolbar.barStyle = UIBarStyleBlackTranslucent;
-    [toolbar setBackgroundColor:[UIColor colorWithRed:68/255.f green:73/255.f blue:83/255.f alpha:1]];
-    UIBarButtonItem *itemCancel = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
-                                                                   style:UIBarButtonItemStylePlain target:self action:@selector(actionCancelTextView)];
-    UIBarButtonItem *itemDone = [[UIBarButtonItem alloc] initWithTitle:@"Done"
-                                                                 style:UIBarButtonItemStyleDone target:self action:@selector(actionDoneTextView)];
-    UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
-                                                                                   target:nil action:nil];
-    itemDone.tintColor = itemCancel.tintColor = [UIColor whiteColor];
-    toolbar.items = @[itemCancel, flexibleSpace, itemDone];
-    [toolbar sizeToFit];
-    textView.inputAccessoryView = toolbar;
+    for (UIView* object in self.arrayWithMainControllers) {
+        UIView *circleView = [[UIView alloc] initWithFrame:CGRectMake(15-4.5, object.center.y - 4.5, 9, 9)];
+        [circleView.layer setCornerRadius:4.5];
+        [circleView setBackgroundColor: [UIColor colorWithRed:230/255.f green:224/255.f blue:213/255.f alpha:1]];
+        [self.view addSubview:circleView];
+        
+        UILabel *statusNameLable = [[UILabel alloc] initWithFrame:CGRectMake(29, object.center.y - 6, 80, 12)];
+        [statusNameLable setFont:[UIFont fontWithName:@"MyriadPro-Regular" size:12]];
+        [statusNameLable setTextColor:[UIColor colorWithRed:230/255.f green:224/255.f blue:213/255.f alpha:1]];
+        [statusNameLable setText: statusName[[self.arrayWithMainControllers indexOfObject:object]]];
+        [self.view addSubview:statusNameLable];
+    }
     
-    
-    self.descriptionTextView = textView;
-    [self.view addSubview:textView];
+    UIView *cursorView = [[UIView alloc] initWithFrame:CGRectMake(15-6.5, [[self.arrayWithMainControllers firstObject] center].y - 6.5, 13, 13)];
+    [cursorView.layer setCornerRadius:6.5];
+    [cursorView setBackgroundColor: [[UIColor whiteColor] colorWithAlphaComponent:0.4]];
+    [self.view addSubview:cursorView];
+    self.cursorView = cursorView;
 }
 
-#pragma mark - UIScrollViewDelegate
-
--(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    NSInteger currentPage = scrollView.contentOffset.x/scrollView.bounds.size.width;
-    [self.typeEventPageControl setCurrentPage:currentPage];
+-(void)creatingButtons {
+    self.chooseButton = [self newButtonWithRect:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 80, 190, 36)
+                                          title:@"CHOOSE DATE"
+                                backgroundColor:[UIColor colorWithRed:239/255.f green:177/255.f blue:27/255.f alpha:1]];
+    [self.view addSubview:self.chooseButton];
+    
+    self.saveButton = [self newButtonWithRect:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200,
+                                                         CGRectGetMaxY(self.view.bounds) - 90, 190, 36)
+                                        title:@"SAVE"
+                              backgroundColor:[UIColor colorWithRed:140/255.f green:186/255.f blue:29/255.f alpha:1]];
+    [self.view addSubview:self.saveButton];
+    self.closeButton = [self newButtonWithRect:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200,
+                                                          CGRectGetMaxY(self.view.bounds) - 46, 190, 36)
+                                         title:@"CLOSE"
+                               backgroundColor:[UIColor colorWithRed:236/255.f green:71/255.f blue:19/255.f alpha:1]];
+    [self.view addSubview:self.closeButton];
 }
 
--(void)actionPageChanged:(UIPageControl *) pageControl {
-    CGPoint contentOffset = CGPointMake(pageControl.currentPage * self.typeEventScrollView.bounds.size.width, 0);
-    [self.typeEventScrollView setContentOffset:contentOffset animated:YES];
+-(void)creatingTextField {
+    UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 126, 190, 36)];
+    self.partyNameTextField = textField;
+    [textField setPlaceholder:@"Your party name"];
+    [textField setTextAlignment:NSTextAlignmentCenter];
+    [textField setTextColor:[UIColor whiteColor]];
+    [textField setFont:[UIFont fontWithName:@"MariadPro-Regular" size:16]];
+    [textField setBackgroundColor: [UIColor colorWithRed:35/255.f green:37/255.f blue:43/255.f alpha:1]];
+    [textField setClearButtonMode:UITextFieldViewModeWhileEditing];
+    [textField setReturnKeyType:UIReturnKeyDone];
+    [textField.layer setCornerRadius:5];
+    textField.delegate = self;
+    NSDictionary *attributedDictionary = @{ NSForegroundColorAttributeName: [UIColor colorWithRed:76/255. green:82/255. blue:92/255. alpha:1]};
+    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:@"Your party Name"
+                                                                           attributes:attributedDictionary];
+    [textField setAttributedPlaceholder:attributedString];
+    [self.view addSubview:textField];
 }
 
--(void) creatingScrollView {
+-(void)creatingSlidersWithLabels {
+    self.startSlider = [self newCustomSliderWithRect:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 170, 190, 30)];
+    [self.view addSubview:self.startSlider];
+    [self.startSlider setMinimumValueImage: [UIImage imageNamed:@"TimePopup"]];
+    [self.startSlider setMinimumValue:0];
+    [self.startSlider setMaximumValue:24*60 - 31];
+    
+    self.startTimeLabel = [self newLabelForSliderWithRect:CGRectMake(CGRectGetMinX(self.startSlider.frame),CGRectGetMinY(self.startSlider.frame),31, 30)
+                                                     test:@"00:00"];
+    [self.view addSubview:self.startTimeLabel];
+    
+    self.endSlider = [self newCustomSliderWithRect:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 210, 190, 30)];
+    [self.view addSubview:self.endSlider];
+    [self.endSlider setMaximumValueImage: [UIImage imageNamed:@"TimePopup180"]];
+    [self.endSlider setMinimumValue:30];
+    [self.endSlider setMaximumValue:24*60-1];
+    
+    self.endTimeLabel = [self newLabelForSliderWithRect:CGRectMake(CGRectGetMaxX(self.endSlider.frame) - 31,CGRectGetMinY(self.endSlider.frame),30, 30)
+                                                   test:@"00:30"];
+    [self.view addSubview:self.endTimeLabel];
+}
+
+-(void)creatingScrollView {
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 250, 190, 100)];
     self.typeEventScrollView = scrollView;
     scrollView.contentSize = CGSizeMake(190*6, 100);
@@ -216,73 +209,42 @@
     [self.view addSubview:pageControl];
 }
 
-
-#pragma mark - Hendles
-
-- (void) handleAddViewController:(UIBarButtonItem *) sender {
-    [self creatingPartyViewController];
-}
-
-#pragma mark - UIToolbar
-
-- (void) actionCancelTolbar {
-    self.chooseButton.userInteractionEnabled = YES;
-    [UIView animateWithDuration:0.3
-                     animations:^{
-                         CGRect rect = self.viewWihtDatePicker.frame;
-                         rect.origin.y += CGRectGetMaxY(self.viewWihtDatePicker.bounds);
-                         self.viewWihtDatePicker.frame = rect;
-                     }
-                     completion:^(BOOL finished) {
-                        [self.viewWihtDatePicker removeFromSuperview];
-                     }];
-}
-
-- (void) actionDoneTolbar {
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat: @"MM.dd.yyyy"];
-    [self.chooseButton setTitle: [dateFormatter stringFromDate:self.datePiker.date] forState:UIControlStateNormal];
-    [self actionCancelTolbar];
-}
-
-- (void) creatingToolbar {
-     NSDictionary *attributesForItem = @{ NSFontAttributeName:[UIFont fontWithName:@"MyriadPro-Bold" size:15],
-                                         NSForegroundColorAttributeName:[UIColor whiteColor]
-                                         };
+-(void)creatingTextView {
+    UIView *viewLine = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 360, 190, 5)];
+    [viewLine setBackgroundColor:[UIColor colorWithRed:40/255.f green:132/255.f blue:175/255.f alpha:1]];
+    [self.view addSubview:viewLine];
+    
+    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 365, 190, 100)];
+    [textView setFont:[UIFont fontWithName:@"MariadPro-Regular" size:18]];
+    [textView setBackgroundColor:[UIColor colorWithRed:35/255.f green:37/255.f blue:43/255.f alpha:1]];
+    [textView setTextColor:[UIColor whiteColor]];
+    textView.delegate = self;
     
     UIToolbar* toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, CGRectGetMaxX(self.view.bounds), 50)];
-    [toolbar setBarStyle:UIBarStyleBlack];
-    [toolbar setBarTintColor:[UIColor colorWithRed:68/255.f green:73/255.f blue:83/255.f alpha:1]];
+    toolbar.barStyle = UIBarStyleBlackTranslucent;
+    [toolbar setBackgroundColor:[UIColor colorWithRed:68/255.f green:73/255.f blue:83/255.f alpha:1]];
     UIBarButtonItem *itemCancel = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
                                                                    style:UIBarButtonItemStylePlain
                                                                   target:self
-                                                                  action:@selector(actionCancelTolbar)];
-    
+                                                                  action:@selector(actionCancelTextView)];
     UIBarButtonItem *itemDone = [[UIBarButtonItem alloc] initWithTitle:@"Done"
                                                                  style:UIBarButtonItemStyleDone
                                                                 target:self
-                                                                action:@selector(actionDoneTolbar)];
+                                                                action:@selector(actionDoneTextView)];
     UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
                                                                                    target:nil
                                                                                    action:nil];
-    [itemCancel setTitleTextAttributes:attributesForItem forState:UIControlStateNormal];
-    [itemDone setTitleTextAttributes:attributesForItem forState:UIControlStateNormal];
-    
-    
+    itemDone.tintColor = itemCancel.tintColor = [UIColor whiteColor];
     toolbar.items = @[itemCancel, flexibleSpace, itemDone];
     [toolbar sizeToFit];
-    self.toolbar = toolbar;
-    [self.viewWihtDatePicker addSubview:toolbar];
-}
-
-#pragma mark - UIDatePicker
-
-- (void)actionDateChanged:(UIDatePicker *) sender {
+    textView.inputAccessoryView = toolbar;
     
-   
+    
+    self.descriptionTextView = textView;
+    [self.view addSubview:textView];
 }
 
-- (void)creatingViewWihtDatePicker {
+-(void)creatingViewWihtDatePicker {
     UIView *viewWihtDatePicker = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.view.bounds), CGRectGetMaxX(self.view.bounds), 200)];
     self.viewWihtDatePicker = viewWihtDatePicker;
     [self.view addSubview:viewWihtDatePicker];
@@ -298,30 +260,40 @@
     [viewWihtDatePicker addSubview:datePicker];
     [self.view addSubview:viewWihtDatePicker];
     
-    [self creatingToolbar];
+    [self creatingDatePickerToolbar];
 }
 
-#pragma mark - UIButton
-
--(void)chooseButtonClicked {
-    self.chooseButton.userInteractionEnabled = NO;
-    [self creatingViewWihtDatePicker];
-    [UIView animateWithDuration:0.3
-                     animations:^{
-                         CGRect rect = self.viewWihtDatePicker.frame;
-                         rect.origin.y -= CGRectGetMaxY(self.viewWihtDatePicker.bounds);
-                         self.viewWihtDatePicker.frame = rect;
-                     }
-                     completion:^(BOOL finished) {
-  
-                     }];
+-(void)creatingDatePickerToolbar {
+    NSDictionary *attributesForItem = @{ NSFontAttributeName:[UIFont fontWithName:@"MyriadPro-Bold" size:15],
+                                         NSForegroundColorAttributeName:[UIColor whiteColor]
+                                         };
+    
+    UIToolbar* toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, CGRectGetMaxX(self.view.bounds), 50)];
+    [toolbar setBarStyle:UIBarStyleBlack];
+    [toolbar setBarTintColor:[UIColor colorWithRed:68/255.f green:73/255.f blue:83/255.f alpha:1]];
+    UIBarButtonItem *itemCancel = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
+                                                                   style:UIBarButtonItemStylePlain
+                                                                  target:self
+                                                                  action:@selector(actionCancelDatePicker)];
+    
+    UIBarButtonItem *itemDone = [[UIBarButtonItem alloc] initWithTitle:@"Done"
+                                                                 style:UIBarButtonItemStyleDone
+                                                                target:self
+                                                                action:@selector(actionDoneDatePicker)];
+    UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+                                                                                   target:nil
+                                                                                   action:nil];
+    [itemCancel setTitleTextAttributes:attributesForItem forState:UIControlStateNormal];
+    [itemDone setTitleTextAttributes:attributesForItem forState:UIControlStateNormal];
+    
+    
+    toolbar.items = @[itemCancel, flexibleSpace, itemDone];
+    [toolbar sizeToFit];
+    self.toolbar = toolbar;
+    [self.viewWihtDatePicker addSubview:toolbar];
 }
 
--(void)actionButtonClicked:(UIButton *) button {
-    if([button isEqual:self.chooseButton]) {
-        [self chooseButtonClicked];
-    }
-}
+#pragma mark - New custom controllers
 
 -(UIButton *)newButtonWithRect:(CGRect) rectButton title:(NSString *) title backgroundColor:(UIColor *) backgroundColor {
     UIButton* button = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -337,61 +309,74 @@
     return button;
 }
 
--(void) creatingButtons {
-    self.chooseButton = [self newButtonWithRect:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 80, 190, 36)
-                                          title:@"CHOOSE DATE"
-                                backgroundColor:[UIColor colorWithRed:239/255.f green:177/255.f blue:27/255.f alpha:1]];
-    [self.view addSubview:self.chooseButton];
+-(UISlider *)newCustomSliderWithRect:(CGRect) rectSlider {
+    UISlider *slider = [[UISlider alloc] initWithFrame:rectSlider];
+    slider.minimumTrackTintColor = [UIColor colorWithRed:239/255.f green:177/255.f blue:27/255.f alpha:1];
+    slider.maximumTrackTintColor = [UIColor colorWithRed:35/255.f green:37/255.f blue:43/255.f alpha:1];
+    slider.tintColor = [UIColor blackColor];
+    slider.value = 0;
+    [slider addTarget:self action:@selector(actionSlideChanged:) forControlEvents:UIControlEventValueChanged];
+    return slider;
+}
+
+-(UILabel *)newLabelForSliderWithRect:(CGRect) rect test:(NSString *) text {
+    UILabel *label = [[UILabel alloc] initWithFrame: rect];
     
-    self.saveButton = [self newButtonWithRect:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200,
-                                                         CGRectGetMaxY(self.view.bounds) - 90, 190, 36)
-                                        title:@"SAVE"
-                              backgroundColor:[UIColor colorWithRed:140/255.f green:186/255.f blue:29/255.f alpha:1]];
-    [self.view addSubview:self.saveButton];
-    self.closeButton = [self newButtonWithRect:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200,
-                                                          CGRectGetMaxY(self.view.bounds) - 46, 190, 36)
-                                         title:@"CLOSE"
-                               backgroundColor:[UIColor colorWithRed:236/255.f green:71/255.f blue:19/255.f alpha:1]];
-    [self.view addSubview:self.closeButton];
+    [label setText:text];
+    [label setTextAlignment:NSTextAlignmentCenter];
+    [label setTextColor:[UIColor whiteColor]];
+    [label setFont:[UIFont fontWithName:@"MyriadPro-Regular" size:12]];
+    return label;
 }
 
-#pragma mark - UITextFieldDelegate and UITextField
+#pragma mark - Action
 
--(BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [textField resignFirstResponder];
-    return NO;
+-(void)actionAddViewController:(UIBarButtonItem *) sender {
+    [self creatingPartyViewController];
 }
 
--(void)creatingTextField {
-    UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 126, 190, 36)];
-    self.partyNameTextField = textField;
-    [textField setPlaceholder:@"Your party name"];
-    [textField setTextAlignment:NSTextAlignmentCenter];
-    [textField setTextColor:[UIColor whiteColor]];
-    [textField setFont:[UIFont fontWithName:@"MariadPro-Regular" size:16]];
-    [textField setBackgroundColor: [UIColor colorWithRed:35/255.f green:37/255.f blue:43/255.f alpha:1]];
-    [textField setClearButtonMode:UITextFieldViewModeWhileEditing];
-    [textField setReturnKeyType:UIReturnKeyDone];
-    [textField.layer setCornerRadius:5];
-    textField.delegate = self;
-    NSDictionary *attributedDictionary = @{ NSForegroundColorAttributeName: [UIColor colorWithRed:76/255. green:82/255. blue:92/255. alpha:1]};
-    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:@"Your party Name"
-                                                                           attributes:attributedDictionary];
-    [textField setAttributedPlaceholder:attributedString];
-    [self.view addSubview:textField];
+-(void)actionCancelTextView {
+    [self.descriptionTextView resignFirstResponder];
 }
 
-#pragma mark - UISlider and UILable
+-(void)actionDoneTextView {
+    [self.descriptionTextView resignFirstResponder];
+}
 
--(NSString *) getCustomTimeWithIntervale:(int) interval {
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
-    [formatter setTimeZone:timeZone];
-    [formatter setDateFormat:@"HH:mm"];
-    return [formatter stringFromDate:[NSDate dateWithTimeIntervalSinceReferenceDate:interval * 60]];
+-(void)actionPageChanged:(UIPageControl *) pageControl {
+    [self moveCursor:self.typeEventScrollView];
+    CGPoint contentOffset = CGPointMake(pageControl.currentPage * self.typeEventScrollView.bounds.size.width, 0);
+    [self.typeEventScrollView setContentOffset:contentOffset animated:YES];
+}
+
+-(void)actionCancelDatePicker {
+    [self blockControllersBesides:nil userInteractionEnabled:YES];
+    __weak PAMAddEventViewController* weakSelf = self;
+    [UIView animateWithDuration:0.3
+                     animations:^{
+                         CGRect rect = weakSelf.viewWihtDatePicker.frame;
+                         rect.origin.y += CGRectGetMaxY(weakSelf.viewWihtDatePicker.bounds);
+                         weakSelf.viewWihtDatePicker.frame = rect;
+                     }
+                     completion:^(BOOL finished) {
+                         [weakSelf.viewWihtDatePicker removeFromSuperview];
+                     }];
+}
+
+-(void)actionDoneDatePicker {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat: @"MM.dd.yyyy"];
+    [self.chooseButton setTitle: [dateFormatter stringFromDate:self.datePiker.date] forState:UIControlStateNormal];
+    [self actionCancelDatePicker];
+}
+
+-(void)actionDateChanged:(UIDatePicker *) sender {
+    
+    
 }
 
 -(void)actionSlideChanged:(UISlider *) slider {
+    [self moveCursor:slider];
     if([slider isEqual:self.startSlider]) {
         if(self.endSlider.value - slider.value <= 0) {
             self.endSlider.value = slider.value;
@@ -409,48 +394,117 @@
     }
 }
 
--(UILabel *)newLabelForSliderWithRect:(CGRect) rect test:(NSString *) text {
-    UILabel *label = [[UILabel alloc] initWithFrame: rect];
-
-    [label setText:text];
-    [label setTextAlignment:NSTextAlignmentCenter];
-    [label setTextColor:[UIColor whiteColor]];
-    [label setFont:[UIFont fontWithName:@"MyriadPro-Regular" size:12]];
-    return label;
+-(void)actionButtonClicked:(UIButton *) button {
+    if([button isEqual:self.chooseButton]) {
+        [self chooseButtonClicked];
+    } else if([button isEqual:self.closeButton]) {
+        [self closeButtonClicked];
+    } else if ([button isEqual:self.saveButton]) {
+        [self saveButtonClicked];
+    }
 }
 
--(UISlider *)newCustomSliderWithRect:(CGRect) rectSlider {
-    UISlider *slider = [[UISlider alloc] initWithFrame:rectSlider];
-    slider.minimumTrackTintColor = [UIColor colorWithRed:239/255.f green:177/255.f blue:27/255.f alpha:1];
-    slider.maximumTrackTintColor = [UIColor colorWithRed:35/255.f green:37/255.f blue:43/255.f alpha:1];
-    slider.tintColor = [UIColor blackColor];
-    slider.value = 0;
-    [slider addTarget:self action:@selector(actionSlideChanged:) forControlEvents:UIControlEventValueChanged];
-    return slider;
+-(void)chooseButtonClicked {
+    [self moveCursor:self.chooseButton];
+    [self blockControllersBesides:nil userInteractionEnabled:NO];
+    [self creatingViewWihtDatePicker];
+    __weak PAMAddEventViewController* weakSelf = self;
+    [UIView animateWithDuration:0.3
+                     animations:^{
+                         CGRect rect = weakSelf.viewWihtDatePicker.frame;
+                         rect.origin.y -= CGRectGetMaxY(weakSelf.viewWihtDatePicker.bounds);
+                         weakSelf.viewWihtDatePicker.frame = rect;
+                     }];
 }
 
--(void)creatingSlidersWithLabels {
-    self.startSlider = [self newCustomSliderWithRect:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 170, 190, 30)];
-    [self.view addSubview:self.startSlider];
-    [self.startSlider setMinimumValueImage: [UIImage imageNamed:@"TimePopup"]];
-    [self.startSlider setMinimumValue:0];
-    [self.startSlider setMaximumValue:24*60 - 31];
+-(void)closeButtonClicked {
+    [self moveCursor:self.saveButton];
+    [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
+-(void)saveButtonClicked {
     
-    self.startTimeLabel = [self newLabelForSliderWithRect:CGRectMake(CGRectGetMinX(self.startSlider.frame),CGRectGetMinY(self.startSlider.frame),31, 30)
-                                                     test:@"00:00"];
-    [self.view addSubview:self.startTimeLabel];
-    
-    self.endSlider = [self newCustomSliderWithRect:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 210, 190, 30)];
-    [self.view addSubview:self.endSlider];
-    [self.endSlider setMaximumValueImage: [UIImage imageNamed:@"TimePopup180"]];
-    [self.endSlider setMinimumValue:30];
-    [self.endSlider setMaximumValue:24*60-1];
-    
-    self.endTimeLabel = [self newLabelForSliderWithRect:CGRectMake(CGRectGetMaxX(self.endSlider.frame) - 31,CGRectGetMinY(self.endSlider.frame),30, 30)
-                                                     test:@"00:30"];
-    [self.view addSubview:self.endTimeLabel];
+}
+
+#pragma mark - UITextViewDelegate
+
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
+    [self moveCursor:textView];
+    __weak PAMAddEventViewController *weakSelf = self;
+    [UIView animateWithDuration:0.3
+                     animations:^{
+                         CGRect viewFrame = weakSelf.view.frame;
+                         viewFrame.origin.y -= 250;
+                         weakSelf.view.frame = viewFrame;
+                     }];
+    return YES;
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView {
+    __block __weak PAMAddEventViewController *weakSelf = self;
+    [UIView animateWithDuration:0.2
+                     animations:^{
+                         CGRect viewFrame = weakSelf.view.frame;
+                         viewFrame.origin.y = 0;
+                         weakSelf.view.frame = viewFrame;
+                     }];
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    NSString *string = [textView.text stringByReplacingCharactersInRange:range withString:text];
+    return !(string.length > 500);
+}
+
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    [self moveCursor:scrollView];
+}
+
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    NSInteger currentPage = scrollView.contentOffset.x/scrollView.bounds.size.width;
+    [self.typeEventPageControl setCurrentPage:currentPage];
+}
+
+#pragma mark - UITextFieldDelegate
+
+-(BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    [self moveCursor:textField];
+    [self blockControllersBesides:textField userInteractionEnabled:NO];
+    return YES;
+}
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [self blockControllersBesides:self.partyNameTextField userInteractionEnabled:YES];
+    [textField resignFirstResponder];
+    return NO;
 }
 
 #pragma mark - Other
+
+-(void)moveCursor:(UIView *) view {
+    __weak PAMAddEventViewController* weakSelf = self;
+    [UIView animateWithDuration:0.3
+                     animations:^{
+                         weakSelf.cursorView.center = CGPointMake(weakSelf.cursorView.center.x, view.center.y);
+                     }];
+}
+
+-(void)blockControllersBesides:(id) controller userInteractionEnabled:(BOOL) isBlock {
+    for (UIView *view in self.view.subviews) {
+        if(![view isEqual:controller]){
+            view.userInteractionEnabled = isBlock;
+        }
+    }
+}
+
+-(NSString *) getCustomTimeWithIntervale:(int) interval {
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+    [formatter setTimeZone:timeZone];
+    [formatter setDateFormat:@"HH:mm"];
+    return [formatter stringFromDate:[NSDate dateWithTimeIntervalSinceReferenceDate:interval * 60]];
+}
 
 @end
