@@ -22,6 +22,20 @@
 
 
 -(void)viewDidAppear:(BOOL)animated {
+    
+    
+//    NSURL *bundleURL = [[NSBundle mainBundle] bundleURL];
+//    NSURL *infoPlistPath = [NSURL URLWithString:@"Info.plist" relativeToURL:bundleURL];
+//    NSDictionary *dictionary = [NSDictionary dictionaryWithContentsOfURL:infoPlistPath];
+//    NSLog(@"%@", dictionary);
+    
+    /*NSURL *logsPlistPath = [NSURL URLWithString:@"logs.plist" relativeToURL:bundleURL];
+    [dictionary writeToFile:logsPlistPath.path atomically:YES];
+     NSLog(@"%@", logsPlistPath.path);*/
+    
+    
+    
+    
     PAMAddEventViewController *addEventViewController = [[PAMAddEventViewController alloc] init];
     [addEventViewController.view setBackgroundColor:[UIColor colorWithRed:46/255.f green:49/255.f blue:56/255.f alpha:1]];
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc]

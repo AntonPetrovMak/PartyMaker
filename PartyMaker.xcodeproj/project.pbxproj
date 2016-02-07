@@ -16,6 +16,8 @@
 		836F47811C6221CE007F5ECC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 836F477F1C6221CE007F5ECC /* LaunchScreen.storyboard */; };
 		8397CA661C635C02006FDE42 /* MyriadProBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8397CA641C635C02006FDE42 /* MyriadProBold.ttf */; };
 		8397CA671C635C02006FDE42 /* MyriadProRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8397CA651C635C02006FDE42 /* MyriadProRegular.ttf */; };
+		EA3ED6171C668B1D00CBCD45 /* logs.plist in Resources */ = {isa = PBXBuildFile; fileRef = EA3ED6161C668B1D00CBCD45 /* logs.plist */; };
+		EADD7C791C6771E900EC4838 /* PAMParty.m in Sources */ = {isa = PBXBuildFile; fileRef = EADD7C781C6771E900EC4838 /* PAMParty.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +35,9 @@
 		836F47821C6221CE007F5ECC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8397CA641C635C02006FDE42 /* MyriadProBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MyriadProBold.ttf; sourceTree = "<group>"; };
 		8397CA651C635C02006FDE42 /* MyriadProRegular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MyriadProRegular.ttf; sourceTree = "<group>"; };
+		EA3ED6161C668B1D00CBCD45 /* logs.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = logs.plist; sourceTree = "<group>"; };
+		EADD7C771C6771E900EC4838 /* PAMParty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMParty.h; sourceTree = "<group>"; };
+		EADD7C781C6771E900EC4838 /* PAMParty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMParty.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +70,8 @@
 		836F47701C6221CE007F5ECC /* PartyMaker */ = {
 			isa = PBXGroup;
 			children = (
+				EADD7C771C6771E900EC4838 /* PAMParty.h */,
+				EADD7C781C6771E900EC4838 /* PAMParty.m */,
 				833708B11C622C490006C9C9 /* PAMAddEventViewController.h */,
 				833708B21C622C490006C9C9 /* PAMAddEventViewController.m */,
 				836F47741C6221CE007F5ECC /* PAMAppDelegate.h */,
@@ -75,6 +82,7 @@
 				836F477D1C6221CE007F5ECC /* Assets.xcassets */,
 				836F477F1C6221CE007F5ECC /* LaunchScreen.storyboard */,
 				836F47821C6221CE007F5ECC /* Info.plist */,
+				EA3ED6161C668B1D00CBCD45 /* logs.plist */,
 				8397CA631C635BE8006FDE42 /* Font */,
 				836F47711C6221CE007F5ECC /* Supporting Files */,
 			);
@@ -161,6 +169,7 @@
 				836F477E1C6221CE007F5ECC /* Assets.xcassets in Resources */,
 				836F477C1C6221CE007F5ECC /* Main.storyboard in Resources */,
 				8397CA671C635C02006FDE42 /* MyriadProRegular.ttf in Resources */,
+				EA3ED6171C668B1D00CBCD45 /* logs.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,6 +184,7 @@
 				836F47761C6221CE007F5ECC /* PAMAppDelegate.m in Sources */,
 				833708B31C622C490006C9C9 /* PAMAddEventViewController.m in Sources */,
 				836F47731C6221CE007F5ECC /* main.m in Sources */,
+				EADD7C791C6771E900EC4838 /* PAMParty.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

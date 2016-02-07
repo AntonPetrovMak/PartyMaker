@@ -7,8 +7,9 @@
 //
 
 #import "PAMAddEventViewController.h"
+#import "PAMParty.h"
 
-@interface PAMAddEventViewController () <UITextFieldDelegate, UIScrollViewDelegate, UITextViewDelegate>
+@interface PAMAddEventViewController () <UITextFieldDelegate, UIScrollViewDelegate, UITextViewDelegate, NSCoding>
 
 //@property(strong,nonatomic) PAMAddEventViewController *createPartyView;
 
@@ -425,6 +426,32 @@
 }
 
 -(void)saveButtonClicked {
+    
+//    NSURL *bundleURL = [[NSBundle mainBundle] bundleURL];
+//    NSURL *logsPlistPath = [NSURL URLWithString:@"logs.plist" relativeToURL:bundleURL];
+//    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+//    NSString *tessdataPath = [[NSBundle mainBundle] pathForResource:@"logs" ofType:@"plist"];
+//    
+//    NSError *error = nil;
+//    [[NSFileManager defaultManager] copyItemAtPath:tessdataPath toPath:documentsPath error:&error];
+//    NSLog(@"%@",error);
+    
+    
+    //        NSURL *logsPlistPath = [NSURL URLWithString:@"logs.plist" relativeToURL:bundleURL];
+    //        NSLog(@"%@",logsPlistPath);
+    
+    //        NSArray *arrayPartyes = [[NSArray alloc] initWithObjects:self, nil];
+    //        NSData* data = [NSKeyedArchiver archivedDataWithRootObject: arrayPartyes];
+    //        [data writeToFile:logsPlistPath.path atomically:YES];
+    //        NSData *newData =[NSData dataWithContentsOfURL:logsPlistPath];
+    //        NSArray *newArray = [NSKeyedUnarchiver unarchiveObjectWithData:newData];
+    //        NSLog(@"%@",newArray);
+    
+    
+    
+    
+    
+    
     [self moveCursor:self.closeButton];
     __weak PAMAddEventViewController *weakSelf = self;
     if(!self.partyDate) {
@@ -453,9 +480,34 @@
         [alert addAction:actionOK];
         [self presentViewController:alert animated:YES completion:nil];
     } else {
-        NSLog(@"Good!");
+        NSError *error;
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+        NSString *documentsPathWithFile = [documentsPath stringByAppendingPathComponent:@"logs.plist"];
+        NSMutableArray *arrayPartyes = [[NSMutableArray alloc] init];
+        
+        PAMParty *party = [[PAMParty alloc] initWithName:self.partyNameTextField.text
+                                               startDate:[NSDate date]
+                                                 endDate:[NSDate date]
+                                                paryType:self.typeEventPageControl.currentPage
+                                             description:self.descriptionTextView.text];
+        
+        if ([fileManager fileExistsAtPath:documentsPathWithFile]) {
+            NSData *oldData =[NSData dataWithContentsOfFile:documentsPathWithFile];
+            arrayPartyes = [NSKeyedUnarchiver unarchiveObjectWithData: oldData];
+
+        } else {
+            NSString *logsPlistPath = [[NSBundle mainBundle] pathForResource:@"logs" ofType:@"plist"];
+            [fileManager copyItemAtPath:logsPlistPath toPath:documentsPathWithFile error:&error];
+            //NSLog(@"copyItemAtPath error: %@",error);
+        }
+        [arrayPartyes addObject:party];
+        
+        NSData* newData = [NSKeyedArchiver archivedDataWithRootObject: arrayPartyes];
+        [newData writeToFile:documentsPathWithFile atomically:YES];
     }
 }
+
 #pragma mark - UITextViewDelegate
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
@@ -487,7 +539,6 @@
 
 
 #pragma mark - UIScrollViewDelegate
-
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
     [self moveCursor:scrollView];
 }
@@ -498,7 +549,6 @@
 }
 
 #pragma mark - UITextFieldDelegate
-
 -(BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     [self moveCursor:textField];
     [self blockControllersBesides:textField userInteractionEnabled:NO];
@@ -509,6 +559,28 @@
     [self blockControllersBesides:self.partyNameTextField userInteractionEnabled:YES];
     [textField resignFirstResponder];
     return NO;
+}
+
+#pragma mark - NSCoding
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.partyNameTextField.text forKey:@"partyName"];
+    [aCoder encodeObject:self.datePiker.date forKey:@"partyDate"];
+    [aCoder encodeObject:self.startTimeLabel.text forKey:@"partyStartTime"];
+    [aCoder encodeObject:self.endTimeLabel.text forKey:@"partyEndTime"];
+    [aCoder encodeObject:[NSNumber numberWithInteger:self.typeEventPageControl.currentPage] forKey:@"partyType"];
+    [aCoder encodeObject:self.descriptionTextView.text forKey:@"partyDescription"];
+}
+
+- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if(!self) return nil;
+    self.partyNameTextField.text = [aDecoder decodeObjectForKey:@"partyName"];
+    self.datePiker.date = [aDecoder decodeObjectForKey:@"partyDate"];
+    self.startTimeLabel.text = [aDecoder decodeObjectForKey:@"partyStartTime"];
+    self.endTimeLabel.text= [aDecoder decodeObjectForKey:@"partyEndTime"];
+    self.typeEventPageControl.currentPage = [[aDecoder decodeObjectForKey:@"partyType"] integerValue];
+    self.descriptionTextView.text = [aDecoder decodeObjectForKey:@"partyDescription"];
+    return self;
 }
 
 #pragma mark - Other
