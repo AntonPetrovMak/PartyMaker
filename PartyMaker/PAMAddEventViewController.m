@@ -426,32 +426,6 @@
 }
 
 -(void)saveButtonClicked {
-    
-//    NSURL *bundleURL = [[NSBundle mainBundle] bundleURL];
-//    NSURL *logsPlistPath = [NSURL URLWithString:@"logs.plist" relativeToURL:bundleURL];
-//    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-//    NSString *tessdataPath = [[NSBundle mainBundle] pathForResource:@"logs" ofType:@"plist"];
-//    
-//    NSError *error = nil;
-//    [[NSFileManager defaultManager] copyItemAtPath:tessdataPath toPath:documentsPath error:&error];
-//    NSLog(@"%@",error);
-    
-    
-    //        NSURL *logsPlistPath = [NSURL URLWithString:@"logs.plist" relativeToURL:bundleURL];
-    //        NSLog(@"%@",logsPlistPath);
-    
-    //        NSArray *arrayPartyes = [[NSArray alloc] initWithObjects:self, nil];
-    //        NSData* data = [NSKeyedArchiver archivedDataWithRootObject: arrayPartyes];
-    //        [data writeToFile:logsPlistPath.path atomically:YES];
-    //        NSData *newData =[NSData dataWithContentsOfURL:logsPlistPath];
-    //        NSArray *newArray = [NSKeyedUnarchiver unarchiveObjectWithData:newData];
-    //        NSLog(@"%@",newArray);
-    
-    
-    
-    
-    
-    
     [self moveCursor:self.closeButton];
     __weak PAMAddEventViewController *weakSelf = self;
     if(!self.partyDate) {
@@ -486,26 +460,31 @@
         NSString *documentsPathWithFile = [documentsPath stringByAppendingPathComponent:@"logs.plist"];
         NSMutableArray *arrayPartyes = [[NSMutableArray alloc] init];
         
+        NSCalendar *calendar =[NSCalendar currentCalendar];
+        
+        NSDateComponents *components = [calendar components:NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:self.partyDate];
+        NSInteger intervale = ((components.hour-2) * 60 * 60) + (components.minute * 60) + components.second;
+        
+        NSDate *partyDate = [self.partyDate dateByAddingTimeInterval:-intervale];
+        
         PAMParty *party = [[PAMParty alloc] initWithName:self.partyNameTextField.text
-                                               startDate:[NSDate date]
-                                                 endDate:[NSDate date]
+                                               startDate:[partyDate dateByAddingTimeInterval:self.startSlider.value*60]
+                                                 endDate:[partyDate dateByAddingTimeInterval:self.endSlider.value*60]
                                                 paryType:self.typeEventPageControl.currentPage
                                              description:self.descriptionTextView.text];
         
         if ([fileManager fileExistsAtPath:documentsPathWithFile]) {
             NSData *oldData =[NSData dataWithContentsOfFile:documentsPathWithFile];
             arrayPartyes = [NSKeyedUnarchiver unarchiveObjectWithData: oldData];
-
         } else {
             NSString *logsPlistPath = [[NSBundle mainBundle] pathForResource:@"logs" ofType:@"plist"];
             [fileManager copyItemAtPath:logsPlistPath toPath:documentsPathWithFile error:&error];
-            //NSLog(@"copyItemAtPath error: %@",error);
         }
         [arrayPartyes addObject:party];
-        
         NSData* newData = [NSKeyedArchiver archivedDataWithRootObject: arrayPartyes];
         [newData writeToFile:documentsPathWithFile atomically:YES];
     }
+    [self closeButtonClicked];
 }
 
 #pragma mark - UITextViewDelegate
