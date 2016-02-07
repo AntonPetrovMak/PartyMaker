@@ -22,7 +22,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"\nName: %@ \nStart: %@ \nEnd: %@ \nType: %ld \nDescription: %@", self.partyName , self.partyStartDate, self.partyEndDate, self.partyType, self.partyDescription];
+    return [NSString stringWithFormat:@"\nName: %@ \nStart: %@ \nEnd: %@ \nType: %d \nDescription: %@", self.partyName , self.partyStartDate, self.partyEndDate, (int)self.partyType, self.partyDescription];
 }
 
 #pragma mark - NSCoding
