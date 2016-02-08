@@ -10,8 +10,6 @@
 #import "PAMParty.h"
 
 @interface PAMNewViewController ()
-@property(strong, nonatomic) NSMutableArray *arrayWithMainControllers;
-@property(strong, nonatomic) UIView *cursorView;
 
 @end
 
@@ -19,12 +17,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.arrayWithMainControllers = [[NSMutableArray alloc] init];
+    self.title = @"CREATE PARTY";
     [self.navigationItem setHidesBackButton:YES];
     [self creatingTextField];
     [self creatingScrollView];
     [self creatingTextView];
-    [self creatingStatusCursor];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -32,7 +29,8 @@
     // Dispose of any resources that can be recreated.
 }
 
--(void)blockControllersBesides:(id) controller userInteractionEnabled:(BOOL) isBlock {
+#pragma mark - Fichi
+- (void)blockControllersBesides:(id) controller userInteractionEnabled:(BOOL) isBlock {
     for (UIView *view in self.view.subviews) {
         if(![view isEqual:controller]){
             view.userInteractionEnabled = isBlock;
@@ -40,7 +38,7 @@
     }
 }
 
--(NSString *) getCustomTimeWithIntervale:(int) interval {
+- (NSString *)getCustomTimeWithIntervale:(int) interval {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
     [formatter setTimeZone:timeZone];
@@ -49,11 +47,8 @@
 }
 
 #pragma mark - Creating controllers
-
 - (void)creatingTextField {
-    [self.partyNameTextField setTextColor:[UIColor whiteColor]];
     [self.partyNameTextField setFont:[UIFont fontWithName:@"MariadPro-Regular" size:16]];
-    self.partyNameTextField.delegate = self;
     NSDictionary *attributedDictionary = @{ NSForegroundColorAttributeName: [UIColor colorWithRed:76/255. green:82/255. blue:92/255. alpha:1]};
     NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:@"Your party Name"
                                                                            attributes:attributedDictionary];
@@ -61,10 +56,9 @@
 }
 
 - (void)creatingScrollView {
-    self.typeEventScrollView.delegate = self;
     for (int i = 0; i < 6; i++) {
         UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"PartyLogo_Small_%d", i]];
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(190*i, 0, 190, 80)];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(190*i, 10, 190, image.size.height)];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         [imageView setImage:image];
         [self.typeEventScrollView addSubview:imageView];
@@ -76,58 +70,19 @@
 }
 
 - (void)creatingTextView {
-    self.partyDescription.delegate = self;
-    self.descriptionToolbar.frame =CGRectMake(0, 0, CGRectGetMaxX(self.view.bounds), 50);
+    self.descriptionToolbar.frame = CGRectMake(0, 0, CGRectGetMaxX(self.view.bounds), 50);
     [self.descriptionToolbar sizeToFit];
     self.partyDescription.inputAccessoryView = self.descriptionToolbar;
 }
 
-- (void)creatingStatusCursor {
-    NSString *statusName[] = {@"CHOOSE DATE",@"PARTY NAME", @"START", @"END", @"LOGO", @"DESCRIPTION", @"FINAL"};
-    [self.arrayWithMainControllers addObject:self.chooseButton];
-    [self.arrayWithMainControllers addObject:self.partyNameTextField];
-    [self.arrayWithMainControllers addObject:self.startSlider];
-    [self.arrayWithMainControllers addObject:self.endSlider];
-    [self.arrayWithMainControllers addObject:self.typeEventScrollView];
-    [self.arrayWithMainControllers addObject:self.partyDescription];
-    [self.arrayWithMainControllers addObject:self.closeButton];
-    
-    float heightLine = [[self.arrayWithMainControllers lastObject] center].y - [[self.arrayWithMainControllers firstObject] center].y;
-    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(15-0.5, [[self.arrayWithMainControllers firstObject] center].y, 1, heightLine)];
-    [lineView setBackgroundColor: [UIColor colorWithRed:230/255.f green:224/255.f blue:213/255.f alpha:1]];
-    [self.view addSubview:lineView];
-    
-    for (UIView* object in self.arrayWithMainControllers) {
-        UIView *circleView = [[UIView alloc] initWithFrame:CGRectMake(15-4.5, object.center.y - 4.5, 9, 9)];
-        [circleView.layer setCornerRadius:4.5];
-        [circleView setBackgroundColor: [UIColor colorWithRed:230/255.f green:224/255.f blue:213/255.f alpha:1]];
-        [self.view addSubview:circleView];
-        
-        UILabel *statusNameLable = [[UILabel alloc] initWithFrame:CGRectMake(29, object.center.y - 6, 80, 12)];
-        [statusNameLable setFont:[UIFont fontWithName:@"MyriadPro-Regular" size:12]];
-        [statusNameLable setTextColor:[UIColor colorWithRed:230/255.f green:224/255.f blue:213/255.f alpha:1]];
-        [statusNameLable setText: statusName[[self.arrayWithMainControllers indexOfObject:object]]];
-        [self.view addSubview:statusNameLable];
-    }
-    
-    UIView *cursorView = [[UIView alloc] initWithFrame:CGRectMake(15-6.5, [[self.arrayWithMainControllers firstObject] center].y - 6.5, 13, 13)];
-    [cursorView.layer setCornerRadius:6.5];
-    [cursorView setBackgroundColor: [[UIColor whiteColor] colorWithAlphaComponent:0.4]];
-    [self.view addSubview:cursorView];
-    self.cursorView = cursorView;
-}
-
 #pragma mark - Action
-- (IBAction)moveCursor:(UIView *) view {
+
+- (IBAction)actionMoveCursor:(UIView *) sender {
     __weak PAMNewViewController* weakSelf = self;
     [UIView animateWithDuration:0.3
                      animations:^{
-                         weakSelf.cursorView.center = CGPointMake(weakSelf.cursorView.center.x, view.center.y);
+                         weakSelf.cursorView.center = CGPointMake(weakSelf.cursorView.center.x, sender.center.y);
                      }];
-}
-
-- (IBAction)actionMoveCursor:(UIView *) sender {
-    
 }
 
 - (IBAction)actionChooseButton:(UIButton *)sender {
@@ -145,7 +100,7 @@
 }
 
 - (IBAction)actionSaveButton:(UIButton *)sender {
-    [self moveCursor:self.closeButton];
+    [self actionMoveCursor:self.closeButton];
     __weak PAMNewViewController *weakSelf = self;
     if(!self.partyDate) {
         
@@ -210,7 +165,7 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
-- (IBAction)actionCancelButtonToolbar:(id)sender {
+- (IBAction)actionCancelDatePiker:(id)sender {
     [self blockControllersBesides:nil userInteractionEnabled:YES];
     __weak PAMNewViewController* weakSelf = self;
     [UIView animateWithDuration:0.3
@@ -224,12 +179,12 @@
                      }];
 }
 
-- (IBAction)actionDoneButtonToolbar:(id)sender {
+- (IBAction)actionDoneDatePiker:(id)sender {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat: @"MM.dd.yyyy"];
     [self.chooseButton setTitle: [dateFormatter stringFromDate:self.datePiker.date] forState:UIControlStateNormal];
     self.partyDate = self.datePiker.date;
-    [self actionCancelButtonToolbar:sender];
+    [self actionCancelDatePiker:sender];
 }
 
 - (IBAction)actionSlideChanged:(UISlider *)sender {
@@ -253,16 +208,16 @@
 }
 
 - (IBAction)actionPageChange:(UIPageControl *)sender {
-    [self moveCursor:self.typeEventScrollView];
+    [self actionMoveCursor:self.typeEventScrollView];
     CGPoint contentOffset = CGPointMake(sender.currentPage * self.typeEventScrollView.bounds.size.width, 0);
     [self.typeEventScrollView setContentOffset:contentOffset animated:YES];
 }
 
-- (IBAction)actionCancelDescriptioToolbar:(UIBarButtonItem *)sender {
+- (IBAction)actionCancelDescription:(UIBarButtonItem *)sender {
     [self.partyDescription resignFirstResponder];
 }
 
-- (IBAction)actionDoneDescriptioToolbar:(UIBarButtonItem *)sender {
+- (IBAction)actionDoneDescription:(UIBarButtonItem *)sender {
     [self.partyDescription resignFirstResponder];
 }
 
@@ -273,14 +228,14 @@
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [self blockControllersBesides:self.partyNameTextField userInteractionEnabled:YES];
+    [self blockControllersBesides:textField userInteractionEnabled:YES];
     [textField resignFirstResponder];
     return NO;
 }
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    [self moveCursor:scrollView];
+    [self actionMoveCursor:scrollView];
 }
 
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
@@ -289,9 +244,8 @@
 }
 
 #pragma mark - UITextViewDelegate
-
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
-    [self moveCursor:textView];
+    [self actionMoveCursor:textView];
     __weak PAMNewViewController *weakSelf = self;
     [UIView animateWithDuration:0.3
                      animations:^{
@@ -316,7 +270,5 @@
     NSString *string = [textView.text stringByReplacingCharactersInRange:range withString:text];
     return !(string.length > 500);
 }
-
-
 
 @end

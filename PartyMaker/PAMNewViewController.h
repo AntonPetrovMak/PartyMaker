@@ -8,9 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PAMNewViewController : UIViewController <UITextFieldDelegate, UITextFieldDelegate, UIScrollViewDelegate, UITextViewDelegate>
+@interface PAMNewViewController : UIViewController <UITextFieldDelegate, UIScrollViewDelegate, UITextViewDelegate>
 
-@property(weak, nonatomic) IBOutlet UIButton *chooseButton;
+@property (weak, nonatomic) IBOutlet UIButton *chooseButton;
 @property (weak, nonatomic) IBOutlet UIButton *closeButton;
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @property (weak, nonatomic) IBOutlet UIDatePicker *datePiker;
@@ -26,23 +26,27 @@
 @property (weak, nonatomic) IBOutlet UITextView *partyDescription;
 @property (weak, nonatomic) IBOutlet UIToolbar *descriptionToolbar;
 
+@property (strong, nonatomic) IBOutlet UIView *datePikerView;
+@property (weak, nonatomic) IBOutlet UIView *cursorView;
+
 @property(strong, nonatomic) NSDate *partyDate;
 
 - (IBAction)actionMoveCursor:(UIView *) sender;
+
 - (IBAction)actionChooseButton:(UIButton *)sender;
 - (IBAction)actionSaveButton:(UIButton *)sender;
 - (IBAction)actionCloseButton:(UIButton *)sender;
-- (IBAction)actionCancelButtonToolbar:(id)sender;
-- (IBAction)actionDoneButtonToolbar:(id)sender;
+
+- (IBAction)actionCancelDatePiker:(id)sender;
+- (IBAction)actionDoneDatePiker:(id)sender;
 
 - (IBAction)actionSlideChanged:(UISlider *)sender;
 
 - (IBAction)actionPageChange:(UIPageControl *)sender;
-- (IBAction)actionCancelDescriptioToolbar:(UIBarButtonItem *)sender;
-- (IBAction)actionDoneDescriptioToolbar:(UIBarButtonItem *)sender;
 
-- (IBAction)moveCursor:(UIView *) view;
+- (IBAction)actionCancelDescription:(UIBarButtonItem *)sender;
+- (IBAction)actionDoneDescription:(UIBarButtonItem *)sender;
 
-@property (strong, nonatomic) IBOutlet UIView *datePikerView;
+
 
 @end

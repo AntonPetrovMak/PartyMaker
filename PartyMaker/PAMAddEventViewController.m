@@ -11,13 +11,11 @@
 
 @interface PAMAddEventViewController () <UITextFieldDelegate, UIScrollViewDelegate, UITextViewDelegate>
 
-//@property(strong,nonatomic) PAMAddEventViewController *createPartyView;
-
 @property(weak, nonatomic) UIView *viewWihtDatePicker;
 @property(weak, nonatomic) UIDatePicker *datePiker;
 @property(strong, nonatomic) NSDate *partyDate;
 
-@property(strong, nonatomic) UIButton *chooseButton;
+@property(strong, nonatomic) UIButton *chooseDateButton;
 @property(strong, nonatomic) UIButton *closeButton;
 @property(strong, nonatomic) UIButton *saveButton;
 
@@ -34,8 +32,6 @@
 
 @property(strong, nonatomic) UITextView *descriptionTextView;
 
-@property(strong, nonatomic) NSMutableArray *arrayWithMainControllers;
-
 @property(strong, nonatomic) UIView *cursorView;
 
 @end
@@ -47,7 +43,6 @@
 -(instancetype)init {
     self = [super init];
     if(!self) return nil;
-    self.arrayWithMainControllers = [[NSMutableArray alloc] init];
     
     return self;
 }
@@ -75,9 +70,8 @@
 -(void)creatingPartyViewController {
     PAMAddEventViewController *createPartyVC = [[PAMAddEventViewController alloc] init];
     [createPartyVC.navigationItem setHidesBackButton:YES];
-    createPartyVC.view = [[UIView alloc] initWithFrame:self.navigationController.view.frame];
     [createPartyVC.view setBackgroundColor:[UIColor colorWithRed:46/255.f green:49/255.f blue:56/255.f alpha:1]];
-    createPartyVC.title = @"CREATE PARTY";
+    [createPartyVC setTitle:@"CREATE PARTY"];
     [createPartyVC creatingButtons];
     [createPartyVC creatingTextField];
     [createPartyVC creatingSlidersWithLabels];
@@ -89,21 +83,22 @@
 }
 
 -(void)creatingStatusCursor {
+    NSMutableArray *arrayWithMainControllers = [[NSMutableArray alloc] init];
     NSString *statusName[] = {@"CHOOSE DATE",@"PARTY NAME", @"START", @"END", @"LOGO", @"DESCRIPTION", @"FINAL"};
-    [self.arrayWithMainControllers addObject:self.chooseButton];
-    [self.arrayWithMainControllers addObject:self.partyNameTextField];
-    [self.arrayWithMainControllers addObject:self.startSlider];
-    [self.arrayWithMainControllers addObject:self.endSlider];
-    [self.arrayWithMainControllers addObject:self.typeEventScrollView];
-    [self.arrayWithMainControllers addObject:self.descriptionTextView];
-    [self.arrayWithMainControllers addObject:self.closeButton];
+    [arrayWithMainControllers addObject:self.chooseDateButton];
+    [arrayWithMainControllers addObject:self.partyNameTextField];
+    [arrayWithMainControllers addObject:self.startSlider];
+    [arrayWithMainControllers addObject:self.endSlider];
+    [arrayWithMainControllers addObject:self.typeEventScrollView];
+    [arrayWithMainControllers addObject:self.descriptionTextView];
+    [arrayWithMainControllers addObject:self.closeButton];
     
-    float heightLine = [[self.arrayWithMainControllers lastObject] center].y - [[self.arrayWithMainControllers firstObject] center].y;
-    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(15-0.5, [[self.arrayWithMainControllers firstObject] center].y, 1, heightLine)];
+    float heightLine = [[arrayWithMainControllers lastObject] center].y - [[arrayWithMainControllers firstObject] center].y;
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(15-0.5, [[arrayWithMainControllers firstObject] center].y, 1, heightLine)];
     [lineView setBackgroundColor: [UIColor colorWithRed:230/255.f green:224/255.f blue:213/255.f alpha:1]];
     [self.view addSubview:lineView];
     
-    for (UIView* object in self.arrayWithMainControllers) {
+    for (UIView* object in arrayWithMainControllers) {
         UIView *circleView = [[UIView alloc] initWithFrame:CGRectMake(15-4.5, object.center.y - 4.5, 9, 9)];
         [circleView.layer setCornerRadius:4.5];
         [circleView setBackgroundColor: [UIColor colorWithRed:230/255.f green:224/255.f blue:213/255.f alpha:1]];
@@ -112,11 +107,11 @@
         UILabel *statusNameLable = [[UILabel alloc] initWithFrame:CGRectMake(29, object.center.y - 6, 80, 12)];
         [statusNameLable setFont:[UIFont fontWithName:@"MyriadPro-Regular" size:12]];
         [statusNameLable setTextColor:[UIColor colorWithRed:230/255.f green:224/255.f blue:213/255.f alpha:1]];
-        [statusNameLable setText: statusName[[self.arrayWithMainControllers indexOfObject:object]]];
+        [statusNameLable setText: statusName[[arrayWithMainControllers indexOfObject:object]]];
         [self.view addSubview:statusNameLable];
     }
     
-    UIView *cursorView = [[UIView alloc] initWithFrame:CGRectMake(15-6.5, [[self.arrayWithMainControllers firstObject] center].y - 6.5, 13, 13)];
+    UIView *cursorView = [[UIView alloc] initWithFrame:CGRectMake(15-6.5, [[arrayWithMainControllers firstObject] center].y - 6.5, 13, 13)];
     [cursorView.layer setCornerRadius:6.5];
     [cursorView setBackgroundColor: [[UIColor whiteColor] colorWithAlphaComponent:0.4]];
     [self.view addSubview:cursorView];
@@ -124,25 +119,23 @@
 }
 
 -(void)creatingButtons {
-    self.chooseButton = [self newButtonWithRect:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 80, 190, 36)
-                                          title:@"CHOOSE DATE"
+    self.chooseDateButton = [self newButtonWithRect:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 9, 190, 36)
+                                          title:@"CHOOSE DAY"
                                 backgroundColor:[UIColor colorWithRed:239/255.f green:177/255.f blue:27/255.f alpha:1]];
-    [self.view addSubview:self.chooseButton];
+    [self.view addSubview:self.chooseDateButton];
     
-    self.saveButton = [self newButtonWithRect:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200,
-                                                         CGRectGetMaxY(self.view.bounds) - 90, 190, 36)
+    self.saveButton = [self newButtonWithRect:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 412, 190, 36)
                                         title:@"SAVE"
                               backgroundColor:[UIColor colorWithRed:140/255.f green:186/255.f blue:29/255.f alpha:1]];
     [self.view addSubview:self.saveButton];
-    self.closeButton = [self newButtonWithRect:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200,
-                                                          CGRectGetMaxY(self.view.bounds) - 46, 190, 36)
+    self.closeButton = [self newButtonWithRect:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 460, 190, 36)
                                          title:@"CLOSE"
                                backgroundColor:[UIColor colorWithRed:236/255.f green:71/255.f blue:19/255.f alpha:1]];
     [self.view addSubview:self.closeButton];
 }
 
 -(void)creatingTextField {
-    UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 126, 190, 36)];
+    UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 56, 190, 36)];
     self.partyNameTextField = textField;
     [textField setPlaceholder:@"Your party name"];
     [textField setTextAlignment:NSTextAlignmentCenter];
@@ -161,7 +154,7 @@
 }
 
 -(void)creatingSlidersWithLabels {
-    self.startSlider = [self newCustomSliderWithRect:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 170, 190, 30)];
+    self.startSlider = [self newCustomSliderWithRect:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 105, 190, 30)];
     [self.view addSubview:self.startSlider];
     [self.startSlider setMinimumValueImage: [UIImage imageNamed:@"TimePopup"]];
     [self.startSlider setMinimumValue:0];
@@ -171,7 +164,7 @@
                                                      test:@"00:00"];
     [self.view addSubview:self.startTimeLabel];
     
-    self.endSlider = [self newCustomSliderWithRect:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 210, 190, 30)];
+    self.endSlider = [self newCustomSliderWithRect:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 145, 190, 30)];
     [self.view addSubview:self.endSlider];
     [self.endSlider setMaximumValueImage: [UIImage imageNamed:@"TimePopup180"]];
     [self.endSlider setMinimumValue:30];
@@ -183,27 +176,29 @@
 }
 
 -(void)creatingScrollView {
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 250, 190, 100)];
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 192, 190, 100)];
     self.typeEventScrollView = scrollView;
-    scrollView.contentSize = CGSizeMake(190*6, 100);
-    scrollView.pagingEnabled = YES;
-    scrollView.layer.cornerRadius = 5;
-    scrollView.backgroundColor = [UIColor colorWithRed:68/255.f green:73/255.f blue:83/255.f alpha:1];
+    [scrollView setShowsHorizontalScrollIndicator:NO];
+    [scrollView setContentSize:CGSizeMake(190*6, 100)];
+    [scrollView setPagingEnabled:YES];
+    [scrollView.layer setCornerRadius:5];
+    [scrollView setBackgroundColor:[UIColor colorWithRed:68/255.f green:73/255.f blue:83/255.f alpha:1]];
     scrollView.delegate = self;
     for (int i = 0; i < 6; i++) {
         UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"PartyLogo_Small_%d", i]];
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(190*i, 0, 190, 80)];
-        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(190*i, 10, 190, image.size.height)];
+        [imageView setContentMode:UIViewContentModeScaleAspectFit];
         [imageView setImage:image];
         [scrollView addSubview:imageView];
     }
     [self.view addSubview:scrollView];
     
-    
     UIPageControl *pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(CGRectGetMinX(scrollView.frame),
                                                                                  CGRectGetMaxY(scrollView.frame) - 22,
                                                                                  CGRectGetMaxX(scrollView.bounds), 22)];
-    pageControl.numberOfPages = 5;
+    
+    [pageControl setPageIndicatorTintColor:[UIColor colorWithRed:35/255.f green:37/255.f blue:43/255.f alpha:1]];
+    [pageControl setNumberOfPages:5];
     [pageControl addTarget:self
                     action:@selector(actionPageChanged:)
           forControlEvents:UIControlEventValueChanged];
@@ -212,20 +207,20 @@
 }
 
 -(void)creatingTextView {
-    UIView *viewLine = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 360, 190, 5)];
+    UIView *viewLine = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 302, 190, 5)];
     [viewLine setBackgroundColor:[UIColor colorWithRed:40/255.f green:132/255.f blue:175/255.f alpha:1]];
     [self.view addSubview:viewLine];
     
-    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 365, 190, 100)];
+    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.view.bounds) - 200, 307, 190, 95)];
     [textView setFont:[UIFont fontWithName:@"MariadPro-Regular" size:18]];
     [textView setBackgroundColor:[UIColor colorWithRed:35/255.f green:37/255.f blue:43/255.f alpha:1]];
     [textView setTextColor:[UIColor whiteColor]];
     textView.delegate = self;
     
     UIToolbar* toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, CGRectGetMaxX(self.view.bounds), 50)];
-    toolbar.barStyle = UIBarStyleBlackTranslucent;
+    [toolbar setBarStyle:UIBarStyleBlack];
+    [toolbar setBarTintColor:[UIColor colorWithRed:68/255.f green:73/255.f blue:83/255.f alpha:1]];
     
-    [toolbar setBackgroundColor:[UIColor colorWithRed:68/255.f green:73/255.f blue:83/255.f alpha:1]];
     UIBarButtonItem *itemCancel = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
                                                                    style:UIBarButtonItemStylePlain
                                                                   target:self
@@ -241,8 +236,6 @@
     toolbar.items = @[itemCancel, flexibleSpace, itemDone];
     [toolbar sizeToFit];
     textView.inputAccessoryView = toolbar;
-    
-    
     self.descriptionTextView = textView;
     [self.view addSubview:textView];
 }
@@ -267,10 +260,6 @@
 }
 
 -(void)creatingDatePickerToolbar {
-    NSDictionary *attributesForItem = @{ NSFontAttributeName:[UIFont fontWithName:@"MyriadPro-Bold" size:15],
-                                         NSForegroundColorAttributeName:[UIColor whiteColor]
-                                         };
-    
     UIToolbar* toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, CGRectGetMaxX(self.view.bounds), 50)];
     [toolbar setBarStyle:UIBarStyleBlack];
     [toolbar setBarTintColor:[UIColor colorWithRed:68/255.f green:73/255.f blue:83/255.f alpha:1]];
@@ -286,10 +275,7 @@
     UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
                                                                                    target:nil
                                                                                    action:nil];
-    [itemCancel setTitleTextAttributes:attributesForItem forState:UIControlStateNormal];
-    [itemDone setTitleTextAttributes:attributesForItem forState:UIControlStateNormal];
-    
-    
+    itemDone.tintColor = itemCancel.tintColor = [UIColor whiteColor];
     toolbar.items = @[itemCancel, flexibleSpace, itemDone];
     [toolbar sizeToFit];
     [self.viewWihtDatePicker addSubview:toolbar];
@@ -313,17 +299,15 @@
 
 -(UISlider *)newCustomSliderWithRect:(CGRect) rectSlider {
     UISlider *slider = [[UISlider alloc] initWithFrame:rectSlider];
-    slider.minimumTrackTintColor = [UIColor colorWithRed:239/255.f green:177/255.f blue:27/255.f alpha:1];
-    slider.maximumTrackTintColor = [UIColor colorWithRed:35/255.f green:37/255.f blue:43/255.f alpha:1];
-    slider.tintColor = [UIColor blackColor];
-    slider.value = 0;
+    [slider setMinimumTrackTintColor:[UIColor colorWithRed:239/255.f green:177/255.f blue:27/255.f alpha:1]];
+    [slider setMaximumTrackTintColor:[UIColor colorWithRed:35/255.f green:37/255.f blue:43/255.f alpha:1]];
+    [slider setValue:0];
     [slider addTarget:self action:@selector(actionSlideChanged:) forControlEvents:UIControlEventValueChanged];
     return slider;
 }
 
 -(UILabel *)newLabelForSliderWithRect:(CGRect) rect test:(NSString *) text {
     UILabel *label = [[UILabel alloc] initWithFrame: rect];
-    
     [label setText:text];
     [label setTextAlignment:NSTextAlignmentCenter];
     [label setTextColor:[UIColor whiteColor]];
@@ -368,7 +352,7 @@
 -(void)actionDoneDatePicker {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat: @"MM.dd.yyyy"];
-    [self.chooseButton setTitle: [dateFormatter stringFromDate:self.datePiker.date] forState:UIControlStateNormal];
+    [self.chooseDateButton setTitle: [dateFormatter stringFromDate:self.datePiker.date] forState:UIControlStateNormal];
     self.partyDate = self.datePiker.date;
     [self actionCancelDatePicker];
 }
@@ -398,7 +382,7 @@
 }
 
 -(void)actionButtonClicked:(UIButton *) button {
-    if([button isEqual:self.chooseButton]) {
+    if([button isEqual:self.chooseDateButton]) {
         [self chooseButtonClicked];
     } else if([button isEqual:self.closeButton]) {
         [self closeButtonClicked];
@@ -408,7 +392,7 @@
 }
 
 -(void)chooseButtonClicked {
-    [self moveCursor:self.chooseButton];
+    [self moveCursor:self.chooseDateButton];
     [self blockControllersBesides:nil userInteractionEnabled:NO];
     [self creatingViewWihtDatePicker];
     __weak PAMAddEventViewController* weakSelf = self;
@@ -423,7 +407,7 @@
 -(void)closeButtonClicked {
     [self moveCursor:self.closeButton];
     [self.navigationController popToRootViewControllerAnimated:YES];
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////[self.view removeFromSuperview];
+    [self.view removeFromSuperview];
 }
 
 -(void)saveButtonClicked {
@@ -484,12 +468,11 @@
         [arrayPartyes addObject:party];
         NSData* newData = [NSKeyedArchiver archivedDataWithRootObject: arrayPartyes];
         [newData writeToFile:documentsPathWithFile atomically:YES];
+        [self closeButtonClicked];
     }
-    [self closeButtonClicked];
 }
 
 #pragma mark - UITextViewDelegate
-
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
     [self moveCursor:textView];
     __weak PAMAddEventViewController *weakSelf = self;
@@ -507,7 +490,7 @@
     [UIView animateWithDuration:0.2
                      animations:^{
                          CGRect viewFrame = weakSelf.view.frame;
-                         viewFrame.origin.y = 0;
+                         viewFrame.origin.y = 64;
                          weakSelf.view.frame = viewFrame;
                      }];
 }
@@ -519,7 +502,7 @@
 
 
 #pragma mark - UIScrollViewDelegate
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
     [self moveCursor:scrollView];
 }
 

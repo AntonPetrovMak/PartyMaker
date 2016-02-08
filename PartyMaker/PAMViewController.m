@@ -40,10 +40,11 @@
     
     NSDictionary *attributes1 = @{ NSFontAttributeName:[UIFont fontWithName:@"MyriadPro-Bold" size:15],
                                    NSForegroundColorAttributeName:[UIColor whiteColor]};
+    [navigationController.navigationBar setBarStyle:UIBarStyleBlackTranslucent];
+    [navigationController.navigationBar setTranslucent:NO];
     [navigationController.navigationBar setTitleTextAttributes:attributes1];
     [navigationController.navigationBar setTintColor:[UIColor whiteColor]];
     [navigationController.navigationBar setBarTintColor:[UIColor colorWithRed:68/255.f green:73/255.f blue:83/255.f alpha:1]];
-    [navigationController.toolbar setBackgroundColor:[UIColor colorWithRed:68/255.f green:73/255.f blue:83/255.f alpha:1]];
     
     
     [self presentViewController:navigationController animated:NO completion:nil];

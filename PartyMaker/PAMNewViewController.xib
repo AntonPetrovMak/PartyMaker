@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
     </dependencies>
     <customFonts key="customFonts">
+        <mutableArray key="MyriadProBold.ttf">
+            <string>MyriadPro-Bold</string>
+            <string>MyriadPro-Bold</string>
+            <string>MyriadPro-Bold</string>
+        </mutableArray>
         <mutableArray key="MyriadProRegular.ttf">
+            <string>MyriadPro-Regular</string>
+            <string>MyriadPro-Regular</string>
+            <string>MyriadPro-Regular</string>
+            <string>MyriadPro-Regular</string>
+            <string>MyriadPro-Regular</string>
+            <string>MyriadPro-Regular</string>
+            <string>MyriadPro-Regular</string>
             <string>MyriadPro-Regular</string>
             <string>MyriadPro-Regular</string>
             <string>MyriadPro-Regular</string>
@@ -17,6 +28,7 @@
             <connections>
                 <outlet property="chooseButton" destination="I3w-a0-EZd" id="TVk-C5-Zvt"/>
                 <outlet property="closeButton" destination="7Bc-H9-5aB" id="M3l-On-QfY"/>
+                <outlet property="cursorView" destination="5o4-C3-p2X" id="YSL-Mi-Out"/>
                 <outlet property="datePiker" destination="u1A-2c-ocA" id="IN5-8r-Zrd"/>
                 <outlet property="datePikerView" destination="Oum-fy-dG5" id="Ty7-b4-7Wo"/>
                 <outlet property="descriptionToolbar" destination="Dir-wE-P96" id="2LH-r8-NaE"/>
@@ -41,6 +53,7 @@
                     <rect key="frame" x="120" y="73" width="190" height="36"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" red="0.93725490196078431" green="0.69411764705882351" blue="0.10588235294117647" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" name="MyriadPro-Bold" family="Myriad Pro" pointSize="16"/>
                     <size key="titleShadowOffset" width="2.2250738585072014e-308" height="0.0"/>
                     <state key="normal" title="CHOOSE DATE">
                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -53,13 +66,13 @@
                     <connections>
                         <action selector="actionChooseButton:" destination="-1" eventType="touchUpInside" id="Czb-Ch-OSs"/>
                         <action selector="actionMoveCursor:" destination="-1" eventType="touchDown" id="XtO-90-M9I"/>
-                        <action selector="moveCursor:" destination="-1" eventType="touchDown" id="SSe-k6-pC8"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="MDi-em-0oD">
                     <rect key="frame" x="122" y="477" width="190" height="36"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" red="0.47058823529411764" green="0.6705882352941176" blue="0.086274509803921567" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" name="MyriadPro-Bold" family="Myriad Pro" pointSize="16"/>
                     <size key="titleShadowOffset" width="2.2250738585072014e-308" height="0.0"/>
                     <state key="normal" title="SAVE">
                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -77,8 +90,9 @@
                     <rect key="frame" x="122" y="524" width="190" height="36"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" red="0.8784313725490196" green="0.20784313725490197" blue="0.054901960784313725" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" name="MyriadPro-Bold" family="Myriad Pro" pointSize="16"/>
                     <size key="titleShadowOffset" width="2.2250738585072014e-308" height="0.0"/>
-                    <state key="normal" title="CLOSE">
+                    <state key="normal" title="CANCEL">
                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </state>
                     <userDefinedRuntimeAttributes>
@@ -88,15 +102,15 @@
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <action selector="actionCloseButton:" destination="-1" eventType="touchUpInside" id="egA-3s-TTS"/>
-                        <action selector="moveCursor:" destination="-1" eventType="touchDown" id="SM5-9r-a3O"/>
+                        <action selector="actionMoveCursor:" destination="-1" eventType="touchDown" id="9of-Mp-BYi"/>
                     </connections>
                 </button>
                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Party name" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" id="NpS-Ud-yrP">
                     <rect key="frame" x="120" y="120" width="190" height="40"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" red="0.10196078431372549" green="0.10980392156862745" blue="0.12549019607843137" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" red="0.13725490200000001" green="0.1450980392" blue="0.16862745100000001" alpha="1" colorSpace="calibratedRGB"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="16"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="yes" returnKeyType="done"/>
                     <userDefinedRuntimeAttributes>
@@ -105,7 +119,8 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <action selector="moveCursor:" destination="-1" eventType="touchDown" id="1im-K0-oww"/>
+                        <action selector="actionMoveCursor:" destination="-1" eventType="touchDown" id="sDa-Qq-EXO"/>
+                        <outlet property="delegate" destination="-1" id="RbY-cx-fO1"/>
                     </connections>
                 </textField>
                 <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1409" minimumValueImage="TimePopup" id="cu9-2Z-pZA">
@@ -114,8 +129,8 @@
                     <color key="minimumTrackTintColor" red="0.91764705882352937" green="0.63921568627450975" blue="0.090196078431372548" alpha="1" colorSpace="calibratedRGB"/>
                     <color key="maximumTrackTintColor" red="0.078431372549019607" green="0.086274509803921567" blue="0.094117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>
+                        <action selector="actionMoveCursor:" destination="-1" eventType="touchDown" id="uVv-NV-ksd"/>
                         <action selector="actionSlideChanged:" destination="-1" eventType="valueChanged" id="xob-gQ-QRK"/>
-                        <action selector="moveCursor:" destination="-1" eventType="touchDown" id="ZwT-nY-VaR"/>
                     </connections>
                 </slider>
                 <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="30" minValue="30" maxValue="1439" maximumValueImage="TimePopup180" id="aYW-0X-ziO">
@@ -124,25 +139,25 @@
                     <color key="minimumTrackTintColor" red="0.89411764709999997" green="0.58039215690000001" blue="0.027450980390000001" alpha="1" colorSpace="calibratedRGB"/>
                     <color key="maximumTrackTintColor" red="0.078431372550000003" green="0.086274509799999996" blue="0.094117647060000004" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>
+                        <action selector="actionMoveCursor:" destination="-1" eventType="touchDown" id="SKu-mM-x5t"/>
                         <action selector="actionSlideChanged:" destination="-1" eventType="valueChanged" id="gPD-oB-yIi"/>
-                        <action selector="moveCursor:" destination="-1" eventType="touchDown" id="5KB-EI-X7v"/>
                     </connections>
                 </slider>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="qVq-r9-fG2">
-                    <rect key="frame" x="120" y="168" width="28" height="30"/>
+                    <rect key="frame" x="120" y="169" width="28" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="12"/>
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:30" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Xnw-h5-PBI">
-                    <rect key="frame" x="284" y="206" width="28" height="30"/>
+                    <rect key="frame" x="284" y="207" width="28" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="12"/>
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsVerticalScrollIndicator="NO" id="fkp-CX-THi">
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" id="fkp-CX-THi">
                     <rect key="frame" x="120" y="250" width="190" height="100"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" red="0.26666666666666666" green="0.28627450980392155" blue="0.32549019607843138" alpha="1" colorSpace="calibratedRGB"/>
@@ -152,15 +167,19 @@
                             <integer key="value" value="5"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="QbZ-zd-Oi5"/>
+                    </connections>
                 </scrollView>
                 <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="6" id="15V-68-awM">
                     <rect key="frame" x="120" y="331" width="190" height="37"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="pageIndicatorTintColor" red="0.13725490200000001" green="0.1450980392" blue="0.16862745100000001" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>
                         <action selector="actionPageChange:" destination="-1" eventType="valueChanged" id="03l-ch-eWX"/>
                     </connections>
                 </pageControl>
-                <view contentMode="scaleToFill" id="EA4-0b-9Tb">
+                <view contentMode="scaleToFill" id="EA4-0b-9Tb" userLabel="Blue line">
                     <rect key="frame" x="120" y="358" width="190" height="5"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" red="0.15686274509803921" green="0.51764705882352935" blue="0.68627450980392157" alpha="1" colorSpace="calibratedRGB"/>
@@ -168,11 +187,148 @@
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" id="t3K-94-UZs">
                     <rect key="frame" x="120" y="363" width="190" height="100"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" red="0.1019607843" green="0.10980392160000001" blue="0.12549019610000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" red="0.13725490200000001" green="0.1450980392" blue="0.16862745100000001" alpha="1" colorSpace="calibratedRGB"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="14"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="D82-xy-7c7"/>
+                    </connections>
                 </textView>
+                <view contentMode="scaleToFill" id="3up-SS-3xX" userLabel="White Line">
+                    <rect key="frame" x="15" y="86" width="1" height="455"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="0.8784313725490196" green="0.85098039215686272" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" id="fmg-i6-9eh" userLabel="Circle1">
+                    <rect key="frame" x="11" y="86" width="9" height="9"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="0.90196078431372551" green="0.8784313725490196" blue="0.83529411764705885" alpha="1" colorSpace="calibratedRGB"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <real key="value" value="4.5"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <view contentMode="scaleToFill" id="mwb-AV-xHa" userLabel="Circle2">
+                    <rect key="frame" x="11" y="135" width="9" height="9"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="0.90196078430000004" green="0.87843137250000003" blue="0.83529411760000005" alpha="1" colorSpace="calibratedRGB"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <real key="value" value="4.5"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <view contentMode="scaleToFill" id="j0V-6y-k2m" userLabel="Circle3">
+                    <rect key="frame" x="11" y="179" width="9" height="9"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="0.90196078430000004" green="0.87843137250000003" blue="0.83529411760000005" alpha="1" colorSpace="calibratedRGB"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <real key="value" value="4.5"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <view contentMode="scaleToFill" id="LnJ-ep-Ysy" userLabel="Circle4">
+                    <rect key="frame" x="11" y="217" width="9" height="9"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="0.90196078430000004" green="0.87843137250000003" blue="0.83529411760000005" alpha="1" colorSpace="calibratedRGB"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <real key="value" value="4.5"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <view contentMode="scaleToFill" id="NBn-KP-8fw" userLabel="Circle5">
+                    <rect key="frame" x="11" y="295" width="9" height="9"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="0.90196078430000004" green="0.87843137250000003" blue="0.83529411760000005" alpha="1" colorSpace="calibratedRGB"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <real key="value" value="4.5"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <view contentMode="scaleToFill" id="zkI-vg-340" userLabel="Circle7">
+                    <rect key="frame" x="11" y="537" width="9" height="9"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="0.90196078430000004" green="0.87843137250000003" blue="0.83529411760000005" alpha="1" colorSpace="calibratedRGB"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <real key="value" value="4.5"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <view alpha="0.40000000000000002" contentMode="scaleToFill" id="5o4-C3-p2X">
+                    <rect key="frame" x="9" y="84" width="13" height="13"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <real key="value" value="6.5"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CHOOSE DAY" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ScC-Vg-Xq0" userLabel="CHOOSE DAY">
+                    <rect key="frame" x="29" y="80" width="84" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="12"/>
+                    <color key="textColor" red="0.87843137250000003" green="0.85098039219999999" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PARTY NAME" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Ngh-3D-TE6">
+                    <rect key="frame" x="29" y="129" width="84" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="12"/>
+                    <color key="textColor" red="0.87843137250000003" green="0.85098039219999999" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="START" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="eE1-jK-Q43">
+                    <rect key="frame" x="29" y="173" width="84" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="12"/>
+                    <color key="textColor" red="0.87843137250000003" green="0.85098039219999999" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="END" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="WHI-ki-EXe">
+                    <rect key="frame" x="29" y="210" width="84" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="12"/>
+                    <color key="textColor" red="0.87843137250000003" green="0.85098039219999999" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LOGO" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="tpx-sn-6e9">
+                    <rect key="frame" x="29" y="289" width="84" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="12"/>
+                    <color key="textColor" red="0.87843137250000003" green="0.85098039219999999" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="DESCRIPTION" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="iwt-g1-DHV">
+                    <rect key="frame" x="29" y="402" width="84" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="12"/>
+                    <color key="textColor" red="0.87843137250000003" green="0.85098039219999999" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FINAL" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="4Kp-nf-mGd">
+                    <rect key="frame" x="30" y="531" width="84" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="12"/>
+                    <color key="textColor" red="0.87843137250000003" green="0.85098039219999999" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" id="Kz9-tK-XPF" userLabel="Circle6">
+                    <rect key="frame" x="11" y="408" width="9" height="9"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="0.90196078430000004" green="0.87843137250000003" blue="0.83529411760000005" alpha="1" colorSpace="calibratedRGB"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <real key="value" value="4.5"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
             </subviews>
             <color key="backgroundColor" red="0.1803921568627451" green="0.19215686274509802" blue="0.2196078431372549" alpha="1" colorSpace="calibratedRGB"/>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
@@ -190,13 +346,13 @@
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     <date key="date" timeIntervalSinceReferenceDate="476628840.74591798">
-                        <!--2016-02-08 12:54:00 пп +0000-->
+                        <!--2016-02-08 12:54:00 +0000-->
                     </date>
                     <date key="minimumDate" timeIntervalSinceReferenceDate="476625600">
-                        <!--2016-02-08 12:00:00 пп +0000-->
+                        <!--2016-02-08 12:00:00 +0000-->
                     </date>
                     <date key="maximumDate" timeIntervalSinceReferenceDate="1167562800">
-                        <!--2037-12-31 11:00:00 дп +0000-->
+                        <!--2037-12-31 11:00:00 +0000-->
                     </date>
                 </datePicker>
                 <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="gmV-3e-do6">
@@ -205,13 +361,13 @@
                     <items>
                         <barButtonItem systemItem="cancel" id="wK9-MC-ZjL">
                             <connections>
-                                <action selector="actionCancelButtonToolbar:" destination="-1" id="kTQ-za-cwX"/>
+                                <action selector="actionCancelDatePiker:" destination="-1" id="4Xw-Gv-vWc"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem systemItem="flexibleSpace" id="yfe-e8-eWw"/>
                         <barButtonItem systemItem="done" id="xst-jR-R1Q">
                             <connections>
-                                <action selector="actionDoneButtonToolbar:" destination="-1" id="43f-gc-ljX"/>
+                                <action selector="actionDoneDatePiker:" destination="-1" id="nW5-nN-VWs"/>
                             </connections>
                         </barButtonItem>
                     </items>
@@ -227,19 +383,18 @@
         <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="Dir-wE-P96">
             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-            <color key="backgroundColor" red="0.26666666666666666" green="0.28627450980392155" blue="0.32549019607843138" alpha="1" colorSpace="calibratedRGB"/>
             <items>
                 <barButtonItem systemItem="cancel" id="Kld-uo-VHb">
                     <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>
-                        <action selector="actionCancelDescriptioToolbar:" destination="-1" id="BfF-jB-dPd"/>
+                        <action selector="actionCancelDescription:" destination="-1" id="vEE-Gl-wYg"/>
                     </connections>
                 </barButtonItem>
                 <barButtonItem systemItem="flexibleSpace" id="nqo-3H-h7O"/>
                 <barButtonItem systemItem="done" id="HnJ-sC-fGE">
                     <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>
-                        <action selector="actionDoneDescriptioToolbar:" destination="-1" id="xXo-Oj-ivk"/>
+                        <action selector="actionDoneDescription:" destination="-1" id="LyF-A0-J5c"/>
                     </connections>
                 </barButtonItem>
             </items>
