@@ -9,7 +9,7 @@
 #import "PAMAddEventViewController.h"
 #import "PAMParty.h"
 
-@interface PAMAddEventViewController () <UITextFieldDelegate, UIScrollViewDelegate, UITextViewDelegate, NSCoding>
+@interface PAMAddEventViewController () <UITextFieldDelegate, UIScrollViewDelegate, UITextViewDelegate>
 
 //@property(strong,nonatomic) PAMAddEventViewController *createPartyView;
 
@@ -224,6 +224,7 @@
     
     UIToolbar* toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, CGRectGetMaxX(self.view.bounds), 50)];
     toolbar.barStyle = UIBarStyleBlackTranslucent;
+    
     [toolbar setBackgroundColor:[UIColor colorWithRed:68/255.f green:73/255.f blue:83/255.f alpha:1]];
     UIBarButtonItem *itemCancel = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
                                                                    style:UIBarButtonItemStylePlain
@@ -540,27 +541,6 @@
     return NO;
 }
 
-#pragma mark - NSCoding
-- (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:self.partyNameTextField.text forKey:@"partyName"];
-    [aCoder encodeObject:self.datePiker.date forKey:@"partyDate"];
-    [aCoder encodeObject:self.startTimeLabel.text forKey:@"partyStartTime"];
-    [aCoder encodeObject:self.endTimeLabel.text forKey:@"partyEndTime"];
-    [aCoder encodeObject:[NSNumber numberWithInteger:self.typeEventPageControl.currentPage] forKey:@"partyType"];
-    [aCoder encodeObject:self.descriptionTextView.text forKey:@"partyDescription"];
-}
-
-- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if(!self) return nil;
-    self.partyNameTextField.text = [aDecoder decodeObjectForKey:@"partyName"];
-    self.datePiker.date = [aDecoder decodeObjectForKey:@"partyDate"];
-    self.startTimeLabel.text = [aDecoder decodeObjectForKey:@"partyStartTime"];
-    self.endTimeLabel.text= [aDecoder decodeObjectForKey:@"partyEndTime"];
-    self.typeEventPageControl.currentPage = [[aDecoder decodeObjectForKey:@"partyType"] integerValue];
-    self.descriptionTextView.text = [aDecoder decodeObjectForKey:@"partyDescription"];
-    return self;
-}
 
 #pragma mark - Other
 
