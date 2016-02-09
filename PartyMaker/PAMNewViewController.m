@@ -261,7 +261,7 @@
     [UIView animateWithDuration:0.2
                      animations:^{
                          CGRect viewFrame = weakSelf.view.frame;
-                         viewFrame.origin.y = 0;
+                         viewFrame.origin.y = 64;
                          weakSelf.view.frame = viewFrame;
                      }];
 }
