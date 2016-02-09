@@ -7,13 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PAMParty.h"
+#import "PAMCustomDatePiker.h"
 
-@interface PAMNewViewController : UIViewController <UITextFieldDelegate, UIScrollViewDelegate, UITextViewDelegate>
+@interface PAMNewViewController : UIViewController <UITextFieldDelegate, UIScrollViewDelegate, UITextViewDelegate, PAMDatePikerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton *chooseButton;
 @property (weak, nonatomic) IBOutlet UIButton *closeButton;
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
-@property (weak, nonatomic) IBOutlet UIDatePicker *datePiker;
 @property (weak, nonatomic) IBOutlet UITextField *partyNameTextField;
 
 @property (weak, nonatomic) IBOutlet UISlider *startSlider;
@@ -26,7 +27,6 @@
 @property (weak, nonatomic) IBOutlet UITextView *partyDescription;
 @property (weak, nonatomic) IBOutlet UIToolbar *descriptionToolbar;
 
-@property (strong, nonatomic) IBOutlet UIView *datePikerView;
 @property (weak, nonatomic) IBOutlet UIView *cursorView;
 
 @property(strong, nonatomic) NSDate *partyDate;
@@ -36,9 +36,6 @@
 - (IBAction)actionChooseButton:(UIButton *)sender;
 - (IBAction)actionSaveButton:(UIButton *)sender;
 - (IBAction)actionCloseButton:(UIButton *)sender;
-
-- (IBAction)actionCancelDatePiker:(id)sender;
-- (IBAction)actionDoneDatePiker:(id)sender;
 
 - (IBAction)actionSlideChanged:(UISlider *)sender;
 

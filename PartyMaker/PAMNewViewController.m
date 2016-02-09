@@ -7,9 +7,8 @@
 //
 
 #import "PAMNewViewController.h"
-#import "PAMParty.h"
 
-@interface PAMNewViewController ()
+@interface PAMNewViewController () 
 
 @end
 
@@ -27,6 +26,31 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+
+}
+
+#pragma mark - PAMDatePikerDelegate
+- (void)actionCancelDatePiker:(PAMCustomDatePiker *)sender {
+        [UIView animateWithDuration:0.3
+                         animations:^{
+                             CGRect rect = sender.frame;
+                             rect.origin.y += CGRectGetMaxY(sender.bounds);
+                             sender.frame = rect;
+                         }
+                         completion:^(BOOL finished) {
+                             [sender removeFromSuperview];
+                         }];
+}
+
+- (void)actionDoneDatePiker:(PAMCustomDatePiker *)sender {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat: @"MM.dd.yyyy"];
+    [self.chooseButton setTitle: [dateFormatter stringFromDate:sender.datePiker.date] forState:UIControlStateNormal];
+    self.partyDate = sender.datePiker.date;
+    [self actionCancelDatePiker:sender];
 }
 
 #pragma mark - Fichi
@@ -86,17 +110,20 @@
 }
 
 - (IBAction)actionChooseButton:(UIButton *)sender {
-    [self blockControllersBesides:nil userInteractionEnabled:NO];
-    self.datePikerView.frame = CGRectMake(0, self.view.frame.size.height,
-                                          self.datePikerView.bounds.size.width, self.datePikerView.bounds.size.height);
-    __weak PAMNewViewController* weakSelf = self;
+    NSArray *nibContents = [[NSBundle mainBundle] loadNibNamed:NSStringFromClass([PAMCustomDatePiker class]) owner:nil options:nil];
+    PAMCustomDatePiker *datePikerView = nibContents[0];
+    datePikerView.delegate = self;
+   
+    datePikerView.frame = CGRectMake(0, self.view.frame.size.height,
+                                    datePikerView.bounds.size.width, datePikerView.bounds.size.height);
     [UIView animateWithDuration:0.3
                      animations:^{
-                         CGRect rect = weakSelf.datePikerView.frame;
-                         rect.origin.y -= CGRectGetMaxY(weakSelf.datePikerView.bounds);
-                         weakSelf.datePikerView.frame = rect;
+                         CGRect rect = datePikerView.frame;
+                         rect.origin.y -= CGRectGetMaxY(datePikerView.bounds);
+                         datePikerView.frame = rect;
                      }];
-    [self.view addSubview:self.datePikerView];
+
+    [self.view addSubview:datePikerView];
 }
 
 - (IBAction)actionSaveButton:(UIButton *)sender {
@@ -163,28 +190,6 @@
 
 - (IBAction)actionCloseButton:(UIButton *)sender {
     [self.navigationController popToRootViewControllerAnimated:YES];
-}
-
-- (IBAction)actionCancelDatePiker:(id)sender {
-    [self blockControllersBesides:nil userInteractionEnabled:YES];
-    __weak PAMNewViewController* weakSelf = self;
-    [UIView animateWithDuration:0.3
-                     animations:^{
-                         CGRect rect = weakSelf.datePikerView.frame;
-                         rect.origin.y += CGRectGetMaxY(weakSelf.datePikerView.bounds);
-                         weakSelf.datePikerView.frame = rect;
-                     }
-                     completion:^(BOOL finished) {
-                         [weakSelf.datePikerView removeFromSuperview];
-                     }];
-}
-
-- (IBAction)actionDoneDatePiker:(id)sender {
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat: @"MM.dd.yyyy"];
-    [self.chooseButton setTitle: [dateFormatter stringFromDate:self.datePiker.date] forState:UIControlStateNormal];
-    self.partyDate = self.datePiker.date;
-    [self actionCancelDatePiker:sender];
 }
 
 - (IBAction)actionSlideChanged:(UISlider *)sender {
