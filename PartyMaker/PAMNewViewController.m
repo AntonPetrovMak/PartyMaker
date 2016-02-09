@@ -17,7 +17,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"CREATE PARTY";
-    [self.navigationItem setHidesBackButton:YES];
+    //[self.navigationItem setHidesBackButton:YES];
     [self creatingTextField];
     [self creatingScrollView];
     [self creatingTextView];
@@ -30,27 +30,6 @@
 
 - (void)viewDidAppear:(BOOL)animated {
 
-}
-
-#pragma mark - PAMDatePikerDelegate
-- (void)actionCancelDatePiker:(PAMCustomDatePiker *)sender {
-        [UIView animateWithDuration:0.3
-                         animations:^{
-                             CGRect rect = sender.frame;
-                             rect.origin.y += CGRectGetMaxY(sender.bounds);
-                             sender.frame = rect;
-                         }
-                         completion:^(BOOL finished) {
-                             [sender removeFromSuperview];
-                         }];
-}
-
-- (void)actionDoneDatePiker:(PAMCustomDatePiker *)sender {
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat: @"MM.dd.yyyy"];
-    [self.chooseButton setTitle: [dateFormatter stringFromDate:sender.datePiker.date] forState:UIControlStateNormal];
-    self.partyDate = sender.datePiker.date;
-    [self actionCancelDatePiker:sender];
 }
 
 #pragma mark - Fichi
@@ -94,9 +73,25 @@
 }
 
 - (void)creatingTextView {
-    self.descriptionToolbar.frame = CGRectMake(0, 0, CGRectGetMaxX(self.view.bounds), 50);
-    [self.descriptionToolbar sizeToFit];
-    self.partyDescription.inputAccessoryView = self.descriptionToolbar;
+    UIToolbar* toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, CGRectGetMaxX(self.view.bounds), 50)];
+    [toolbar setBarStyle:UIBarStyleBlack];
+    [toolbar setBarTintColor:[UIColor colorWithRed:68/255.f green:73/255.f blue:83/255.f alpha:1]];
+    
+    UIBarButtonItem *itemCancel = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
+                                                                   style:UIBarButtonItemStylePlain
+                                                                  target:self
+                                                                  action:@selector(actionCancelDescription:)];
+    UIBarButtonItem *itemDone = [[UIBarButtonItem alloc] initWithTitle:@"Done"
+                                                                 style:UIBarButtonItemStyleDone
+                                                                target:self
+                                                                action:@selector(actionDoneDescription:)];
+    UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+                                                                                   target:nil
+                                                                                   action:nil];
+    itemDone.tintColor = itemCancel.tintColor = [UIColor whiteColor];
+    toolbar.items = @[itemCancel, flexibleSpace, itemDone];
+    [toolbar sizeToFit];
+    self.partyDescription.inputAccessoryView = toolbar;
 }
 
 #pragma mark - Action
@@ -110,6 +105,7 @@
 }
 
 - (IBAction)actionChooseButton:(UIButton *)sender {
+    [self blockControllersBesides:nil userInteractionEnabled:NO];
     NSArray *nibContents = [[NSBundle mainBundle] loadNibNamed:NSStringFromClass([PAMCustomDatePiker class]) owner:nil options:nil];
     PAMCustomDatePiker *datePikerView = nibContents[0];
     datePikerView.delegate = self;
@@ -126,9 +122,8 @@
     [self.view addSubview:datePikerView];
 }
 
-- (IBAction)actionSaveButton:(UIButton *)sender {
-    [self actionMoveCursor:self.closeButton];
-    __weak PAMNewViewController *weakSelf = self;
+- (IBAction)actionSaveButton:(id)sender {
+    //__weak PAMNewViewController *weakSelf = self;
     if(!self.partyDate) {
         
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error!"
@@ -138,7 +133,7 @@
         UIAlertAction *actionOK = [UIAlertAction actionWithTitle:@"OK"
                                                            style:UIAlertActionStyleDefault
                                                          handler: ^(UIAlertAction* action) {
-                                                             [weakSelf actionChooseButton:sender];
+                                                             //[weakSelf actionChooseButton:sender];
                                                          }];
         [alert addAction:actionOK];
         [self presentViewController:alert animated:YES completion:nil];
@@ -150,7 +145,7 @@
         UIAlertAction *actionOK = [UIAlertAction actionWithTitle:@"OK"
                                                            style:UIAlertActionStyleDefault
                                                          handler: ^(UIAlertAction* action) {
-                                                             [weakSelf.partyNameTextField becomeFirstResponder];
+                                                             //[weakSelf.partyNameTextField becomeFirstResponder];
                                                          }];
         [alert addAction:actionOK];
         [self presentViewController:alert animated:YES completion:nil];
@@ -184,11 +179,11 @@
         [arrayPartyes addObject:party];
         NSData* newData = [NSKeyedArchiver archivedDataWithRootObject: arrayPartyes];
         [newData writeToFile:documentsPathWithFile atomically:YES];
+        [self actionCloseButton:sender];
     }
-    [self actionCloseButton:sender];
 }
 
-- (IBAction)actionCloseButton:(UIButton *)sender {
+- (IBAction)actionCloseButton:(id)sender {
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
@@ -255,7 +250,7 @@
     [UIView animateWithDuration:0.3
                      animations:^{
                          CGRect viewFrame = weakSelf.view.frame;
-                         viewFrame.origin.y -= 250;
+                         viewFrame.origin.y -= 220;
                          weakSelf.view.frame = viewFrame;
                      }];
     return YES;
@@ -274,6 +269,28 @@
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     NSString *string = [textView.text stringByReplacingCharactersInRange:range withString:text];
     return !(string.length > 500);
+}
+
+#pragma mark - PAMDatePikerDelegate
+- (void)actionCancelDatePiker:(PAMCustomDatePiker *)sender {
+    [self blockControllersBesides:nil userInteractionEnabled:YES];
+    [UIView animateWithDuration:0.3
+                     animations:^{
+                         CGRect rect = sender.frame;
+                         rect.origin.y += CGRectGetMaxY(sender.bounds);
+                         sender.frame = rect;
+                     }
+                     completion:^(BOOL finished) {
+                         [sender removeFromSuperview];
+                     }];
+}
+
+- (void)actionDoneDatePiker:(PAMCustomDatePiker *)sender {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat: @"MM.dd.yyyy"];
+    [self.chooseButton setTitle: [dateFormatter stringFromDate:sender.datePiker.date] forState:UIControlStateNormal];
+    self.partyDate = sender.datePiker.date;
+    [self actionCancelDatePiker:sender];
 }
 
 @end

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PAMCustomDatePiker"/>
@@ -11,20 +11,6 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="189"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="QdE-Ci-0yy">
-                    <rect key="frame" x="0.0" y="44" width="320" height="145"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    <date key="date" timeIntervalSinceReferenceDate="476628840.74591798">
-                        <!--2016-02-08 12:54:00 пп +0000-->
-                    </date>
-                    <date key="minimumDate" timeIntervalSinceReferenceDate="476625600">
-                        <!--2016-02-08 12:00:00 пп +0000-->
-                    </date>
-                    <date key="maximumDate" timeIntervalSinceReferenceDate="1167562800">
-                        <!--2037-12-31 11:00:00 дп +0000-->
-                    </date>
-                </datePicker>
                 <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QBX-A3-LEU">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                     <items>
@@ -42,6 +28,20 @@
                     </items>
                     <color key="barTintColor" red="0.2666666667" green="0.28627450980000002" blue="0.32549019610000002" alpha="1" colorSpace="calibratedRGB"/>
                 </toolbar>
+                <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="QdE-Ci-0yy">
+                    <rect key="frame" x="0.0" y="44" width="320" height="145"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    <date key="date" timeIntervalSinceReferenceDate="476628840.74591798">
+                        <!--2016-02-08 12:54:00 +0000-->
+                    </date>
+                    <date key="minimumDate" timeIntervalSinceReferenceDate="476625600">
+                        <!--2016-02-08 12:00:00 +0000-->
+                    </date>
+                    <date key="maximumDate" timeIntervalSinceReferenceDate="1167562800">
+                        <!--2037-12-31 11:00:00 +0000-->
+                    </date>
+                </datePicker>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -50,7 +50,7 @@
             <connections>
                 <outlet property="datePiker" destination="QdE-Ci-0yy" id="AhE-Lr-yNK"/>
             </connections>
-            <point key="canvasLocation" x="714" y="308.5"/>
+            <point key="canvasLocation" x="369" y="407.5"/>
         </view>
     </objects>
 </document>

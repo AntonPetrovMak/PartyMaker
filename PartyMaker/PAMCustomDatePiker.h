@@ -10,10 +10,8 @@
 @class PAMCustomDatePiker;
 
 @protocol PAMDatePikerDelegate <NSObject>
-
 - (void)actionCancelDatePiker:(PAMCustomDatePiker *)sender;
 - (void)actionDoneDatePiker:(PAMCustomDatePiker *)sender;
-
 @end
 
 @interface PAMCustomDatePiker : UIView

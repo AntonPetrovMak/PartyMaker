@@ -25,7 +25,6 @@
 @property (weak, nonatomic) IBOutlet UIScrollView *typeEventScrollView;
 @property (weak, nonatomic) IBOutlet UIPageControl *typeEventPageControl;
 @property (weak, nonatomic) IBOutlet UITextView *partyDescription;
-@property (weak, nonatomic) IBOutlet UIToolbar *descriptionToolbar;
 
 @property (weak, nonatomic) IBOutlet UIView *cursorView;
 
@@ -34,16 +33,11 @@
 - (IBAction)actionMoveCursor:(UIView *) sender;
 
 - (IBAction)actionChooseButton:(UIButton *)sender;
-- (IBAction)actionSaveButton:(UIButton *)sender;
-- (IBAction)actionCloseButton:(UIButton *)sender;
+- (IBAction)actionSaveButton:(id)sender;
+- (IBAction)actionCloseButton:(id)sender;
 
 - (IBAction)actionSlideChanged:(UISlider *)sender;
 
 - (IBAction)actionPageChange:(UIPageControl *)sender;
-
-- (IBAction)actionCancelDescription:(UIBarButtonItem *)sender;
-- (IBAction)actionDoneDescription:(UIBarButtonItem *)sender;
-
-
 
 @end
