@@ -19,6 +19,9 @@
 		836F47811C6221CE007F5ECC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 836F477F1C6221CE007F5ECC /* LaunchScreen.storyboard */; };
 		8397CA661C635C02006FDE42 /* MyriadProBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8397CA641C635C02006FDE42 /* MyriadProBold.ttf */; };
 		8397CA671C635C02006FDE42 /* MyriadProRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8397CA651C635C02006FDE42 /* MyriadProRegular.ttf */; };
+		839A8ABF1C6B2BD900D715D3 /* PAMDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 839A8ABE1C6B2BD900D715D3 /* PAMDataStore.m */; };
+		839A8AC31C6B419E00D715D3 /* PAMPartiesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 839A8AC11C6B419E00D715D3 /* PAMPartiesTableViewController.m */; };
+		839A8AC41C6B419E00D715D3 /* PAMPartiesTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 839A8AC21C6B419E00D715D3 /* PAMPartiesTableViewController.xib */; };
 		EA3ED6171C668B1D00CBCD45 /* logs.plist in Resources */ = {isa = PBXBuildFile; fileRef = EA3ED6161C668B1D00CBCD45 /* logs.plist */; };
 		EA74B4231C6A932C00960CE0 /* PAMNewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA74B4251C6A932C00960CE0 /* PAMNewViewController.xib */; };
 		EADD7C791C6771E900EC4838 /* PAMParty.m in Sources */ = {isa = PBXBuildFile; fileRef = EADD7C781C6771E900EC4838 /* PAMParty.m */; };
@@ -44,6 +47,11 @@
 		836F47821C6221CE007F5ECC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8397CA641C635C02006FDE42 /* MyriadProBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MyriadProBold.ttf; sourceTree = "<group>"; };
 		8397CA651C635C02006FDE42 /* MyriadProRegular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MyriadProRegular.ttf; sourceTree = "<group>"; };
+		839A8ABD1C6B2BD900D715D3 /* PAMDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMDataStore.h; sourceTree = "<group>"; };
+		839A8ABE1C6B2BD900D715D3 /* PAMDataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMDataStore.m; sourceTree = "<group>"; };
+		839A8AC01C6B419E00D715D3 /* PAMPartiesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMPartiesTableViewController.h; sourceTree = "<group>"; };
+		839A8AC11C6B419E00D715D3 /* PAMPartiesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMPartiesTableViewController.m; sourceTree = "<group>"; };
+		839A8AC21C6B419E00D715D3 /* PAMPartiesTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PAMPartiesTableViewController.xib; sourceTree = "<group>"; };
 		EA3ED6161C668B1D00CBCD45 /* logs.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = logs.plist; sourceTree = "<group>"; };
 		EA74B4241C6A932C00960CE0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PAMNewViewController.xib; sourceTree = "<group>"; };
 		EADD7C771C6771E900EC4838 /* PAMParty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMParty.h; sourceTree = "<group>"; };
@@ -81,13 +89,13 @@
 			isa = PBXGroup;
 			children = (
 				836F477D1C6221CE007F5ECC /* Assets.xcassets */,
+				836F47741C6221CE007F5ECC /* PAMAppDelegate.h */,
+				836F47751C6221CE007F5ECC /* PAMAppDelegate.m */,
 				EA74B41F1C6A6CF500960CE0 /* Models */,
 				EA74B4221C6A6F4D00960CE0 /* Views */,
 				EA74B4201C6A6D0000960CE0 /* Controllers */,
 				833708B11C622C490006C9C9 /* PAMAddEventViewController.h */,
 				833708B21C622C490006C9C9 /* PAMAddEventViewController.m */,
-				836F47741C6221CE007F5ECC /* PAMAppDelegate.h */,
-				836F47751C6221CE007F5ECC /* PAMAppDelegate.m */,
 				836F47771C6221CE007F5ECC /* PAMViewController.h */,
 				836F47781C6221CE007F5ECC /* PAMViewController.m */,
 				EA74B4211C6A6EAD00960CE0 /* Storyboards */,
@@ -119,6 +127,8 @@
 		EA74B41F1C6A6CF500960CE0 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				839A8ABD1C6B2BD900D715D3 /* PAMDataStore.h */,
+				839A8ABE1C6B2BD900D715D3 /* PAMDataStore.m */,
 				EADD7C771C6771E900EC4838 /* PAMParty.h */,
 				EADD7C781C6771E900EC4838 /* PAMParty.m */,
 			);
@@ -150,6 +160,9 @@
 				831231221C6A2B7100422D00 /* PAMCustomDatePiker.h */,
 				831231231C6A2B7100422D00 /* PAMCustomDatePiker.m */,
 				831231251C6A2D0400422D00 /* PAMCustomDatePiker.xib */,
+				839A8AC01C6B419E00D715D3 /* PAMPartiesTableViewController.h */,
+				839A8AC11C6B419E00D715D3 /* PAMPartiesTableViewController.m */,
+				839A8AC21C6B419E00D715D3 /* PAMPartiesTableViewController.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -217,6 +230,7 @@
 				836F477E1C6221CE007F5ECC /* Assets.xcassets in Resources */,
 				836F477C1C6221CE007F5ECC /* Main.storyboard in Resources */,
 				EA74B4231C6A932C00960CE0 /* PAMNewViewController.xib in Resources */,
+				839A8AC41C6B419E00D715D3 /* PAMPartiesTableViewController.xib in Resources */,
 				831231261C6A2D0400422D00 /* PAMCustomDatePiker.xib in Resources */,
 				8397CA671C635C02006FDE42 /* MyriadProRegular.ttf in Resources */,
 				EA3ED6171C668B1D00CBCD45 /* logs.plist in Resources */,
@@ -236,6 +250,8 @@
 				833708B31C622C490006C9C9 /* PAMAddEventViewController.m in Sources */,
 				831231241C6A2B7100422D00 /* PAMCustomDatePiker.m in Sources */,
 				836F47731C6221CE007F5ECC /* main.m in Sources */,
+				839A8ABF1C6B2BD900D715D3 /* PAMDataStore.m in Sources */,
+				839A8AC31C6B419E00D715D3 /* PAMPartiesTableViewController.m in Sources */,
 				EADD7C791C6771E900EC4838 /* PAMParty.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

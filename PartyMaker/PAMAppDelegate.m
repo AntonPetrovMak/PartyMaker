@@ -16,6 +16,10 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    NSDictionary *attributes1 = @{ NSFontAttributeName:[UIFont fontWithName:@"MyriadPro-Bold" size:15],
+                                   NSForegroundColorAttributeName:[UIColor whiteColor]};
+    
+    [[UINavigationBar appearance] setTitleTextAttributes:attributes1];
     return YES;
 }
 

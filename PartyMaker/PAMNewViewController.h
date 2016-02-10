@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "PAMParty.h"
 #import "PAMCustomDatePiker.h"
+#import "PAMDataStore.h"
 
 @interface PAMNewViewController : UIViewController <UITextFieldDelegate, UIScrollViewDelegate, UITextViewDelegate, PAMDatePikerDelegate>
 

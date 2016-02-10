@@ -150,35 +150,7 @@
         [alert addAction:actionOK];
         [self presentViewController:alert animated:YES completion:nil];
     } else {
-        NSError *error;
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-        NSString *documentsPathWithFile = [documentsPath stringByAppendingPathComponent:@"logs.plist"];
-        NSMutableArray *arrayPartyes = [[NSMutableArray alloc] init];
-        
-        NSCalendar *calendar =[NSCalendar currentCalendar];
-        
-        NSDateComponents *components = [calendar components:NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:self.partyDate];
-        NSInteger intervale = ((components.hour-2) * 60 * 60) + (components.minute * 60) + components.second;
-        
-        NSDate *partyDate = [self.partyDate dateByAddingTimeInterval:-intervale];
-        
-        PAMParty *party = [[PAMParty alloc] initWithName:self.partyNameTextField.text
-                                               startDate:[partyDate dateByAddingTimeInterval:self.startSlider.value*60]
-                                                 endDate:[partyDate dateByAddingTimeInterval:self.endSlider.value*60]
-                                                paryType:self.typeEventPageControl.currentPage
-                                             description:self.partyDescription.text];
-        
-        if ([fileManager fileExistsAtPath:documentsPathWithFile]) {
-            NSData *oldData =[NSData dataWithContentsOfFile:documentsPathWithFile];
-            arrayPartyes = [NSKeyedUnarchiver unarchiveObjectWithData: oldData];
-        } else {
-            NSString *logsPlistPath = [[NSBundle mainBundle] pathForResource:@"logs" ofType:@"plist"];
-            [fileManager copyItemAtPath:logsPlistPath toPath:documentsPathWithFile error:&error];
-        }
-        [arrayPartyes addObject:party];
-        NSData* newData = [NSKeyedArchiver archivedDataWithRootObject: arrayPartyes];
-        [newData writeToFile:documentsPathWithFile atomically:YES];
+        [[PAMDataStore standartDataStore] writePartiesToPlist:self];
         [self actionCloseButton:sender];
     }
 }
@@ -213,11 +185,11 @@
     [self.typeEventScrollView setContentOffset:contentOffset animated:YES];
 }
 
-- (IBAction)actionCancelDescription:(UIBarButtonItem *)sender {
+- (void)actionCancelDescription:(UIBarButtonItem *)sender {
     [self.partyDescription resignFirstResponder];
 }
 
-- (IBAction)actionDoneDescription:(UIBarButtonItem *)sender {
+- (void)actionDoneDescription:(UIBarButtonItem *)sender {
     [self.partyDescription resignFirstResponder];
 }
 
@@ -250,7 +222,7 @@
     [UIView animateWithDuration:0.3
                      animations:^{
                          CGRect viewFrame = weakSelf.view.frame;
-                         viewFrame.origin.y -= 220;
+                         viewFrame.origin.y -= 218;
                          weakSelf.view.frame = viewFrame;
                      }];
     return YES;
