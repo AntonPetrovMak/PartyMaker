@@ -19,7 +19,6 @@
     self.title = @"CREATE PARTY";
     //[self.navigationItem setHidesBackButton:YES];
     [self creatingTextField];
-    [self creatingScrollView];
     [self creatingTextView];
 }
 
@@ -29,7 +28,8 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-
+    [super viewDidAppear:animated];
+    [self creatingScrollView];
 }
 
 #pragma mark - Fichi
@@ -59,17 +59,15 @@
 }
 
 - (void)creatingScrollView {
+    [self.typeEventScrollView setContentSize:CGSizeMake(CGRectGetMaxX(self.typeEventScrollView.bounds)*6, CGRectGetMaxY(self.typeEventScrollView.bounds))];
     for (int i = 0; i < 6; i++) {
         UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"PartyLogo_Small_%d", i]];
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(190*i, 10, 190, image.size.height)];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.typeEventScrollView.bounds)*i, 5,
+                                                                               CGRectGetMaxX(self.typeEventScrollView.bounds), CGRectGetMaxY(self.typeEventScrollView.bounds)-27)];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         [imageView setImage:image];
         [self.typeEventScrollView addSubview:imageView];
     }
-    
-    CGRect frame = self.typeEventPageControl.frame;
-    frame.size.height = 22.0;
-    self.typeEventPageControl.frame = frame;
 }
 
 - (void)creatingTextView {
@@ -97,10 +95,11 @@
 #pragma mark - Action
 
 - (IBAction)actionMoveCursor:(UIView *) sender {
+    self.cursorTopConstraint.constant = sender.center.y - self.cursorView.bounds.size.height/2;
     __weak PAMNewViewController* weakSelf = self;
     [UIView animateWithDuration:0.3
                      animations:^{
-                         weakSelf.cursorView.center = CGPointMake(weakSelf.cursorView.center.x, sender.center.y);
+                         [weakSelf.view layoutIfNeeded];
                      }];
 }
 
@@ -109,9 +108,8 @@
     NSArray *nibContents = [[NSBundle mainBundle] loadNibNamed:NSStringFromClass([PAMCustomDatePiker class]) owner:nil options:nil];
     PAMCustomDatePiker *datePikerView = nibContents[0];
     datePikerView.delegate = self;
-   
     datePikerView.frame = CGRectMake(0, self.view.frame.size.height,
-                                    datePikerView.bounds.size.width, datePikerView.bounds.size.height);
+                                    self.view.bounds.size.width, datePikerView.bounds.size.height);
     [UIView animateWithDuration:0.3
                      animations:^{
                          CGRect rect = datePikerView.frame;

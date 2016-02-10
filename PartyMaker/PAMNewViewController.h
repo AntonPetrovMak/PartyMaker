@@ -28,6 +28,7 @@
 @property (weak, nonatomic) IBOutlet UITextView *partyDescription;
 
 @property (weak, nonatomic) IBOutlet UIView *cursorView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *cursorTopConstraint;
 
 @property(strong, nonatomic) NSDate *partyDate;
 

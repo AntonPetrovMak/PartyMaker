@@ -94,10 +94,6 @@
 				EA74B41F1C6A6CF500960CE0 /* Models */,
 				EA74B4221C6A6F4D00960CE0 /* Views */,
 				EA74B4201C6A6D0000960CE0 /* Controllers */,
-				833708B11C622C490006C9C9 /* PAMAddEventViewController.h */,
-				833708B21C622C490006C9C9 /* PAMAddEventViewController.m */,
-				836F47771C6221CE007F5ECC /* PAMViewController.h */,
-				836F47781C6221CE007F5ECC /* PAMViewController.m */,
 				EA74B4211C6A6EAD00960CE0 /* Storyboards */,
 				8397CA631C635BE8006FDE42 /* Font */,
 				836F47711C6221CE007F5ECC /* Supporting Files */,
@@ -138,6 +134,10 @@
 		EA74B4201C6A6D0000960CE0 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				833708B11C622C490006C9C9 /* PAMAddEventViewController.h */,
+				833708B21C622C490006C9C9 /* PAMAddEventViewController.m */,
+				836F47771C6221CE007F5ECC /* PAMViewController.h */,
+				836F47781C6221CE007F5ECC /* PAMViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
