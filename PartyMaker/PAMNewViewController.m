@@ -27,8 +27,22 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+//   [self.view layoutIfNeeded];
+    
+//    NSLog(@"%s",__PRETTY_FUNCTION__);
+//    NSLog(@"UIScreen = %@", NSStringFromCGRect([UIScreen mainScreen].bounds));
+//    NSLog(@"%@", NSStringFromCGRect(self.typeEventScrollView.bounds));
+//    
+//    //[self creatingScrollView];
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+//    NSLog(@"UIScreen = %@", NSStringFromCGRect([UIScreen mainScreen].bounds));
+//    NSLog(@"%s",__PRETTY_FUNCTION__);
+//    NSLog(@"%@", NSStringFromCGRect(self.typeEventScrollView.bounds));
     [self creatingScrollView];
 }
 
@@ -148,7 +162,22 @@
         [alert addAction:actionOK];
         [self presentViewController:alert animated:YES completion:nil];
     } else {
-        [[PAMDataStore standartDataStore] writePartiesToPlist:self];
+        
+        NSCalendar *calendar =[NSCalendar currentCalendar];
+        
+        NSDateComponents *components = [calendar components:NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond
+                                                   fromDate:self.partyDate];
+        
+        NSInteger intervale = ((components.hour-2) * 60 * 60) + (components.minute * 60) + components.second;
+        
+        NSDate *partyDate = [self.partyDate dateByAddingTimeInterval:-intervale];
+        
+        PAMParty *party = [[PAMParty alloc] initWithName:self.partyNameTextField.text
+                                               startDate:[partyDate dateByAddingTimeInterval:self.startSlider.value*60]
+                                                 endDate:[partyDate dateByAddingTimeInterval:self.endSlider.value*60]
+                                                paryType:self.typeEventPageControl.currentPage
+                                             description:self.partyDescription.text];
+        [[PAMDataStore standartDataStore] writePartiesToPlist:party];
         [self actionCloseButton:sender];
     }
 }

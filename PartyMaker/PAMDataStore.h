@@ -15,7 +15,7 @@
 
 + (PAMDataStore *) standartDataStore;
 
-- (void) writePartiesToPlist:(PAMNewViewController *) viewController;
+- (void) writePartiesToPlist:(PAMParty *) party;
 - (NSMutableArray *) arrayWithParties;
 
 @end

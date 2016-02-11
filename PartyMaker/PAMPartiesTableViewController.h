@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "PAMDataStore.h"
 #import "PAMParty.h"
+#import "PAMPartyTableCell.h"
 
-@interface PAMPartiesTableViewController : UITableViewController <UITableViewDelegate>
+@interface PAMPartiesTableViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource>
 
 @end

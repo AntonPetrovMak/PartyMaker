@@ -31,26 +31,11 @@
     return [[NSMutableArray alloc] init];
 }
 
-- (void) writePartiesToPlist:(PAMNewViewController *) viewController {
+- (void) writePartiesToPlist:(PAMParty *) party {
     NSError *error;
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     NSString *documentsPathWithFile = [documentsPath stringByAppendingPathComponent:@"logs.plist"];
-    
-    NSCalendar *calendar =[NSCalendar currentCalendar];
-    
-    NSDateComponents *components = [calendar components:NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond
-                                               fromDate:viewController.partyDate];
-    
-    NSInteger intervale = ((components.hour-2) * 60 * 60) + (components.minute * 60) + components.second;
-    
-    NSDate *partyDate = [viewController.partyDate dateByAddingTimeInterval:-intervale];
-    
-    PAMParty *party = [[PAMParty alloc] initWithName:viewController.partyNameTextField.text
-                                           startDate:[partyDate dateByAddingTimeInterval:viewController.startSlider.value*60]
-                                             endDate:[partyDate dateByAddingTimeInterval:viewController.endSlider.value*60]
-                                            paryType:viewController.typeEventPageControl.currentPage
-                                         description:viewController.partyDescription.text];
     
     NSMutableArray *arrayPartyes = [self arrayWithParties];
     
