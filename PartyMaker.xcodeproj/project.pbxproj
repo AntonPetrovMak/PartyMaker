@@ -133,7 +133,7 @@
 			name = "Date Picker";
 			sourceTree = "<group>";
 		};
-		83A134141C6DD0E800EE6097 /* Show Party */ = {
+		83A134141C6DD0E800EE6097 /* Table Show Party */ = {
 			isa = PBXGroup;
 			children = (
 				838D665E1C6CBF2B00C43BC8 /* PAMPartyTableCell.h */,
@@ -141,7 +141,7 @@
 				839A8AC01C6B419E00D715D3 /* PAMPartiesTableViewController.h */,
 				839A8AC11C6B419E00D715D3 /* PAMPartiesTableViewController.m */,
 			);
-			name = "Show Party";
+			name = "Table Show Party";
 			sourceTree = "<group>";
 		};
 		EA74B41F1C6A6CF500960CE0 /* Models */ = {
@@ -176,7 +176,7 @@
 		EA74B4221C6A6F4D00960CE0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				83A134141C6DD0E800EE6097 /* Show Party */,
+				83A134141C6DD0E800EE6097 /* Table Show Party */,
 				83A134131C6DD09600EE6097 /* Date Picker */,
 				838D66641C6CDBE600C43BC8 /* PAMShowPartyViewController.h */,
 				838D66651C6CDBE600C43BC8 /* PAMShowPartyViewController.m */,

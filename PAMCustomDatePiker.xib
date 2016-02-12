@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PAMCustomDatePiker"/>
@@ -15,8 +15,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                     <color key="backgroundColor" red="0.26666666666666666" green="0.28627450980392155" blue="0.32549019607843138" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="320" id="Pu7-YD-cBa"/>
-                        <constraint firstAttribute="height" constant="44" id="cjf-GR-qZb"/>
+                        <constraint firstAttribute="height" constant="44" id="clY-sR-VKL"/>
                     </constraints>
                     <items>
                         <barButtonItem systemItem="cancel" id="76d-z8-zW8">
@@ -38,29 +37,29 @@
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="145" id="CBF-ad-o6R"/>
-                        <constraint firstAttribute="width" constant="320" id="Mqw-X5-h8m"/>
+                        <constraint firstAttribute="height" constant="145" id="vna-A4-COg"/>
                     </constraints>
                     <date key="date" timeIntervalSinceReferenceDate="476628840.74591798">
-                        <!--2016-02-08 12:54:00 +0000-->
+                        <!--2016-02-08 12:54:00 пп +0000-->
                     </date>
                     <date key="minimumDate" timeIntervalSinceReferenceDate="476625600">
-                        <!--2016-02-08 12:00:00 +0000-->
+                        <!--2016-02-08 12:00:00 пп +0000-->
                     </date>
                     <date key="maximumDate" timeIntervalSinceReferenceDate="1167562800">
-                        <!--2037-12-31 11:00:00 +0000-->
+                        <!--2037-12-31 11:00:00 дп +0000-->
                     </date>
                 </datePicker>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="QBX-A3-LEU" firstAttribute="leading" secondItem="zWP-rH-euS" secondAttribute="leading" id="FYF-9W-23X"/>
-                <constraint firstAttribute="trailing" secondItem="QBX-A3-LEU" secondAttribute="trailing" id="b4P-ML-udp"/>
-                <constraint firstItem="QBX-A3-LEU" firstAttribute="top" secondItem="zWP-rH-euS" secondAttribute="top" id="dJh-ng-3di"/>
-                <constraint firstAttribute="trailing" secondItem="QdE-Ci-0yy" secondAttribute="trailing" id="hRS-bE-pbT"/>
-                <constraint firstItem="QdE-Ci-0yy" firstAttribute="leading" secondItem="zWP-rH-euS" secondAttribute="leading" id="vZ7-zr-kUT"/>
-                <constraint firstAttribute="bottom" secondItem="QdE-Ci-0yy" secondAttribute="bottom" id="xvS-xx-QqD"/>
+                <constraint firstAttribute="bottom" secondItem="QdE-Ci-0yy" secondAttribute="bottom" id="3dR-uN-ev4"/>
+                <constraint firstItem="QBX-A3-LEU" firstAttribute="leading" secondItem="zWP-rH-euS" secondAttribute="leading" id="3hi-Ue-DU2"/>
+                <constraint firstAttribute="trailing" secondItem="QBX-A3-LEU" secondAttribute="trailing" id="I8h-qh-xEx"/>
+                <constraint firstItem="QdE-Ci-0yy" firstAttribute="leading" secondItem="zWP-rH-euS" secondAttribute="leading" id="SiS-KE-DO5"/>
+                <constraint firstItem="QBX-A3-LEU" firstAttribute="top" secondItem="zWP-rH-euS" secondAttribute="top" id="cfk-Gh-J4L"/>
+                <constraint firstItem="QdE-Ci-0yy" firstAttribute="top" secondItem="QBX-A3-LEU" secondAttribute="bottom" id="evv-r9-N9d"/>
+                <constraint firstAttribute="trailing" secondItem="QdE-Ci-0yy" secondAttribute="trailing" id="zmK-uW-q1J"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

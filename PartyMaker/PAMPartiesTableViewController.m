@@ -42,7 +42,7 @@
   
     [cell configureWithPartyName:party.partyName
                        partyDate:[dateFormatter stringFromDate:party.partyStartDate]
-                       partyType:[UIImage imageNamed:[NSString stringWithFormat:@"PartyLogo_Small_%ld", party.partyType]]];
+                       partyType:[UIImage imageNamed:[NSString stringWithFormat:@"PartyLogo_Small_%ld", (long)party.partyType]]];
     return cell;
 }
 
@@ -63,6 +63,4 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
 }
-
-
 @end

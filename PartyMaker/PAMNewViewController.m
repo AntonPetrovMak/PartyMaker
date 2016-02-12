@@ -8,7 +8,9 @@
 
 #import "PAMNewViewController.h"
 
-@interface PAMNewViewController () 
+@interface PAMNewViewController ()
+
+@property(strong, nonatomic) PAMParty *party;
 
 @end
 
@@ -20,6 +22,11 @@
     //[self.navigationItem setHidesBackButton:YES];
     [self creatingTextField];
     [self creatingTextView];
+    self.party = [[PAMParty alloc] initWithName:nil
+                                      startDate:nil
+                                        endDate:nil
+                                       paryType:0
+                                    description:nil];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -164,12 +171,11 @@
         
         NSDate *partyDate = [self.partyDate dateByAddingTimeInterval:-intervale];
         
-        PAMParty *party = [[PAMParty alloc] initWithName:self.partyNameTextField.text
-                                               startDate:[partyDate dateByAddingTimeInterval:self.startSlider.value*60]
-                                                 endDate:[partyDate dateByAddingTimeInterval:self.endSlider.value*60]
-                                                paryType:self.typeEventPageControl.currentPage
-                                             description:self.partyDescription.text];
-        [[PAMDataStore standartDataStore] writePartiesToPlist:party];
+        self.party.partyName = self.partyNameTextField.text;
+        self.party.partyStartDate = [partyDate dateByAddingTimeInterval:self.startSlider.value*60];
+        self.party.partyEndDate = [partyDate dateByAddingTimeInterval:self.endSlider.value*60];
+        self.party.partyType = self.typeEventPageControl.currentPage;
+        [[PAMDataStore standartDataStore] writePartiesToPlist:self.party];
         [self actionCloseButton:sender];
     }
 }
@@ -205,10 +211,12 @@
 }
 
 - (void)actionCancelDescription:(UIBarButtonItem *)sender {
+    self.partyDescription.text = self.party.partyDescription;
     [self.partyDescription resignFirstResponder];
 }
 
 - (void)actionDoneDescription:(UIBarButtonItem *)sender {
+    self.party.partyDescription = self.partyDescription.text;
     [self.partyDescription resignFirstResponder];
 }
 
@@ -236,6 +244,7 @@
 
 #pragma mark - UITextViewDelegate
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
+    self.party.partyDescription = textView.text;
     [self actionMoveCursor:textView];
     __weak PAMNewViewController *weakSelf = self;
     [UIView animateWithDuration:0.3

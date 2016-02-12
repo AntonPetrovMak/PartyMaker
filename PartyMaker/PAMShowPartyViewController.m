@@ -25,7 +25,7 @@
 - (void) configureWithParty:(PAMParty *) party {
     self.partyNameLabel.text = party.partyName;
     self.partyDescriptionTextView.text = party.partyDescription;
-    self.partyTypeImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"PartyLogo_Small_%ld", party.partyType]];
+    self.partyTypeImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"PartyLogo_Small_%ld", (long)party.partyType]];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat: @"MM.dd.yyyy"];
     self.partyDateLabel.text = [dateFormatter stringFromDate:party.partyStartDate];
