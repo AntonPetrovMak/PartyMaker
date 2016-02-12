@@ -17,6 +17,5 @@
 + (NSString *) reuseIdentifire;
 
 - (void) configureWithPartyName:(NSString *) partyName partyDate:(NSString *) partyDate partyType:(UIImage *) partyType;
-- (void)prepareForReuse;
 
 @end

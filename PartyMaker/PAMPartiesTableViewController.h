@@ -10,6 +10,7 @@
 #import "PAMDataStore.h"
 #import "PAMParty.h"
 #import "PAMPartyTableCell.h"
+#import "PAMShowPartyViewController.h"
 
 @interface PAMPartiesTableViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource>
 

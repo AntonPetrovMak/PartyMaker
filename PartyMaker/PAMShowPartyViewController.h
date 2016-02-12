@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PAMParty.h"
 
 @interface PAMShowPartyViewController : UIViewController
 
@@ -21,4 +22,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *locationButton;
 @property (weak, nonatomic) IBOutlet UIButton *editButton;
 @property (weak, nonatomic) IBOutlet UIButton *deleteButton;
+
+@property (nonatomic, strong) PAMParty *party;
+
 @end

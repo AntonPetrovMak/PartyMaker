@@ -22,28 +22,17 @@
     [self creatingTextView];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-//   [self.view layoutIfNeeded];
-    
-//    NSLog(@"%s",__PRETTY_FUNCTION__);
-//    NSLog(@"UIScreen = %@", NSStringFromCGRect([UIScreen mainScreen].bounds));
-//    NSLog(@"%@", NSStringFromCGRect(self.typeEventScrollView.bounds));
-//    
-//    //[self creatingScrollView];
+    CGRect rect = self.typeEventScrollView.frame;
+    rect.size.height = ([UIScreen mainScreen].bounds.size.height - 369)/2;
+    rect.size.width = [UIScreen mainScreen].bounds.size.width - 128;
+    self.typeEventScrollView.frame = rect;
+    [self creatingScrollView];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-//    NSLog(@"UIScreen = %@", NSStringFromCGRect([UIScreen mainScreen].bounds));
-//    NSLog(@"%s",__PRETTY_FUNCTION__);
-//    NSLog(@"%@", NSStringFromCGRect(self.typeEventScrollView.bounds));
-    [self creatingScrollView];
 }
 
 #pragma mark - Fichi
@@ -109,7 +98,11 @@
 #pragma mark - Action
 
 - (IBAction)actionMoveCursor:(UIView *) sender {
-    self.cursorTopConstraint.constant = sender.center.y - self.cursorView.bounds.size.height/2;
+    if([[sender class] isEqual:[UISlider class]]) {
+        self.cursorTopConstraint.constant = sender.center.y - 0.5;
+    } else {
+        self.cursorTopConstraint.constant = sender.center.y;
+    }
     __weak PAMNewViewController* weakSelf = self;
     [UIView animateWithDuration:0.3
                      animations:^{
@@ -162,7 +155,6 @@
         [alert addAction:actionOK];
         [self presentViewController:alert animated:YES completion:nil];
     } else {
-        
         NSCalendar *calendar =[NSCalendar currentCalendar];
         
         NSDateComponents *components = [calendar components:NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond

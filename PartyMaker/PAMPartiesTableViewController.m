@@ -16,12 +16,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    
 }
 
 #pragma mark - UITableViewDataSource
@@ -51,13 +49,19 @@
 #pragma mark - UITableViewDataSource
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    NSLog(@"prepareForSegue");
+    if ([segue.identifier isEqualToString:@"SegueShowParty"]) {
+        
+        PAMShowPartyViewController *showView = [segue destinationViewController];
+        PAMParty *party = [[[PAMDataStore standartDataStore] arrayWithParties] objectAtIndex:[self.tableView indexPathForSelectedRow].row];
+        showView.party = party;
+       
+    }
+   
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
-    NSLog(@"touch on row %ld", indexPath.row);
+
 }
 
 
