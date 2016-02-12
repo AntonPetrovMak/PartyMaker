@@ -15,8 +15,15 @@
 @implementation PAMShowPartyViewController
 
 - (void)viewDidLoad {
-    
     [super viewDidLoad];
+//    NSAttributedString *string = [[NSAttributedString alloc] initWithString:self attributes:attr];
+//    CGRect rect = [string boundingRectWithSize:CGSizeMake(width, 10000) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil];
+//    
+//    CGSizeMake(roundf(rect.size.width), roundf(rect.size.height));
+//    
+//    NSMutableParagraphStyle *ps = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+//    ps.lineBreakMode = NSLineBreakByWordWrapping;
+//    : @{NSFontAttributeName:[UIFont fontWithName:FontName size:FontSize], NSParagraphStyleAttributeName:ps}
     
     NSAssert1(self.party, @"self.party in nil", nil);
     [self configureWithParty:self.party];
@@ -32,12 +39,6 @@
     [dateFormatter setDateFormat: @"HH:mm"];
     self.partyTimeStartLabel.text = [dateFormatter stringFromDate:party.partyStartDate];
     self.partyTimeEndLabel.text = [dateFormatter stringFromDate:party.partyEndDate];
-//    NSCalendar *calendar =[NSCalendar currentCalendar];
-//    NSDateComponents *components = [calendar components:    NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitYear |
-//                                                            NSCalendarUnitMonth | NSCalendarUnitDay
-//                                               fromDate:party.partyStartDate];
-//    self.partyTimeStartLabel.text = [NSString stringWithFormat:@"%ld:%ld",[components hour], [components minute]];
-//    self.partyDateLabel.text = [NSString stringWithFormat:@"%ld.%ld.%ld",[components month], [components day], [components year]];
 }
 
 @end
