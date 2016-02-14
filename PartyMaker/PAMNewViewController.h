@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NSString+PAMDateFormat.h"
 #import "PAMParty.h"
 #import "PAMCustomDatePiker.h"
 #import "PAMDataStore.h"
@@ -31,6 +32,8 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cursorTopConstraint;
 
 @property(strong, nonatomic) NSDate *partyDate;
+@property(strong, nonatomic) PAMParty *party;
+@property (nonatomic, assign) NSInteger indexCurrentCell;
 
 - (IBAction)actionMoveCursor:(UIView *) sender;
 

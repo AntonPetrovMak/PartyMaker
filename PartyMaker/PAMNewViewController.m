@@ -10,8 +10,6 @@
 
 @interface PAMNewViewController ()
 
-@property(strong, nonatomic) PAMParty *party;
-
 @end
 
 @implementation PAMNewViewController
@@ -22,24 +20,54 @@
     //[self.navigationItem setHidesBackButton:YES];
     [self creatingTextField];
     [self creatingTextView];
-    self.party = [[PAMParty alloc] initWithName:nil
-                                      startDate:nil
-                                        endDate:nil
-                                       paryType:0
-                                    description:nil];
+    
 }
 
--(void)viewWillAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     CGRect rect = self.typeEventScrollView.frame;
     rect.size.height = ([UIScreen mainScreen].bounds.size.height - 369)/2;
     rect.size.width = [UIScreen mainScreen].bounds.size.width - 128;
     self.typeEventScrollView.frame = rect;
     [self creatingScrollView];
+    
+    if(self.party) {
+        [self enterDataForEdit];
+    } else {
+        self.party = [[PAMParty alloc] init];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+}
+
+- (void)enterDataForEdit {
+    self.partyDate = self.party.partyStartDate;
+    [self.chooseButton setTitle: [NSString stringPrityDateWithDate:self.party.partyStartDate]
+                       forState: UIControlStateNormal];
+    self.partyNameTextField.text = self.party.partyName;
+    
+    self.startSlider.value = [self countMinutesInDay:self.party.partyStartDate];
+    self.startTimeLabel.text = [NSString stringHourAndMinutesWithInterval:self.startSlider.value];
+    
+    self.endSlider.value = [self countMinutesInDay:self.party.partyEndDate];
+    self.endTimeLabel.text = [NSString stringHourAndMinutesWithInterval:self.endSlider.value];
+    
+    CGPoint contentOffset = CGPointMake(self.party.partyType * self.typeEventScrollView.bounds.size.width, 0);
+    [self.typeEventScrollView setContentOffset:contentOffset animated:NO];
+    self.typeEventPageControl.currentPage = self.party.partyType;
+    self.partyDescription.text = self.party.partyDescription;
+}
+
+#pragma mark - Helpers
+
+- (NSInteger) countMinutesInDay:(NSDate *) date {
+    NSCalendar *calendar =[NSCalendar currentCalendar];
+    NSDateComponents *startComponents = [calendar components:NSCalendarUnitHour | NSCalendarUnitMinute
+                                                    fromDate:[date dateByAddingTimeInterval:-7200]];
+    NSInteger interval = (startComponents.hour * 60) + startComponents.minute;
+    return interval;
 }
 
 #pragma mark - Fichi
@@ -49,14 +77,6 @@
             view.userInteractionEnabled = isBlock;
         }
     }
-}
-
-- (NSString *)getCustomTimeWithIntervale:(int) interval {
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
-    [formatter setTimeZone:timeZone];
-    [formatter setDateFormat:@"HH:mm"];
-    return [formatter stringFromDate:[NSDate dateWithTimeIntervalSinceReferenceDate:interval * 60]];
 }
 
 #pragma mark - Creating controllers
@@ -135,7 +155,6 @@
 }
 
 - (IBAction)actionSaveButton:(id)sender {
-    //__weak PAMNewViewController *weakSelf = self;
     if(!self.partyDate) {
         
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error!"
@@ -175,7 +194,17 @@
         self.party.partyStartDate = [partyDate dateByAddingTimeInterval:self.startSlider.value*60];
         self.party.partyEndDate = [partyDate dateByAddingTimeInterval:self.endSlider.value*60];
         self.party.partyType = self.typeEventPageControl.currentPage;
-        [[PAMDataStore standartDataStore] writePartiesToPlist:self.party];
+        if(self.indexCurrentCell) {
+            NSMutableArray* paties = [[PAMDataStore standartDataStore] arrayWithParties];
+            [paties removeObjectAtIndex:self.indexCurrentCell];
+            [paties addObject:self.party];
+            [[PAMDataStore standartDataStore] writePartiesToPlist:paties];
+        } else {
+            [[PAMDataStore standartDataStore] writePartyToPlist:self.party];
+        }
+        
+        
+        
         [self actionCloseButton:sender];
     }
 }
@@ -185,21 +214,20 @@
 }
 
 - (IBAction)actionSlideChanged:(UISlider *)sender {
-    //[self moveCursor:slider];
     if([sender isEqual:self.startSlider]) {
         if(self.endSlider.value - sender.value <= 0) {
             self.endSlider.value = sender.value;
-            self.startTimeLabel.text = [self getCustomTimeWithIntervale:(int)sender.value];
-            self.endTimeLabel.text = [self getCustomTimeWithIntervale:(int)sender.value + 30];
+            self.startTimeLabel.text = [NSString stringHourAndMinutesWithInterval:sender.value];
+            self.endTimeLabel.text = [NSString stringHourAndMinutesWithInterval:sender.value + 30];
         }
-        self.startTimeLabel.text = [self getCustomTimeWithIntervale:(int)sender.value];
+        self.startTimeLabel.text = [NSString stringHourAndMinutesWithInterval:sender.value];
     } else if([sender isEqual:self.endSlider]) {
         if(self.startSlider.value - sender.value > 0) {
             self.startSlider.value = sender.value;
-            self.endTimeLabel.text = [self getCustomTimeWithIntervale:(int)sender.value];
-            self.startTimeLabel.text = [self getCustomTimeWithIntervale:(int)sender.value - 30];
+            self.endTimeLabel.text = [NSString stringHourAndMinutesWithInterval:sender.value];
+            self.startTimeLabel.text = [NSString stringHourAndMinutesWithInterval:sender.value - 30];
         }
-        self.endTimeLabel.text = [self getCustomTimeWithIntervale:(int)sender.value];
+        self.endTimeLabel.text = [NSString stringHourAndMinutesWithInterval:sender.value];
     }
 
 }

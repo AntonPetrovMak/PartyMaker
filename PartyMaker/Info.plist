@@ -40,6 +40,7 @@
 	</array>
 	<key>UIAppFonts</key>
 	<array>
+		<string>MyriadPro-It.otf</string>
 		<string>MyriadProBold.ttf</string>
 		<string>MyriadProRegular.ttf</string>
 	</array>

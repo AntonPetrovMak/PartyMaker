@@ -15,16 +15,9 @@
 }
 
 - (void) configureWithPartyName:(NSString *) partyName partyDate:(NSString *) partyDate partyType:(UIImage *) partyType {
-    self.partyNameLabel.text = partyName;
+    self.partyNameLabel.text = [partyName uppercaseString];
     self.partyDateLabel.text = partyDate;
     self.patryTypeImage.image = partyType;
-}
-
-- (void)prepareForReuse {
-    [super prepareForReuse];
-    self.partyNameLabel.text = nil;
-    self.partyDateLabel.text = nil;
-    self.patryTypeImage.image = nil;
 }
 
 @end

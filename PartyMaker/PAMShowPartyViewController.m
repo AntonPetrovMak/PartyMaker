@@ -16,29 +16,50 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-//    NSAttributedString *string = [[NSAttributedString alloc] initWithString:self attributes:attr];
-//    CGRect rect = [string boundingRectWithSize:CGSizeMake(width, 10000) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil];
-//    
-//    CGSizeMake(roundf(rect.size.width), roundf(rect.size.height));
-//    
-//    NSMutableParagraphStyle *ps = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-//    ps.lineBreakMode = NSLineBreakByWordWrapping;
-//    : @{NSFontAttributeName:[UIFont fontWithName:FontName size:FontSize], NSParagraphStyleAttributeName:ps}
     
-    NSAssert1(self.party, @"self.party in nil", nil);
-    [self configureWithParty:self.party];
+    [self emptyParty];
+    if(self.party) {
+        [self configureWithParty:self.party];
+    }
 }
 
-- (void) configureWithParty:(PAMParty *) party {
-    self.partyNameLabel.text = party.partyName;
-    self.partyDescriptionTextView.text = party.partyDescription;
+- (void)configureWithParty:(PAMParty *) party {
+    self.partyNameLabel.text = [party.partyName uppercaseString];
+    self.partyDescriptionLabel.text = [NSString stringWithFormat:@" \"%@\" ", party.partyDescription.length ? party.partyDescription : @"not description" ];
     self.partyTypeImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"PartyLogo_Small_%ld", (long)party.partyType]];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat: @"MM.dd.yyyy"];
-    self.partyDateLabel.text = [dateFormatter stringFromDate:party.partyStartDate];
-    [dateFormatter setDateFormat: @"HH:mm"];
-    self.partyTimeStartLabel.text = [dateFormatter stringFromDate:party.partyStartDate];
-    self.partyTimeEndLabel.text = [dateFormatter stringFromDate:party.partyEndDate];
+    self.partyDateLabel.text = [NSString stringPrityDateWithDate:party.partyStartDate];
+    self.partyTimeStartLabel.text = [NSString stringHourAndMinutesWithDate: party.partyStartDate];
+    self.partyTimeEndLabel.text = [NSString stringHourAndMinutesWithDate:party.partyEndDate];
 }
 
+- (void)emptyParty{
+    self.partyNameLabel.text = [@"not name" uppercaseString];
+    self.partyDescriptionLabel.text = @"not description";
+    self.partyTypeImageView.image = nil;
+    self.partyDateLabel.text = @"00.00.0000";
+    self.partyTimeStartLabel.text = @"00:00";
+    self.partyTimeEndLabel.text = @"00:00";
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"SegueEditParty"]) {
+        PAMNewViewController *editView = [segue destinationViewController];
+        PAMParty *party = [[PAMDataStore standartDataStore] arrayWithParties][self.indexCurrentCell];
+        editView.party = party;
+        editView.indexCurrentCell = self.indexCurrentCell;
+    }
+}
+
+#pragma mark - Action
+
+- (IBAction)actionEditParty:(UIButton *)sender {
+    
+}
+
+- (IBAction)actionDeleteParty:(UIButton *)sender {
+    NSMutableArray* paties = [[PAMDataStore standartDataStore] arrayWithParties];
+    [paties removeObjectAtIndex:self.indexCurrentCell - 1];
+    [[PAMDataStore standartDataStore] writePartiesToPlist:paties];
+    [self.navigationController popToRootViewControllerAnimated:YES];
+}
 @end

@@ -23,7 +23,6 @@
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     NSString *documentsPathWithFile = [documentsPath stringByAppendingPathComponent:@"logs.plist"];
-    
     if ([fileManager fileExistsAtPath:documentsPathWithFile]) {
         NSData *oldData =[NSData dataWithContentsOfFile:documentsPathWithFile];
         return [NSKeyedUnarchiver unarchiveObjectWithData: oldData];
@@ -31,22 +30,31 @@
     return [[NSMutableArray alloc] init];
 }
 
-- (void) writePartiesToPlist:(PAMParty *) party {
+- (void) writePartiesToPlist:(NSMutableArray *) arrayParties {
+    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *documentsPathWithFile = [documentsPath stringByAppendingPathComponent:@"logs.plist"];
+    
+//    NSArray *sortedParties = [arrayParties sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"partyStartDate" ascending: true],
+//                                                                         [NSSortDescriptor sortDescriptorWithKey:@"partyName" ascending: true]]];
+    
+    NSData* newData = [NSKeyedArchiver archivedDataWithRootObject: arrayParties];
+    [newData writeToFile:documentsPathWithFile atomically:YES];
+}
+
+- (void) writePartyToPlist:(PAMParty *) party {
     NSError *error;
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     NSString *documentsPathWithFile = [documentsPath stringByAppendingPathComponent:@"logs.plist"];
     
-    NSMutableArray *arrayPartyes = [self arrayWithParties];
+    NSMutableArray *arrayParties = [self arrayWithParties];
     
-    if (!arrayPartyes.count) {
+    if (!arrayParties.count) {
         NSString *logsPlistPath = [[NSBundle mainBundle] pathForResource:@"logs" ofType:@"plist"];
         [fileManager copyItemAtPath:logsPlistPath toPath:documentsPathWithFile error:&error];
     }
-    [arrayPartyes addObject:party];
-    NSLog(@"%@",arrayPartyes);
-    NSData* newData = [NSKeyedArchiver archivedDataWithRootObject: arrayPartyes];
-    [newData writeToFile:documentsPathWithFile atomically:YES];
+    [arrayParties addObject:party];
+    [self writePartiesToPlist:arrayParties];
 }
 
 @end
