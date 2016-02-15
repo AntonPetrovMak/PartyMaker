@@ -10,6 +10,8 @@
 
 @interface PAMNewViewController ()
 
+@property(assign, nonatomic) BOOL isEdit;
+
 @end
 
 @implementation PAMNewViewController
@@ -32,6 +34,7 @@
     [self creatingScrollView];
     
     if(self.party) {
+        self.isEdit = YES;
         [self enterDataForEdit];
     } else {
         self.party = [[PAMParty alloc] init];
@@ -194,7 +197,7 @@
         self.party.partyStartDate = [partyDate dateByAddingTimeInterval:self.startSlider.value*60];
         self.party.partyEndDate = [partyDate dateByAddingTimeInterval:self.endSlider.value*60];
         self.party.partyType = self.typeEventPageControl.currentPage;
-        if(self.indexCurrentCell) {
+        if(self.isEdit) {
             NSMutableArray* paties = [[PAMDataStore standartDataStore] arrayWithParties];
             [paties removeObjectAtIndex:self.indexCurrentCell];
             [paties addObject:self.party];

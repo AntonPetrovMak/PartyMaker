@@ -25,19 +25,22 @@
     NSString *documentsPathWithFile = [documentsPath stringByAppendingPathComponent:@"logs.plist"];
     if ([fileManager fileExistsAtPath:documentsPathWithFile]) {
         NSData *oldData =[NSData dataWithContentsOfFile:documentsPathWithFile];
-        return [NSKeyedUnarchiver unarchiveObjectWithData: oldData];
+        NSArray *array = [NSKeyedUnarchiver unarchiveObjectWithData: oldData];
+        NSMutableArray *mattay = [[NSMutableArray alloc] initWithArray:array];
+        return mattay;
     }
     return [[NSMutableArray alloc] init];
 }
+
 
 - (void) writePartiesToPlist:(NSMutableArray *) arrayParties {
     NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     NSString *documentsPathWithFile = [documentsPath stringByAppendingPathComponent:@"logs.plist"];
     
-//    NSArray *sortedParties = [arrayParties sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"partyStartDate" ascending: true],
-//                                                                         [NSSortDescriptor sortDescriptorWithKey:@"partyName" ascending: true]]];
+    NSArray *sortedParties = [arrayParties sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"partyStartDate" ascending: true],
+                                                                         [NSSortDescriptor sortDescriptorWithKey:@"partyName" ascending: true]]];
     
-    NSData* newData = [NSKeyedArchiver archivedDataWithRootObject: arrayParties];
+    NSData* newData = [NSKeyedArchiver archivedDataWithRootObject: sortedParties];
     [newData writeToFile:documentsPathWithFile atomically:YES];
 }
 

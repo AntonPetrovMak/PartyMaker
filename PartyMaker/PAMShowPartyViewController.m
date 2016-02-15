@@ -50,6 +50,8 @@
     }
 }
 
+
+
 #pragma mark - Action
 
 - (IBAction)actionEditParty:(UIButton *)sender {
@@ -58,7 +60,7 @@
 
 - (IBAction)actionDeleteParty:(UIButton *)sender {
     NSMutableArray* paties = [[PAMDataStore standartDataStore] arrayWithParties];
-    [paties removeObjectAtIndex:self.indexCurrentCell - 1];
+    [paties removeObjectAtIndex:self.indexCurrentCell];
     [[PAMDataStore standartDataStore] writePartiesToPlist:paties];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
