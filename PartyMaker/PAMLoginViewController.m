@@ -51,14 +51,24 @@
 #pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+//    self.view convertRect:<#(CGRect)#> toView:<#(nullable UIView *)#>
+//    NSLog(@"%@", NSStringFromCGRect(textField.frame));
+//    int value = (self.view.frame.size.height - 432) - CGRectGetMaxY(textField.frame);
+//    if(value <= 0){
+//        CGSize contentWithKeyboard = self.loginScrollView.contentSize;
+//        contentWithKeyboard.height +=value;
+//        self.loginScrollView.contentSize = contentWithKeyboard;
+//        
+//        CGPoint contentOffset = CGPointMake(0,value);
+//        
+//        [self.loginScrollView setContentOffset:contentOffset animated:YES];
+//    }
     if(!isKeyboardShow) {
-//        __weak PAMLoginViewController *weakSelf = self;
-//        [UIView animateWithDuration:0.3
-//                         animations:^{
-//                             CGRect viewFrame = weakSelf.view.frame;
-//                             viewFrame.origin.y -= 50;
-//                             weakSelf.view.frame = viewFrame;
-//                         }];
+        CGSize contentWithKeyboard = self.loginScrollView.contentSize;
+        contentWithKeyboard.height +=30;
+        self.loginScrollView.contentSize = contentWithKeyboard;
+        CGPoint contentOffset = CGPointMake(0,30);
+        [self.loginScrollView setContentOffset:contentOffset animated:YES];
         isKeyboardShow = YES;
     }
     return YES;
@@ -70,13 +80,11 @@
         [self.passwordTextField becomeFirstResponder];
     } else {
         if(isKeyboardShow) {
-//            __weak PAMLoginViewController *weakSelf = self;
-//            [UIView animateWithDuration:0.3
-//                             animations:^{
-//                                 CGRect viewFrame = weakSelf.view.frame;
-//                                 viewFrame.origin.y = 0;
-//                                 weakSelf.view.frame = viewFrame;
-//                             }];
+            CGSize contentWithKeyboard = self.loginScrollView.contentSize;
+            contentWithKeyboard.height -=30;
+            self.loginScrollView.contentSize = contentWithKeyboard;
+            CGPoint contentOffset = CGPointMake(0,0);
+            [self.loginScrollView setContentOffset:contentOffset animated:YES];
             isKeyboardShow = NO;
         }
         

@@ -12,6 +12,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *loginTextField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
 @property (weak, nonatomic) IBOutlet UIView *substrateForLoginView;
+@property (weak, nonatomic) IBOutlet UIScrollView *loginScrollView;
 
 - (IBAction)actionClickRegister:(UIButton *)sender;
 - (IBAction)actionClickSingIn:(UIButton *)sender;
