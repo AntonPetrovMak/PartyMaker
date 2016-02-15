@@ -1,0 +1,18 @@
+//
+//  PAMLoginViewController.h
+//  PartyMaker
+//
+//  Created by Petrov Anton on 15.02.16.
+//  Copyright © 2016 Softheme. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface PAMLoginViewController : UIViewController <UITextFieldDelegate>
+@property (weak, nonatomic) IBOutlet UITextField *loginTextField;
+@property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
+@property (weak, nonatomic) IBOutlet UIView *substrateForLoginView;
+
+- (IBAction)actionClickRegister:(UIButton *)sender;
+- (IBAction)actionClickSingIn:(UIButton *)sender;
+@end

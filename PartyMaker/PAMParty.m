@@ -18,6 +18,9 @@
     self.partyEndDate = endDate;
     self.partyType = partyType;
     self.partyDescription = description;
+    
+    
+    
     return self;
 }
 
