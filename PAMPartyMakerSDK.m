@@ -29,8 +29,8 @@ static NSString* APIURLLink = @"http://itworksinua.km.ua/party/";
 
 -(void)configureSessionAndAPI {
     NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
-    sessionConfig.timeoutIntervalForRequest = 30.0;
-    sessionConfig.timeoutIntervalForResource = 60.0;
+    sessionConfig.timeoutIntervalForRequest = 5.0;
+    sessionConfig.timeoutIntervalForResource = 10.0;
     sessionConfig.allowsCellularAccess = NO;
     self.defaultSession = [NSURLSession sessionWithConfiguration:sessionConfig];
 }
@@ -73,7 +73,39 @@ static NSString* APIURLLink = @"http://itworksinua.km.ua/party/";
                                 if(block) {
                                     block ([self serialize:data statusCode:(NSNumber *)[response valueForKey:@"statusCode"]], error);
                                 }
-    }] resume];
+                            }] resume];
+}
+
+-(void) partiesWithCreatorId:(NSNumber *) creatorId callback:(void(^)(NSDictionary *response, NSError *error)) block {
+    NSMutableURLRequest *urlRequst = [self requestMethod:@"GET" methodAPI:@"party" parrametrs:@{@"creator_id":creatorId} headers:nil];
+    
+    [[self.defaultSession dataTaskWithRequest:urlRequst
+                           completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                               if(block) {
+                                   block([self serialize:data statusCode:[response valueForKey:@"statusCode"]],error);
+                               }
+                           }] resume];
+}
+
+-(void) writeParty:(PAMParty *) party withCreatorId:(NSNumber *) creatorId callback:(void(^)(NSDictionary *response, NSError *error)) block {
+    NSDictionary *dictionaryWithParty = @{  @"party_id":@"",
+                                                @"name":party.partyName,
+                                          @"start_time":party.partyStartDate,
+                                            @"end_time":party.partyEndDate,
+                                             @"logo_id":@(party.partyType),
+                                             @"comment":party.partyDescription,
+                                          @"creator_id":creatorId,
+                                            @"latitude":@"",
+                                           @"longitude":@""};
+    
+    NSMutableURLRequest *urlRequst = [self requestMethod:@"POST" methodAPI:@"addParty" parrametrs:dictionaryWithParty headers:nil];
+    
+    [[self.defaultSession dataTaskWithRequest:urlRequst
+                            completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                                if(block) {
+                                    block([self serialize:data statusCode:[response valueForKey:@"statusCode"]],error);
+                                }
+                            }] resume];
 }
 
 -(void) registerWithUserName:(NSString *) _username andPassword:(NSString *) _pass andEmail:(NSString *) _email callback:(void(^)(NSDictionary *response, NSError *error)) block {
@@ -86,6 +118,17 @@ static NSString* APIURLLink = @"http://itworksinua.km.ua/party/";
                             completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
                                 if(block) {
                                     block ([self serialize:data statusCode:(NSNumber *)[response valueForKey:@"statusCode"]], error);
+                                }
+                            }] resume];
+}
+
+-(void) deletePartyById:(NSNumber *) partyId callback:(void(^)(NSDictionary *response, NSError *error)) block {
+    NSMutableURLRequest *urlRequst = [self requestMethod:@"GET" methodAPI:@"deleteParty" parrametrs:@{@"party_id":partyId} headers:nil];
+    
+    [[self.defaultSession dataTaskWithRequest:urlRequst
+                            completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                                if(block) {
+                                    block([self serialize:data statusCode:[response valueForKey:@"statusCode"]],error);
                                 }
                             }] resume];
 }

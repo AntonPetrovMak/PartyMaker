@@ -30,4 +30,11 @@
     return [dateFormatter stringFromDate:date];
 }
 
++ (NSDate *) getHumanDate: (NSString *) strDate {
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss Z"];
+    strDate = [NSString stringWithFormat:@"%@ -0000",[strDate substringToIndex:20]];
+    return [dateFormat dateFromString:strDate];
+}
+
 @end

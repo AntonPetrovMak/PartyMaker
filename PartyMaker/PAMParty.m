@@ -10,9 +10,10 @@
 
 @implementation PAMParty
 
--(instancetype) initWithName:(NSString *) name startDate:(NSDate *) startDate endDate:(NSDate *) endDate paryType:(NSInteger) partyType description:(NSString *)description {
+-(instancetype) initWithPartyId:(NSInteger) partyId name:(NSString *) name startDate:(NSDate *) startDate endDate:(NSDate *) endDate paryType:(NSInteger) partyType description:(NSString *)description {
     self = [super init];
     if(!self) return nil;
+    self.partyId = partyId;
     self.partyName = name;
     self.partyStartDate = startDate;
     self.partyEndDate = endDate;
@@ -23,11 +24,13 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"\nName: %@ \nStart: %@ \nEnd: %@ \nType: %d \nDescription: %@", self.partyName , self.partyStartDate, self.partyEndDate, (int)self.partyType, self.partyDescription];
+    return [NSString stringWithFormat:@"\nId: %d\nName: %@ \nStart: %@ \nEnd: %@ \nType: %d \nDescription: %@",
+            (int)self.partyId, self.partyName , self.partyStartDate, self.partyEndDate, (int)self.partyType, self.partyDescription];
 }
 
 #pragma mark - NSCoding
 - (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[NSNumber numberWithInteger:self.partyId] forKey:@"partyId"];
     [aCoder encodeObject:self.partyName forKey:@"partyName"];
     [aCoder encodeObject:self.partyStartDate forKey:@"partyStartDate"];
     [aCoder encodeObject:self.partyEndDate forKey:@"partyEndDate"];
@@ -38,6 +41,7 @@
 - (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super init];
     if(!self) return nil;
+    self.partyId = [[aDecoder decodeObjectForKey:@"partyId"] integerValue];
     self.partyName = [aDecoder decodeObjectForKey:@"partyName"];
     self.partyStartDate = [aDecoder decodeObjectForKey:@"partyStartDate"];
     self.partyEndDate = [aDecoder decodeObjectForKey:@"partyEndDate"];

@@ -10,13 +10,15 @@
 
 @interface PAMPartiesTableViewController ()
 
+@property(strong,nonatomic) NSMutableArray *arrayWithParties;
+
 @end
 
 @implementation PAMPartiesTableViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.arrayWithParties = [[NSMutableArray alloc] init];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -24,14 +26,32 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    
-    [self.tableView reloadData];
+    NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
+    PAMUser *user = [NSKeyedUnarchiver unarchiveObjectWithData: data];
+    PAMPartyMakerSDK *partyMakerSDK = [PAMPartyMakerSDK standartPartyMakerSDK];
+    __weak PAMPartiesTableViewController *weakSelf = self;
+    [partyMakerSDK partiesWithCreatorId:@(user.userId) callback:^(NSDictionary *response, NSError *error) {
+//        NSLog(@"%@",response);
+//        NSLog(@"%@",[response objectForKey:@"response"]);
+        weakSelf.arrayWithParties = [[NSMutableArray alloc] initWithArray:[response objectForKey:@"response"]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.tableView reloadData];
+        });
+        
+    }];
+}
+#pragma mark - Action
+- (IBAction)logOffUser:(UIBarButtonItem *)sender {
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userId"];
+    UITabBarController *tabBar = [self.storyboard instantiateViewControllerWithIdentifier:@"PAMLoginViewController"];
+    [self presentViewController:tabBar animated:YES completion:nil];
 }
 
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [[[PAMDataStore standartDataStore] arrayWithParties] count];
+    return [self.arrayWithParties count];
+    //return [[[PAMDataStore standartDataStore] arrayWithParties] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -41,7 +61,14 @@
                                         reuseIdentifier:[PAMPartyTableCell reuseIdentifire]];
     }
 
-    PAMParty *party = [[[PAMDataStore standartDataStore] arrayWithParties] objectAtIndex:indexPath.row];
+    //PAMParty *party = [[[PAMDataStore standartDataStore] arrayWithParties] objectAtIndex:indexPath.row];
+    NSDictionary *dictionaty = [self.arrayWithParties objectAtIndex:indexPath.row];
+    PAMParty *party = [[PAMParty alloc] initWithPartyId:[[dictionaty objectForKey:@"id"] integerValue]
+                                                   name:[dictionaty objectForKey:@"name"]
+                                              startDate:[NSString getHumanDate:[dictionaty objectForKey:@"start_time"]]
+                                                endDate:[NSString getHumanDate:[dictionaty objectForKey:@"end_time"]]
+                                               paryType:[[dictionaty objectForKey:@"logo_id"] integerValue]
+                                            description:[dictionaty objectForKey:@"comment"]];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat: @"MM.dd.yyyy HH:mm"];
     [dateFormatter setTimeZone:[NSTimeZone systemTimeZone]];
@@ -69,4 +96,5 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
 }
+
 @end

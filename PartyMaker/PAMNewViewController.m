@@ -1,3 +1,4 @@
+
 //
 //  PAMNewViewController.m
 //  PartyMaker
@@ -192,8 +193,9 @@
         NSInteger intervale = ((components.hour-2) * 60 * 60) + (components.minute * 60) + components.second;
         
         NSDate *partyDate = [self.partyDate dateByAddingTimeInterval:-intervale];
-        
+        //self.party.partyId = 0;
         self.party.partyName = self.partyNameTextField.text;
+        self.party.partyDescription = self.partyDescription.text;
         self.party.partyStartDate = [partyDate dateByAddingTimeInterval:self.startSlider.value*60];
         self.party.partyEndDate = [partyDate dateByAddingTimeInterval:self.endSlider.value*60];
         self.party.partyType = self.typeEventPageControl.currentPage;
@@ -204,9 +206,13 @@
             [[PAMDataStore standartDataStore] writePartiesToPlist:paties];
         } else {
             [[PAMDataStore standartDataStore] writePartyToPlist:self.party];
+            NSLog(@"ADD CREATOR ID");
+            NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
+            PAMUser *user = [NSKeyedUnarchiver unarchiveObjectWithData: data];
+            [[PAMPartyMakerSDK standartPartyMakerSDK] writeParty:self.party withCreatorId:@(user.userId) callback:^(NSDictionary *response, NSError *error) {
+                NSLog(@"%@",response);
+            }];
         }
-        
-        
         
         [self actionCloseButton:sender];
     }

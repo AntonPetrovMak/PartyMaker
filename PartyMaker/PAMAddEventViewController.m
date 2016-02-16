@@ -452,11 +452,12 @@
         
         NSDate *partyDate = [self.partyDate dateByAddingTimeInterval:-intervale];
         
-        PAMParty *party = [[PAMParty alloc] initWithName:self.partyNameTextField.text
-                                               startDate:[partyDate dateByAddingTimeInterval:self.startSlider.value*60]
-                                                 endDate:[partyDate dateByAddingTimeInterval:self.endSlider.value*60]
-                                                paryType:self.typeEventPageControl.currentPage
-                                             description:self.descriptionTextView.text];
+        PAMParty *party = [[PAMParty alloc] initWithPartyId: arc4random_uniform(100000000)
+                                                       name:self.partyNameTextField.text
+                                                  startDate:[partyDate dateByAddingTimeInterval:self.startSlider.value*60]
+                                                    endDate:[partyDate dateByAddingTimeInterval:self.endSlider.value*60]
+                                                   paryType:self.typeEventPageControl.currentPage
+                                                description:self.descriptionTextView.text];
         
         if ([fileManager fileExistsAtPath:documentsPathWithFile]) {
             NSData *oldData =[NSData dataWithContentsOfFile:documentsPathWithFile];

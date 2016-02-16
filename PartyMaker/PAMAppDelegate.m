@@ -19,19 +19,15 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSDictionary *attributes1 = @{ NSFontAttributeName:[UIFont fontWithName:@"MyriadPro-Bold" size:15],
                                    NSForegroundColorAttributeName:[UIColor whiteColor]};
-    
     [[UINavigationBar appearance] setTitleTextAttributes:attributes1];
-    //PAMPartyMakerSDK *PM = [PAMPartyMakerSDK standartPartyMakerSDK];
-//    [PM loginWithUserName:@"test" andPassword:@"test" callback:^(NSDictionary *response, NSError *error) {
-//        NSLog(@"%@", response);
-//    }];
-//    [PM registerWithUserName:@"Anton" andPassword:@"12345" andEmail:@"Anton@gmail.com" callback:^(NSDictionary *response, NSError *error) {
-//        NSLog(@"%@", response);
-//    }];
-//    [PM loginWithUserName:@"Anton" andPassword:@"12345" callback:^(NSDictionary *response, NSError *error) {
-//        NSLog(@"%@", response);
-//    }];
     
+    if([[NSUserDefaults standardUserDefaults] objectForKey:@"userId"]) {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UITabBarController *tabBar = [storyboard instantiateViewControllerWithIdentifier:@"MainTabBarController"];
+        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        self.window.rootViewController = tabBar;
+        [self.window makeKeyAndVisible];
+    }
     return YES;
 }
 

@@ -13,5 +13,6 @@
 + (NSString *) stringHourAndMinutesWithInterval:(NSInteger) minutes;
 + (NSString *) stringHourAndMinutesWithDate:(NSDate *) date;
 + (NSString *) stringPrityDateWithDate:(NSDate *) date;
++ (NSDate *) getHumanDate: (NSString *) strDate;
 
 @end
