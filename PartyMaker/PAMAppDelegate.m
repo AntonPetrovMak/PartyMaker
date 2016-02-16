@@ -7,6 +7,7 @@
 //
 
 #import "PAMAppDelegate.h"
+#import "PAMPartyMakerSDK.h"
 
 @interface PAMAppDelegate ()
 
@@ -20,6 +21,17 @@
                                    NSForegroundColorAttributeName:[UIColor whiteColor]};
     
     [[UINavigationBar appearance] setTitleTextAttributes:attributes1];
+    //PAMPartyMakerSDK *PM = [PAMPartyMakerSDK standartPartyMakerSDK];
+//    [PM loginWithUserName:@"test" andPassword:@"test" callback:^(NSDictionary *response, NSError *error) {
+//        NSLog(@"%@", response);
+//    }];
+//    [PM registerWithUserName:@"Anton" andPassword:@"12345" andEmail:@"Anton@gmail.com" callback:^(NSDictionary *response, NSError *error) {
+//        NSLog(@"%@", response);
+//    }];
+//    [PM loginWithUserName:@"Anton" andPassword:@"12345" callback:^(NSDictionary *response, NSError *error) {
+//        NSLog(@"%@", response);
+//    }];
+    
     return YES;
 }
 

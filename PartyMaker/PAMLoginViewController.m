@@ -38,31 +38,60 @@
     [self.passwordTextField setAttributedPlaceholder:attributedForPassword];
 }
 
-#pragma mark - Action
+#pragma mark - Helpers
+- (void) userLogin {
+    __weak PAMLoginViewController *weakSelf = self;
+    PAMPartyMakerSDK *partyMakerSDK = [PAMPartyMakerSDK standartPartyMakerSDK];
+    [partyMakerSDK loginWithUserName: weakSelf.loginTextField.text
+                         andPassword: weakSelf.passwordTextField.text
+                            callback:^(NSDictionary *response, NSError *error) {
+        NSDictionary *answerServer = [response objectForKey:@"response"];
+        if([[response objectForKey:@"statusCode"] isEqual:@200]) {
+            if([[answerServer objectForKey:@"name"] isEqualToString:weakSelf.loginTextField.text]) {
+                PAMUser *user = [[PAMUser alloc] initWithName:[answerServer objectForKey:@"name"]
+                                                        email:[answerServer objectForKey:@"email"]
+                                                       userId:[[answerServer objectForKey:@"id"] intValue]];
+                NSData* userData = [NSKeyedArchiver archivedDataWithRootObject: user];
+                [[NSUserDefaults standardUserDefaults] setObject:userData forKey:@"userId"];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    UITabBarController *tabBar = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"MainTabBarController"];
+                    [weakSelf presentViewController:tabBar animated:YES completion:nil];
+                });
+            }else {
+                NSLog(@"Karl, problem with server!");
+            }
+        } else {
+            NSLog(@"%@",[answerServer objectForKey:@"msg"]);
+        }
+    }];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userId"];
+}
 
+#pragma mark - Action
 - (IBAction)actionClickRegister:(UIButton *)sender {
-    
+    __weak PAMLoginViewController *weakSelf = self;
+    PAMPartyMakerSDK *partyMakerSDK = [PAMPartyMakerSDK standartPartyMakerSDK];
+    [partyMakerSDK registerWithUserName:weakSelf.loginTextField.text
+                            andPassword:weakSelf.passwordTextField.text
+                               andEmail:[NSString stringWithFormat:@"%@@gmail.com",weakSelf.loginTextField.text]
+                               callback:^(NSDictionary *response, NSError *error) {
+                                   NSDictionary *answerServer = [response objectForKey:@"response"];
+                                   if([[response objectForKey:@"statusCode"] isEqual:@200]) {
+                                       [weakSelf userLogin];
+                                   } else {
+                                       NSLog(@"%@",[answerServer objectForKey:@"msg"]);
+                                   }
+                               }];
 }
 
 - (IBAction)actionClickSingIn:(UIButton *)sender {
-    
+    [self userLogin];
 }
 
 #pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-//    self.view convertRect:<#(CGRect)#> toView:<#(nullable UIView *)#>
-//    NSLog(@"%@", NSStringFromCGRect(textField.frame));
-//    int value = (self.view.frame.size.height - 432) - CGRectGetMaxY(textField.frame);
-//    if(value <= 0){
-//        CGSize contentWithKeyboard = self.loginScrollView.contentSize;
-//        contentWithKeyboard.height +=value;
-//        self.loginScrollView.contentSize = contentWithKeyboard;
-//        
-//        CGPoint contentOffset = CGPointMake(0,value);
-//        
-//        [self.loginScrollView setContentOffset:contentOffset animated:YES];
-//    }
     if(!isKeyboardShow) {
         CGSize contentWithKeyboard = self.loginScrollView.contentSize;
         contentWithKeyboard.height +=30;

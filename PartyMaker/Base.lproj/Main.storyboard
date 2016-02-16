@@ -46,7 +46,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="ubF-Kv-y5E">
             <objects>
-                <tabBarController id="qNV-YE-6Aw" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="MainTabBarController" id="qNV-YE-6Aw" sceneMemberID="viewController">
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
@@ -95,9 +95,8 @@
                                         <rect key="frame" x="6" y="101" width="308" height="365"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HELLO!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NPM-gb-xae">
-                                                <rect key="frame" x="94" y="45" width="120" height="36"/>
+                                                <rect key="frame" x="10" y="45" width="288" height="36"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="120" id="0bl-tF-U5Z"/>
                                                     <constraint firstAttribute="height" constant="36" id="aTA-tM-JZw"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="MyriadPro-Bold" family="Myriad Pro" pointSize="36"/>
@@ -196,15 +195,16 @@
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
                                                     <action selector="actionClickSingIn:" destination="jq1-Zj-42t" eventType="touchUpInside" id="QYV-e6-F7W"/>
-                                                    <segue destination="qNV-YE-6Aw" kind="show" id="6cf-Ux-zrN"/>
                                                 </connections>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" red="0.18039215689999999" green="0.19215686269999999" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstItem="QZR-bx-GGK" firstAttribute="leading" secondItem="vbx-cn-3Ml" secondAttribute="leading" constant="57" id="3uJ-W7-wDw"/>
+                                            <constraint firstItem="NPM-gb-xae" firstAttribute="leading" secondItem="vbx-cn-3Ml" secondAttribute="leading" constant="10" id="4Pq-E4-FlP"/>
                                             <constraint firstAttribute="trailing" secondItem="QZR-bx-GGK" secondAttribute="trailing" constant="57" id="8BJ-Ak-J2p"/>
                                             <constraint firstItem="qbS-Oz-4QS" firstAttribute="top" secondItem="NPM-gb-xae" secondAttribute="bottom" constant="40" id="9K9-We-E8b"/>
+                                            <constraint firstAttribute="trailing" secondItem="NPM-gb-xae" secondAttribute="trailing" constant="10" id="C7m-zs-Sui"/>
                                             <constraint firstItem="RjA-Rq-di1" firstAttribute="top" secondItem="qbS-Oz-4QS" secondAttribute="bottom" constant="17" id="Hy1-Cc-oB5"/>
                                             <constraint firstItem="qbS-Oz-4QS" firstAttribute="leading" secondItem="vbx-cn-3Ml" secondAttribute="leading" constant="23" id="Iqk-7h-APZ"/>
                                             <constraint firstItem="kOs-Ll-69U" firstAttribute="top" secondItem="RjA-Rq-di1" secondAttribute="bottom" constant="22" id="RJY-iA-bR6"/>

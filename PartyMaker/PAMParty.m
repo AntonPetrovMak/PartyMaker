@@ -19,8 +19,6 @@
     self.partyType = partyType;
     self.partyDescription = description;
     
-    
-    
     return self;
 }
 
