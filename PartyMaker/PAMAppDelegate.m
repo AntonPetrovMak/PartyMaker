@@ -8,6 +8,8 @@
 
 #import "PAMAppDelegate.h"
 #import "PAMPartyMakerSDK.h"
+#import "PAMPartyCore.h"
+#import "PAMDataStore.h"
 
 @interface PAMAppDelegate ()
 
@@ -21,13 +23,33 @@
                                    NSForegroundColorAttributeName:[UIColor whiteColor]};
     [[UINavigationBar appearance] setTitleTextAttributes:attributes1];
     
-    if([[NSUserDefaults standardUserDefaults] objectForKey:@"userId"]) {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        UITabBarController *tabBar = [storyboard instantiateViewControllerWithIdentifier:@"MainTabBarController"];
-        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        self.window.rootViewController = tabBar;
-        [self.window makeKeyAndVisible];
+    NSManagedObjectContext *moc = [[PAMDataStore standartDataStore] managedObjectContext];
+    
+    
+    PAMPartyCore *party = [NSEntityDescription insertNewObjectForEntityForName:@"PAMPartyCore" inManagedObjectContext:moc];
+    
+    party.name = @"fmljsngvkhfdnkvjfddfkjanddjsnvjndfbnvdfjnvbdfjkvdkjnv";
+    
+    NSError *error = nil;
+    [moc save:&error];
+    if (error) {
+        NSLog(@"%s error saving context %@", __PRETTY_FUNCTION__, error);
     }
+
+    
+    
+//    PAMPartyMakerSDK *partyMakerSDK = [PAMPartyMakerSDK standartPartyMakerSDK];
+//    [partyMakerSDK partiesWithCreatorId:@56 callback:^(NSDictionary *response, NSError *error) {
+//        NSLog(@"%@",response);
+//    }];
+    
+//    if([[NSUserDefaults standardUserDefaults] objectForKey:@"userId"]) {
+//        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//        UITabBarController *tabBar = [storyboard instantiateViewControllerWithIdentifier:@"MainTabBarController"];
+//        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+//        self.window.rootViewController = tabBar;
+//        [self.window makeKeyAndVisible];
+//    }
     return YES;
 }
 
@@ -50,5 +72,7 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
 
 }
+
+
 
 @end
