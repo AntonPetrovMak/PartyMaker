@@ -11,8 +11,6 @@
 
 @interface PAMNewViewController ()
 
-@property(assign, nonatomic) BOOL isEdit;
-
 @end
 
 @implementation PAMNewViewController
@@ -33,21 +31,11 @@
     rect.size.width = [UIScreen mainScreen].bounds.size.width - 128;
     self.typeEventScrollView.frame = rect;
     [self creatingScrollView];
-    
-    if(self.party) {
-        self.isEdit = YES;
-        [self enterDataForEdit];
-    } else {
-        self.party = [[PAMParty alloc] init];
-    }
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
+    self.party = [[PAMParty alloc] init];
 }
 
 - (void)enterDataForEdit {
-    self.partyDate = self.party.partyStartDate;
+    /*self.partyDate = self.party.partyStartDate;
     [self.chooseButton setTitle: [NSString stringPrityDateWithDate:self.party.partyStartDate]
                        forState: UIControlStateNormal];
     self.partyNameTextField.text = self.party.partyName;
@@ -61,7 +49,7 @@
     CGPoint contentOffset = CGPointMake(self.party.partyType * self.typeEventScrollView.bounds.size.width, 0);
     [self.typeEventScrollView setContentOffset:contentOffset animated:NO];
     self.typeEventPageControl.currentPage = self.party.partyType;
-    self.partyDescription.text = self.party.partyDescription;
+    self.partyDescription.text = self.party.partyDescription;*/
 }
 
 #pragma mark - Helpers
@@ -145,6 +133,7 @@
     [self blockControllersBesides:nil userInteractionEnabled:NO];
     NSArray *nibContents = [[NSBundle mainBundle] loadNibNamed:NSStringFromClass([PAMCustomDatePiker class]) owner:nil options:nil];
     PAMCustomDatePiker *datePikerView = nibContents[0];
+    [datePikerView.datePiker setMinimumDate:[NSDate date]];
     datePikerView.delegate = self;
     datePikerView.frame = CGRectMake(0, self.view.frame.size.height,
                                     self.view.bounds.size.width, datePikerView.bounds.size.height);
@@ -193,18 +182,20 @@
         NSInteger intervale = ((components.hour-2) * 60 * 60) + (components.minute * 60) + components.second;
         
         NSDate *partyDate = [self.partyDate dateByAddingTimeInterval:-intervale];
-        
+        self.party.partyId = arc4random_uniform(1000000);
         self.party.partyName = self.partyNameTextField.text;
         self.party.partyDescription = self.partyDescription.text;
-        self.party.partyStartDate = [partyDate dateByAddingTimeInterval:self.startSlider.value*60];
-        self.party.partyEndDate = [partyDate dateByAddingTimeInterval:self.endSlider.value*60];
+        self.party.partyStartDate = [[partyDate dateByAddingTimeInterval:self.startSlider.value] timeIntervalSince1970];
+        self.party.partyEndDate = [[partyDate dateByAddingTimeInterval:self.endSlider.value] timeIntervalSince1970];
         self.party.partyType = self.typeEventPageControl.currentPage;
-        if(self.isEdit) {
+        NSManagedObjectContext *context = [[PAMDataStore standartDataStore] managedObjectContext];
+        [PAMPartyCore createParty:self.party withContext:context];
+//        if(self.isEdit) {
 //            NSMutableArray* paties = [[PAMDataStore standartDataStore] arrayWithParties];
 //            [paties removeObjectAtIndex:self.indexCurrentCell];
 //            [paties addObject:self.party];
 //            [[PAMDataStore standartDataStore] writePartiesToPlist:paties];
-        } else {
+//        } else {
 //            [[PAMDataStore standartDataStore] writePartyToPlist:self.party];
 //            NSLog(@"ADD CREATOR ID");
 //            NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
@@ -212,7 +203,7 @@
 //            [[PAMPartyMakerSDK standartPartyMakerSDK] writeParty:self.party withCreatorId:@(user.userId) callback:^(NSDictionary *response, NSError *error) {
 //                NSLog(@"%@",response);
 //            }];
-        }
+//        }
         
         [self actionCloseButton:sender];
     }

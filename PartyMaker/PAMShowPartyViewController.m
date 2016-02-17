@@ -23,13 +23,13 @@
     }
 }
 
-- (void)configureWithParty:(PAMParty *) party {
-    self.partyNameLabel.text = [party.partyName uppercaseString];
+- (void)configureWithParty:(PAMPartyCore *) party {
+    self.partyNameLabel.text = [party.name uppercaseString];
     self.partyDescriptionLabel.text = [NSString stringWithFormat:@" \"%@\" ", party.partyDescription.length ? party.partyDescription : @"not description" ];
     self.partyTypeImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"PartyLogo_Small_%ld", (long)party.partyType]];
-    self.partyDateLabel.text = [NSString stringPrityDateWithDate:party.partyStartDate];
-    self.partyTimeStartLabel.text = [NSString stringHourAndMinutesWithDate: party.partyStartDate];
-    self.partyTimeEndLabel.text = [NSString stringHourAndMinutesWithDate:party.partyEndDate];
+    self.partyDateLabel.text = [NSString stringPrityDateWithDate:[NSDate dateWithTimeIntervalSince1970:party.startDate]];
+    self.partyTimeStartLabel.text = [NSString stringHourAndMinutesWithInterval:party.startDate];
+    self.partyTimeEndLabel.text = [NSString stringHourAndMinutesWithInterval:party.endDate];
 }
 
 - (void)emptyParty{
@@ -43,10 +43,8 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"SegueEditParty"]) {
-        PAMNewViewController *editView = [segue destinationViewController];
-        PAMParty *party = [[PAMDataStore standartDataStore] arrayWithParties][self.indexCurrentCell];
-        editView.party = party;
-        editView.indexCurrentCell = self.indexCurrentCell;
+        //PAMNewViewController *editView = [segue destinationViewController];
+        //editView.partyCore = self.party;
     }
 }
 
@@ -59,9 +57,8 @@
 }
 
 - (IBAction)actionDeleteParty:(UIButton *)sender {
-    NSMutableArray* paties = [[PAMDataStore standartDataStore] arrayWithParties];
-    [paties removeObjectAtIndex:self.indexCurrentCell];
-    [[PAMDataStore standartDataStore] writePartiesToPlist:paties];
+    // go to root controller
+    [PAMPartyCore deletePartyWithCompletion:nil byPartyId: self.party.partyId];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 @end

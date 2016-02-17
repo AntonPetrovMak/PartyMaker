@@ -19,7 +19,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.arrayWithParties = [[NSMutableArray alloc] init];
-    //load date from code data
+    NSManagedObjectContext *context = [[PAMDataStore standartDataStore] managedObjectContext];
+    [PAMPartyCore fetchPartiesWithContext: context];
+    if([PAMPartyCore fetchPartiesWithContext: context]) {
+        self.arrayWithParties = [[NSMutableArray alloc] initWithArray:[PAMPartyCore fetchPartiesWithContext: context]];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -27,7 +31,12 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    //load new data from code data + add + delete + edit 
+    //load new data from code data + add + delete + edit
+    NSManagedObjectContext *context = [[PAMDataStore standartDataStore] managedObjectContext];
+    [PAMPartyCore fetchPartiesWithContext: context];
+    if([PAMPartyCore fetchPartiesWithContext: context]) {
+        self.arrayWithParties = [[NSMutableArray alloc] initWithArray:[PAMPartyCore fetchPartiesWithContext: context]];
+    }
     [self.tableView reloadData];
 }
 
@@ -68,16 +77,15 @@
         cell = [[PAMPartyTableCell alloc] initWithStyle:UITableViewCellStyleDefault
                                         reuseIdentifier:[PAMPartyTableCell reuseIdentifire]];
     }
-    PAMParty *party = [self.arrayWithParties objectAtIndex:indexPath.row];
+    PAMPartyCore *party = [self.arrayWithParties objectAtIndex:indexPath.row];
     
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat: @"MM.dd.yyyy HH:mm"];
-    [dateFormatter setTimeZone:[NSTimeZone systemTimeZone]];
-    
-    
-    [cell configureWithPartyName:party.partyName
-                       partyDate:[dateFormatter stringFromDate:[party.partyStartDate dateByAddingTimeInterval:-7200]]
-                       partyType:[UIImage imageNamed:[NSString stringWithFormat:@"PartyLogo_Small_%ld", (long)party.partyType]]];
+    NSString *strWithDate = [NSString stringWithFormat:@"%@     %@ - %@", [NSString stringPrityDateWithDate:[NSDate dateWithTimeIntervalSince1970:party.startDate]],
+                                                               [NSString stringHourAndMinutesWithInterval: party.startDate],
+                                                               [NSString stringHourAndMinutesWithInterval: party.endDate]];
+    [cell configureWithPartyName:party.name
+                       partyDate:strWithDate
+                       partyType:[UIImage imageNamed:[NSString stringWithFormat:@"PartyLogo_Small_%lld", party.partyType]]];
+
     return cell;
 }
 
@@ -112,16 +120,13 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"SegueShowParty"]) {
         PAMShowPartyViewController *showView = [segue destinationViewController];
-        PAMParty *party = [[[PAMDataStore standartDataStore] arrayWithParties] objectAtIndex:[self.tableView indexPathForSelectedRow].row];
-        showView.party = party;
-        showView.indexCurrentCell = [self.tableView indexPathForSelectedRow].row;
-        showView.tableViewWithPaties = self.tableView;
+        NSInteger selectedRow = [[self.tableView indexPathForSelectedRow] row];
+        showView.party = [self.arrayWithParties objectAtIndex:selectedRow];
     }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-
 }
 
 @end

@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PAMParty.h"
+#import "NSString+PAMDateFormat.h"
+#import "PAMPartyCore.h"
 #import "PAMDataStore.h"
 
 @interface PAMShowPartyViewController : UIViewController
@@ -24,9 +25,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *editButton;
 @property (weak, nonatomic) IBOutlet UIButton *deleteButton;
 
-@property (nonatomic, strong) PAMParty *party;
+@property (nonatomic, strong) PAMPartyCore *party;
 @property (nonatomic, strong) UITableView *tableViewWithPaties;
-@property (nonatomic, assign) NSInteger indexCurrentCell;
 
 - (IBAction)actionEditParty:(UIButton *)sender;
 - (IBAction)actionDeleteParty:(UIButton *)sender;

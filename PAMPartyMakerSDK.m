@@ -90,8 +90,8 @@ static NSString* APIURLLink = @"http://itworksinua.km.ua/party/";
 -(void) writeParty:(PAMParty *) party withCreatorId:(NSNumber *) creatorId callback:(void(^)(NSDictionary *response, NSError *error)) block {
     NSDictionary *dictionaryWithParty = @{  @"party_id":@"",
                                                 @"name":party.partyName,
-                                          @"start_time":party.partyStartDate,
-                                            @"end_time":party.partyEndDate,
+                                          @"start_time":[NSString stringWithFormat:@"%ld",party.partyStartDate],
+                                            @"end_time":[NSString stringWithFormat:@"%ld",party.partyEndDate],
                                              @"logo_id":@(party.partyType),
                                              @"comment":party.partyDescription,
                                           @"creator_id":creatorId,

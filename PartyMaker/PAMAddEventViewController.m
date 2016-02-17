@@ -445,19 +445,19 @@
         NSString *documentsPathWithFile = [documentsPath stringByAppendingPathComponent:@"logs.plist"];
         NSMutableArray *arrayPartyes = [[NSMutableArray alloc] init];
         
-        NSCalendar *calendar =[NSCalendar currentCalendar];
+        /*NSCalendar *calendar =[NSCalendar currentCalendar];
         
         NSDateComponents *components = [calendar components:NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:self.partyDate];
         NSInteger intervale = ((components.hour-2) * 60 * 60) + (components.minute * 60) + components.second;
         
-        NSDate *partyDate = [self.partyDate dateByAddingTimeInterval:-intervale];
+        NSDate *partyDate = [self.partyDate dateByAddingTimeInterval:-intervale];*/
         
-        PAMParty *party = [[PAMParty alloc] initWithPartyId: arc4random_uniform(100000000)
+       /* PAMParty *party = [[PAMParty alloc] initWithPartyId: arc4random_uniform(100000000)
                                                        name:self.partyNameTextField.text
                                                   startDate:[partyDate dateByAddingTimeInterval:self.startSlider.value*60]
                                                     endDate:[partyDate dateByAddingTimeInterval:self.endSlider.value*60]
                                                    paryType:self.typeEventPageControl.currentPage
-                                                description:self.descriptionTextView.text];
+                                                description:self.descriptionTextView.text];*/
         
         if ([fileManager fileExistsAtPath:documentsPathWithFile]) {
             NSData *oldData =[NSData dataWithContentsOfFile:documentsPathWithFile];
@@ -466,7 +466,7 @@
             NSString *logsPlistPath = [[NSBundle mainBundle] pathForResource:@"logs" ofType:@"plist"];
             [fileManager copyItemAtPath:logsPlistPath toPath:documentsPathWithFile error:&error];
         }
-        [arrayPartyes addObject:party];
+        //[arrayPartyes addObject:party];
         NSData* newData = [NSKeyedArchiver archivedDataWithRootObject: arrayPartyes];
         [newData writeToFile:documentsPathWithFile atomically:YES];
         [self closeButtonClicked];

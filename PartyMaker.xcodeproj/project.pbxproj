@@ -31,7 +31,6 @@
 		839A8ABF1C6B2BD900D715D3 /* PAMDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 839A8ABE1C6B2BD900D715D3 /* PAMDataStore.m */; };
 		839A8AC31C6B419E00D715D3 /* PAMPartiesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 839A8AC11C6B419E00D715D3 /* PAMPartiesTableViewController.m */; };
 		EA3ED6171C668B1D00CBCD45 /* logs.plist in Resources */ = {isa = PBXBuildFile; fileRef = EA3ED6161C668B1D00CBCD45 /* logs.plist */; };
-		EA74B4231C6A932C00960CE0 /* PAMNewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA74B4251C6A932C00960CE0 /* PAMNewViewController.xib */; };
 		EA9F4E001C707DAE003B683F /* MyriadPro-It.otf in Resources */ = {isa = PBXBuildFile; fileRef = EA9F4DFF1C707DAE003B683F /* MyriadPro-It.otf */; };
 		EA9F4E071C70DD8B003B683F /* NSString+PAMDateFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = EA9F4E061C70DD8B003B683F /* NSString+PAMDateFormat.m */; };
 		EADD7C791C6771E900EC4838 /* PAMParty.m in Sources */ = {isa = PBXBuildFile; fileRef = EADD7C781C6771E900EC4838 /* PAMParty.m */; };
@@ -79,7 +78,6 @@
 		839A8AC01C6B419E00D715D3 /* PAMPartiesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMPartiesTableViewController.h; sourceTree = "<group>"; };
 		839A8AC11C6B419E00D715D3 /* PAMPartiesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMPartiesTableViewController.m; sourceTree = "<group>"; };
 		EA3ED6161C668B1D00CBCD45 /* logs.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = logs.plist; sourceTree = "<group>"; };
-		EA74B4241C6A932C00960CE0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PAMNewViewController.xib; sourceTree = "<group>"; };
 		EA9F4DFF1C707DAE003B683F /* MyriadPro-It.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MyriadPro-It.otf"; sourceTree = "<group>"; };
 		EA9F4E051C70DD8B003B683F /* NSString+PAMDateFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+PAMDateFormat.h"; sourceTree = "<group>"; };
 		EA9F4E061C70DD8B003B683F /* NSString+PAMDateFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+PAMDateFormat.m"; sourceTree = "<group>"; };
@@ -134,9 +132,7 @@
 			isa = PBXGroup;
 			children = (
 				EA9F4E011C70D977003B683F /* Categories */,
-				836F477D1C6221CE007F5ECC /* Assets.xcassets */,
-				836F47741C6221CE007F5ECC /* PAMAppDelegate.h */,
-				836F47751C6221CE007F5ECC /* PAMAppDelegate.m */,
+				831A75291C74BE8F007BB322 /* CoreData Models  */,
 				EA74B41F1C6A6CF500960CE0 /* Models */,
 				EA74B4221C6A6F4D00960CE0 /* Views */,
 				EA74B4201C6A6D0000960CE0 /* Controllers */,
@@ -150,6 +146,9 @@
 		836F47711C6221CE007F5ECC /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				836F477D1C6221CE007F5ECC /* Assets.xcassets */,
+				836F47741C6221CE007F5ECC /* PAMAppDelegate.h */,
+				836F47751C6221CE007F5ECC /* PAMAppDelegate.m */,
 				836F47821C6221CE007F5ECC /* Info.plist */,
 				EA3ED6161C668B1D00CBCD45 /* logs.plist */,
 				836F47721C6221CE007F5ECC /* main.m */,
@@ -191,7 +190,6 @@
 		EA74B41F1C6A6CF500960CE0 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				831A75291C74BE8F007BB322 /* CoreData Models  */,
 				836A61FF1C736AE6001085C3 /* PAMUser.h */,
 				836A62001C736AE6001085C3 /* PAMUser.m */,
 				EADD7C771C6771E900EC4838 /* PAMParty.h */,
@@ -233,7 +231,6 @@
 				838D66651C6CDBE600C43BC8 /* PAMShowPartyViewController.m */,
 				8301C1881C68AA560070A745 /* PAMNewViewController.h */,
 				8301C1891C68AA560070A745 /* PAMNewViewController.m */,
-				EA74B4251C6A932C00960CE0 /* PAMNewViewController.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -310,7 +307,6 @@
 				836F477E1C6221CE007F5ECC /* Assets.xcassets in Resources */,
 				836F477C1C6221CE007F5ECC /* Main.storyboard in Resources */,
 				EA9F4E001C707DAE003B683F /* MyriadPro-It.otf in Resources */,
-				EA74B4231C6A932C00960CE0 /* PAMNewViewController.xib in Resources */,
 				831231261C6A2D0400422D00 /* PAMCustomDatePiker.xib in Resources */,
 				8397CA671C635C02006FDE42 /* MyriadProRegular.ttf in Resources */,
 				EA3ED6171C668B1D00CBCD45 /* logs.plist in Resources */,
@@ -363,14 +359,6 @@
 				836F47801C6221CE007F5ECC /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		EA74B4251C6A932C00960CE0 /* PAMNewViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				EA74B4241C6A932C00960CE0 /* Base */,
-			);
-			name = PAMNewViewController.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

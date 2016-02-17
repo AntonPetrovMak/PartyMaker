@@ -10,7 +10,7 @@
 
 @implementation PAMParty
 
--(instancetype) initWithPartyId:(NSInteger) partyId name:(NSString *) name startDate:(NSDate *) startDate endDate:(NSDate *) endDate paryType:(NSInteger) partyType description:(NSString *)description {
+-(instancetype) initWithPartyId:(NSInteger) partyId name:(NSString *) name startDate:(NSInteger) startDate endDate:(NSInteger) endDate paryType:(NSInteger) partyType description:(NSString *)description {
     self = [super init];
     if(!self) return nil;
     self.partyId = partyId;
@@ -25,15 +25,15 @@
 
 - (NSString *)description {
     return [NSString stringWithFormat:@"\nId: %d\nName: %@ \nStart: %@ \nEnd: %@ \nType: %d \nDescription: %@",
-            (int)self.partyId, self.partyName , self.partyStartDate, self.partyEndDate, (int)self.partyType, self.partyDescription];
+            (int)self.partyId, self.partyName , [NSDate dateWithTimeIntervalSince1970:self.partyStartDate], [NSDate dateWithTimeIntervalSince1970:self.partyEndDate], (int)self.partyType, self.partyDescription];
 }
 
 #pragma mark - NSCoding
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:[NSNumber numberWithInteger:self.partyId] forKey:@"partyId"];
     [aCoder encodeObject:self.partyName forKey:@"partyName"];
-    [aCoder encodeObject:self.partyStartDate forKey:@"partyStartDate"];
-    [aCoder encodeObject:self.partyEndDate forKey:@"partyEndDate"];
+    [aCoder encodeObject:[NSNumber numberWithInteger: self.partyStartDate] forKey:@"partyStartDate"];
+    [aCoder encodeObject:[NSNumber numberWithInteger: self.partyEndDate] forKey:@"partyEndDate"];
     [aCoder encodeObject:[NSNumber numberWithInteger:self.partyType] forKey:@"partyType"];
     [aCoder encodeObject:self.partyDescription forKey:@"partyDescription"];
 }
@@ -43,8 +43,8 @@
     if(!self) return nil;
     self.partyId = [[aDecoder decodeObjectForKey:@"partyId"] integerValue];
     self.partyName = [aDecoder decodeObjectForKey:@"partyName"];
-    self.partyStartDate = [aDecoder decodeObjectForKey:@"partyStartDate"];
-    self.partyEndDate = [aDecoder decodeObjectForKey:@"partyEndDate"];
+    self.partyStartDate = [[aDecoder decodeObjectForKey:@"partyStartDate"] integerValue];
+    self.partyEndDate = [[aDecoder decodeObjectForKey:@"partyEndDate"] integerValue];
     self.partyType = [[aDecoder decodeObjectForKey:@"partyType"] integerValue];
     self.partyDescription = [aDecoder decodeObjectForKey:@"partyDescription"];
     return self;

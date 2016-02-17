@@ -23,19 +23,19 @@
                                    NSForegroundColorAttributeName:[UIColor whiteColor]};
     [[UINavigationBar appearance] setTitleTextAttributes:attributes1];
     
-    NSManagedObjectContext *moc = [[PAMDataStore standartDataStore] managedObjectContext];
+    //NSManagedObjectContext *context = [[PAMDataStore standartDataStore] managedObjectContext];
+    //[PAMPartyCore fetchPartiesWithContext: context];
+    //[PAMPartyCore deletePartyWithCompletion:nil byPartyId:12];
+    //[PAMPartyCore fetchPartiesWithContext: context];
     
+//    PAMParty *party = [[PAMParty alloc] initWithPartyId:88
+//                                                   name:@"Test party 4"
+//                                              startDate:1
+//                                                endDate:120*1000
+//                                               paryType:4
+//                                            description:@"description party test 4"];
+//    [PAMPartyCore createParty:party withContext:context];
     
-    PAMPartyCore *party = [NSEntityDescription insertNewObjectForEntityForName:@"PAMPartyCore" inManagedObjectContext:moc];
-    
-    party.name = @"fmljsngvkhfdnkvjfddfkjanddjsnvjndfbnvdfjnvbdfjkvdkjnv";
-    
-    NSError *error = nil;
-    [moc save:&error];
-    if (error) {
-        NSLog(@"%s error saving context %@", __PRETTY_FUNCTION__, error);
-    }
-
     
     
 //    PAMPartyMakerSDK *partyMakerSDK = [PAMPartyMakerSDK standartPartyMakerSDK];

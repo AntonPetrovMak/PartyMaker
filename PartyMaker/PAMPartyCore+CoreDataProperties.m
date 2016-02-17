@@ -2,7 +2,7 @@
 //  PAMPartyCore+CoreDataProperties.m
 //  PartyMaker
 //
-//  Created by Petrov Anton on 17.02.16.
+//  Created by iMac309 on 17.02.16.
 //  Copyright © 2016 Softheme. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -13,12 +13,12 @@
 
 @implementation PAMPartyCore (CoreDataProperties)
 
-@dynamic partyId;
-@dynamic name;
-@dynamic startDate;
 @dynamic endDate;
+@dynamic name;
 @dynamic partyDescription;
+@dynamic partyId;
 @dynamic partyType;
+@dynamic startDate;
 @dynamic partyRelationship;
 
 @end

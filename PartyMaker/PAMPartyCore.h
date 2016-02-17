@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "PAMDataStore.h"
+#import "PAMParty.h"
 
 @class PAMUserCore;
 
@@ -15,7 +17,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PAMPartyCore : NSManagedObject
 
-// Insert code here to declare functionality of your managed object subclass
++ (PAMPartyCore *) fetchPartyWithContext:(NSManagedObjectContext *) context byPartyId:(NSInteger) partyId;
++ (NSArray *) fetchPartiesWithContext:(NSManagedObjectContext *) context byUserId:(NSInteger) userId;
++ (NSArray *) fetchPartiesWithContext:(NSManagedObjectContext *) context;
+
++ (void) deletePartyWithCompletion:(void (^ _Nullable )(void))completion byPartyId:(NSInteger) partyId;
+
++ (void) createParty:(PAMParty *) party withContext:(NSManagedObjectContext *) contex;
 
 @end
 

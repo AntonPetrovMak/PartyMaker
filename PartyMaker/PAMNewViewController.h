@@ -8,13 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import "NSString+PAMDateFormat.h"
-#import "PAMParty.h"
-#import "PAMUser.h"
 #import "PAMCustomDatePiker.h"
-#import "PAMDataStore.h"
 #import "PAMPartyMakerSDK.h"
+#import "PAMDataStore.h"
+#import "PAMPartyCore.h"
+#import "PAMParty.h"
 
 @interface PAMNewViewController : UIViewController <UITextFieldDelegate, UIScrollViewDelegate, UITextViewDelegate, PAMDatePikerDelegate>
+
+//@property(strong, nonatomic) PAMPartyCore *partyCore;
+@property(strong, nonatomic) PAMParty *party;
 
 @property (weak, nonatomic) IBOutlet UIButton *chooseButton;
 @property (weak, nonatomic) IBOutlet UIButton *closeButton;
@@ -34,8 +37,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cursorTopConstraint;
 
 @property(strong, nonatomic) NSDate *partyDate;
-@property(strong, nonatomic) PAMParty *party;
-@property (nonatomic, assign) NSInteger indexCurrentCell;
+
 
 - (IBAction)actionMoveCursor:(UIView *) sender;
 

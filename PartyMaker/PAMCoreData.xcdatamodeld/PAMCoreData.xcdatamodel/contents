@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15B42" minimumToolsVersion="Xcode 7.0">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15D21" minimumToolsVersion="Xcode 7.0">
     <entity name="PAMPartyCore" representedClassName="PAMPartyCore" syncable="YES">
         <attribute name="endDate" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="partyDescription" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="partyId" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="partyType" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
-        <attribute name="startDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="startDate" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <relationship name="partyRelationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PAMUserCore" inverseName="userRelationship" inverseEntity="PAMUserCore" syncable="YES"/>
     </entity>
     <entity name="PAMUserCore" representedClassName="PAMUserCore" syncable="YES">
