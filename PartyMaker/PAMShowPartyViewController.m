@@ -56,7 +56,6 @@
 }
 
 - (IBAction)actionDeleteParty:(UIButton *)sender {
-    // go to root controller
     [[PAMDataStore standartDataStore] deletePartyByPartyId:self.party.partyId withCompletion:nil];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }

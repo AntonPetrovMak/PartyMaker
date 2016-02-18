@@ -30,6 +30,8 @@
     rect.size.width = [UIScreen mainScreen].bounds.size.width - 128;
     self.typeEventScrollView.frame = rect;
     [self creatingScrollView];
+    
+    
     self.party = [[PAMParty alloc] init];
     if(self.partyCore) {
         [self enterDataForEdit];

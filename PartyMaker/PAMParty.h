@@ -19,5 +19,4 @@
 
 -(instancetype) initWithPartyId:(NSInteger) partyId name:(NSString *) name startDate:(NSInteger) startDate endDate:(NSInteger) endDate paryType:(NSInteger) partyType description:(NSString *)description;
 
-
 @end

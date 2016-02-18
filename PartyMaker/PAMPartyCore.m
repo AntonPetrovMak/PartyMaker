@@ -2,7 +2,7 @@
 //  PAMPartyCore.m
 //  PartyMaker
 //
-//  Created by Petrov Anton on 17.02.16.
+//  Created by Petrov Anton on 18.02.16.
 //  Copyright © 2016 Softheme. All rights reserved.
 //
 

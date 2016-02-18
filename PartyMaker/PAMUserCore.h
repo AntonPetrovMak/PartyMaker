@@ -2,19 +2,20 @@
 //  PAMUserCore.h
 //  PartyMaker
 //
-//  Created by Petrov Anton on 17.02.16.
+//  Created by Petrov Anton on 18.02.16.
 //  Copyright © 2016 Softheme. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
+@class PAMPartyCore;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PAMUserCore : NSManagedObject
 
-+ (NSArray *)fetchUsersWithContext:(NSManagedObjectContext *) context;
-+ (PAMUserCore *)fetchUserWithContext:(NSManagedObjectContext *) context byUserId:(NSInteger) userId;
+// Insert code here to declare functionality of your managed object subclass
 
 @end
 

@@ -2,7 +2,7 @@
 //  PAMUserCore+CoreDataProperties.h
 //  PartyMaker
 //
-//  Created by Petrov Anton on 17.02.16.
+//  Created by Petrov Anton on 18.02.16.
 //  Copyright © 2016 Softheme. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -15,19 +15,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PAMUserCore (CoreDataProperties)
 
+@property (nullable, nonatomic, retain) NSString *email;
 @property (nullable, nonatomic, retain) NSString *name;
 @property (nonatomic) int64_t userId;
-@property (nullable, nonatomic, retain) NSString *email;
-@property (nullable, nonatomic, retain) NSSet<NSManagedObject *> *userRelationship;
+@property (nonatomic) BOOL isLoaded;
+@property (nullable, nonatomic, retain) NSSet<PAMPartyCore *> *parties;
 
 @end
 
 @interface PAMUserCore (CoreDataGeneratedAccessors)
 
-- (void)addUserRelationshipObject:(NSManagedObject *)value;
-- (void)removeUserRelationshipObject:(NSManagedObject *)value;
-- (void)addUserRelationship:(NSSet<NSManagedObject *> *)values;
-- (void)removeUserRelationship:(NSSet<NSManagedObject *> *)values;
+- (void)addPartiesObject:(PAMPartyCore *)value;
+- (void)removePartiesObject:(PAMPartyCore *)value;
+- (void)addParties:(NSSet<PAMPartyCore *> *)values;
+- (void)removeParties:(NSSet<PAMPartyCore *> *)values;
 
 @end
 

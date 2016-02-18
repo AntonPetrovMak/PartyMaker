@@ -7,10 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		830D099B1C74C5A5008114EB /* PAMUserCore+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 830D09941C74C5A5008114EB /* PAMUserCore+CoreDataProperties.m */; };
-		830D099C1C74C5A5008114EB /* PAMUserCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 830D09961C74C5A5008114EB /* PAMUserCore.m */; };
-		830D099D1C74C5A5008114EB /* PAMPartyCore+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 830D09981C74C5A5008114EB /* PAMPartyCore+CoreDataProperties.m */; };
-		830D099E1C74C5A5008114EB /* PAMPartyCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 830D099A1C74C5A5008114EB /* PAMPartyCore.m */; };
 		831231241C6A2B7100422D00 /* PAMCustomDatePiker.m in Sources */ = {isa = PBXBuildFile; fileRef = 831231231C6A2B7100422D00 /* PAMCustomDatePiker.m */; };
 		831231261C6A2D0400422D00 /* PAMCustomDatePiker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 831231251C6A2D0400422D00 /* PAMCustomDatePiker.xib */; };
 		831A74EA1C748715007BB322 /* PAMCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 831A74E81C748715007BB322 /* PAMCoreData.xcdatamodeld */; };
@@ -30,6 +26,10 @@
 		8397CA671C635C02006FDE42 /* MyriadProRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8397CA651C635C02006FDE42 /* MyriadProRegular.ttf */; };
 		839A8ABF1C6B2BD900D715D3 /* PAMDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 839A8ABE1C6B2BD900D715D3 /* PAMDataStore.m */; };
 		839A8AC31C6B419E00D715D3 /* PAMPartiesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 839A8AC11C6B419E00D715D3 /* PAMPartiesTableViewController.m */; };
+		83FFB20A1C761A2C00423DD9 /* PAMUserCore+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 83FFB2031C761A2C00423DD9 /* PAMUserCore+CoreDataProperties.m */; };
+		83FFB20B1C761A2C00423DD9 /* PAMUserCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 83FFB2051C761A2C00423DD9 /* PAMUserCore.m */; };
+		83FFB20C1C761A2C00423DD9 /* PAMPartyCore+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 83FFB2071C761A2C00423DD9 /* PAMPartyCore+CoreDataProperties.m */; };
+		83FFB20D1C761A2C00423DD9 /* PAMPartyCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 83FFB2091C761A2C00423DD9 /* PAMPartyCore.m */; };
 		EA3ED6171C668B1D00CBCD45 /* logs.plist in Resources */ = {isa = PBXBuildFile; fileRef = EA3ED6161C668B1D00CBCD45 /* logs.plist */; };
 		EA9F4E001C707DAE003B683F /* MyriadPro-It.otf in Resources */ = {isa = PBXBuildFile; fileRef = EA9F4DFF1C707DAE003B683F /* MyriadPro-It.otf */; };
 		EA9F4E071C70DD8B003B683F /* NSString+PAMDateFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = EA9F4E061C70DD8B003B683F /* NSString+PAMDateFormat.m */; };
@@ -37,14 +37,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		830D09931C74C5A5008114EB /* PAMUserCore+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PAMUserCore+CoreDataProperties.h"; sourceTree = "<group>"; };
-		830D09941C74C5A5008114EB /* PAMUserCore+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PAMUserCore+CoreDataProperties.m"; sourceTree = "<group>"; };
-		830D09951C74C5A5008114EB /* PAMUserCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMUserCore.h; sourceTree = "<group>"; };
-		830D09961C74C5A5008114EB /* PAMUserCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMUserCore.m; sourceTree = "<group>"; };
-		830D09971C74C5A5008114EB /* PAMPartyCore+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PAMPartyCore+CoreDataProperties.h"; sourceTree = "<group>"; };
-		830D09981C74C5A5008114EB /* PAMPartyCore+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PAMPartyCore+CoreDataProperties.m"; sourceTree = "<group>"; };
-		830D09991C74C5A5008114EB /* PAMPartyCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMPartyCore.h; sourceTree = "<group>"; };
-		830D099A1C74C5A5008114EB /* PAMPartyCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMPartyCore.m; sourceTree = "<group>"; };
 		831231221C6A2B7100422D00 /* PAMCustomDatePiker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMCustomDatePiker.h; sourceTree = "<group>"; };
 		831231231C6A2B7100422D00 /* PAMCustomDatePiker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMCustomDatePiker.m; sourceTree = "<group>"; };
 		831231251C6A2D0400422D00 /* PAMCustomDatePiker.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PAMCustomDatePiker.xib; path = ../PAMCustomDatePiker.xib; sourceTree = "<group>"; };
@@ -77,6 +69,14 @@
 		839A8ABE1C6B2BD900D715D3 /* PAMDataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMDataStore.m; sourceTree = "<group>"; };
 		839A8AC01C6B419E00D715D3 /* PAMPartiesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMPartiesTableViewController.h; sourceTree = "<group>"; };
 		839A8AC11C6B419E00D715D3 /* PAMPartiesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMPartiesTableViewController.m; sourceTree = "<group>"; };
+		83FFB2021C761A2C00423DD9 /* PAMUserCore+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PAMUserCore+CoreDataProperties.h"; sourceTree = "<group>"; };
+		83FFB2031C761A2C00423DD9 /* PAMUserCore+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PAMUserCore+CoreDataProperties.m"; sourceTree = "<group>"; };
+		83FFB2041C761A2C00423DD9 /* PAMUserCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMUserCore.h; sourceTree = "<group>"; };
+		83FFB2051C761A2C00423DD9 /* PAMUserCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMUserCore.m; sourceTree = "<group>"; };
+		83FFB2061C761A2C00423DD9 /* PAMPartyCore+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PAMPartyCore+CoreDataProperties.h"; sourceTree = "<group>"; };
+		83FFB2071C761A2C00423DD9 /* PAMPartyCore+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PAMPartyCore+CoreDataProperties.m"; sourceTree = "<group>"; };
+		83FFB2081C761A2C00423DD9 /* PAMPartyCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMPartyCore.h; sourceTree = "<group>"; };
+		83FFB2091C761A2C00423DD9 /* PAMPartyCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMPartyCore.m; sourceTree = "<group>"; };
 		EA3ED6161C668B1D00CBCD45 /* logs.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = logs.plist; sourceTree = "<group>"; };
 		EA9F4DFF1C707DAE003B683F /* MyriadPro-It.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MyriadPro-It.otf"; sourceTree = "<group>"; };
 		EA9F4E051C70DD8B003B683F /* NSString+PAMDateFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+PAMDateFormat.h"; sourceTree = "<group>"; };
@@ -99,14 +99,14 @@
 		831A75291C74BE8F007BB322 /* CoreData Models  */ = {
 			isa = PBXGroup;
 			children = (
-				830D09931C74C5A5008114EB /* PAMUserCore+CoreDataProperties.h */,
-				830D09941C74C5A5008114EB /* PAMUserCore+CoreDataProperties.m */,
-				830D09951C74C5A5008114EB /* PAMUserCore.h */,
-				830D09961C74C5A5008114EB /* PAMUserCore.m */,
-				830D09971C74C5A5008114EB /* PAMPartyCore+CoreDataProperties.h */,
-				830D09981C74C5A5008114EB /* PAMPartyCore+CoreDataProperties.m */,
-				830D09991C74C5A5008114EB /* PAMPartyCore.h */,
-				830D099A1C74C5A5008114EB /* PAMPartyCore.m */,
+				83FFB2021C761A2C00423DD9 /* PAMUserCore+CoreDataProperties.h */,
+				83FFB2031C761A2C00423DD9 /* PAMUserCore+CoreDataProperties.m */,
+				83FFB2041C761A2C00423DD9 /* PAMUserCore.h */,
+				83FFB2051C761A2C00423DD9 /* PAMUserCore.m */,
+				83FFB2061C761A2C00423DD9 /* PAMPartyCore+CoreDataProperties.h */,
+				83FFB2071C761A2C00423DD9 /* PAMPartyCore+CoreDataProperties.m */,
+				83FFB2081C761A2C00423DD9 /* PAMPartyCore.h */,
+				83FFB2091C761A2C00423DD9 /* PAMPartyCore.m */,
 				831A74E81C748715007BB322 /* PAMCoreData.xcdatamodeld */,
 			);
 			name = "CoreData Models ";
@@ -321,16 +321,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				836A61FE1C733119001085C3 /* PAMPartyMakerSDK.m in Sources */,
-				830D099C1C74C5A5008114EB /* PAMUserCore.m in Sources */,
 				836F47761C6221CE007F5ECC /* PAMAppDelegate.m in Sources */,
+				83FFB20B1C761A2C00423DD9 /* PAMUserCore.m in Sources */,
 				838D66671C6CDBE600C43BC8 /* PAMShowPartyViewController.m in Sources */,
 				833708B31C622C490006C9C9 /* PAMAddEventViewController.m in Sources */,
 				838D66601C6CBF2B00C43BC8 /* PAMPartyTableCell.m in Sources */,
 				831231241C6A2B7100422D00 /* PAMCustomDatePiker.m in Sources */,
-				830D099D1C74C5A5008114EB /* PAMPartyCore+CoreDataProperties.m in Sources */,
 				EA9F4E071C70DD8B003B683F /* NSString+PAMDateFormat.m in Sources */,
-				830D099B1C74C5A5008114EB /* PAMUserCore+CoreDataProperties.m in Sources */,
+				83FFB20C1C761A2C00423DD9 /* PAMPartyCore+CoreDataProperties.m in Sources */,
 				836F47731C6221CE007F5ECC /* main.m in Sources */,
+				83FFB20A1C761A2C00423DD9 /* PAMUserCore+CoreDataProperties.m in Sources */,
 				839A8ABF1C6B2BD900D715D3 /* PAMDataStore.m in Sources */,
 				8342F0621C72043D000FC044 /* PAMLoginViewController.m in Sources */,
 				839A8AC31C6B419E00D715D3 /* PAMPartiesTableViewController.m in Sources */,
@@ -338,7 +338,7 @@
 				EADD7C791C6771E900EC4838 /* PAMParty.m in Sources */,
 				836A62011C736AE6001085C3 /* PAMUser.m in Sources */,
 				837F257A1C75B7FE0011BFA3 /* PAMCreatePartyViewController.m in Sources */,
-				830D099E1C74C5A5008114EB /* PAMPartyCore.m in Sources */,
+				83FFB20D1C761A2C00423DD9 /* PAMPartyCore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
