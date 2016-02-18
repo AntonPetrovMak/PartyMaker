@@ -6,22 +6,26 @@
 //  Copyright © 2016 Softheme. All rights reserved.
 //
 
-#import "PAMPartyMakerSDK.h"
+#import "PAMPartyMakerAPI.h"
 
 static NSString* APIURLLink = @"http://itworksinua.km.ua/party/";
 
-@interface PAMPartyMakerSDK ()
+@interface PAMPartyMakerAPI ()
+
 @property(strong, nonatomic) NSURLSession *defaultSession;
+@property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
+@property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+
 @end
 
-@implementation PAMPartyMakerSDK
+@implementation PAMPartyMakerAPI
 
-#pragma mark - init
-+ (PAMPartyMakerSDK *) standartPartyMakerSDK {
-    static PAMPartyMakerSDK *dataStore = nil;
+#pragma mark - API
++ (PAMPartyMakerAPI *) standartPartyMakerAPI {
+    static PAMPartyMakerAPI *dataStore = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        dataStore = [[PAMPartyMakerSDK alloc] init];
+        dataStore = [[PAMPartyMakerAPI alloc] init];
         if(dataStore)[dataStore configureSessionAndAPI];
     });
     return dataStore;
@@ -87,7 +91,7 @@ static NSString* APIURLLink = @"http://itworksinua.km.ua/party/";
                            }] resume];
 }
 
--(void) writeParty:(PAMParty *) party withCreatorId:(NSNumber *) creatorId callback:(void(^)(NSDictionary *response, NSError *error)) block {
+/*-(void) writeParty:(PAMParty *) party withCreatorId:(NSNumber *) creatorId callback:(void(^)(NSDictionary *response, NSError *error)) block {
     NSDictionary *dictionaryWithParty = @{  @"party_id":@"",
                                                 @"name":party.partyName,
                                           @"start_time":[NSString stringWithFormat:@"%ld",party.partyStartDate],
@@ -106,7 +110,7 @@ static NSString* APIURLLink = @"http://itworksinua.km.ua/party/";
                                     block([self serialize:data statusCode:[response valueForKey:@"statusCode"]],error);
                                 }
                             }] resume];
-}
+}*/
 
 -(void) registerWithUserName:(NSString *) _username andPassword:(NSString *) _pass andEmail:(NSString *) _email callback:(void(^)(NSDictionary *response, NSError *error)) block {
     NSMutableURLRequest *urlRequst = [self requestMethod:@"POST"
@@ -145,6 +149,95 @@ static NSString* APIURLLink = @"http://itworksinua.km.ua/party/";
     [dict setValue:jsonArray forKey:@"response"];
     return dict;
 }
+
+#pragma mark - Fetches
+
+#pragma mark - Fetches User
+- (NSArray *)fetchUserWithName:(NSString *) name email:(NSString *)email userId:(NSInteger) userId {
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PAMUserCore" inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@ AND email == %@ AND userId == %ld", name, email, userId];
+    [fetchRequest setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSArray *fetchedObjects = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (fetchedObjects == nil) {
+        NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
+    }
+    return [fetchedObjects lastObject];
+}
+
+- (void) performWriteOperation:(void (^)(NSManagedObjectContext*))writeBlock completion:(void(^)())completion {
+    [self.managedObjectContext performBlock:^{
+        writeBlock(self.managedObjectContext);
+        
+        if (self.managedObjectContext.hasChanges) {
+            NSError *error = nil;
+            [self.managedObjectContext save:&error];
+            NSLog(@"%s, error happened - %@", __PRETTY_FUNCTION__, error);
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (completion) {
+                completion();
+            }
+        });
+    }];
+}
+
+#pragma mark - Core Data stack
+
+@synthesize managedObjectContext = _managedObjectContext;
+@synthesize managedObjectModel = _managedObjectModel;
+@synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
+
+- (NSURL *)applicationDocumentsDirectory {
+    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+}
+
+- (NSManagedObjectModel *)managedObjectModel {
+    if (_managedObjectModel != nil) {
+        return _managedObjectModel;
+    }
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"PAMPartyMakerAPI" withExtension:@"momd"];
+    _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    return _managedObjectModel;
+}
+
+- (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
+    if (_persistentStoreCoordinator != nil) {
+        return _persistentStoreCoordinator;
+    }
+    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"PAMPartyMakerAPI.sqlite"];
+    NSError *error = nil;
+    NSString *failureReason = @"There was an error creating or loading the application's saved data.";
+    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[NSLocalizedDescriptionKey] = @"Failed to initialize the application's saved data";
+        dict[NSLocalizedFailureReasonErrorKey] = failureReason;
+        dict[NSUnderlyingErrorKey] = error;
+        error = [NSError errorWithDomain:@"YOUR_ERROR_DOMAIN" code:9999 userInfo:dict];
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        abort();
+    }
+    return _persistentStoreCoordinator;
+}
+
+- (NSManagedObjectContext *)managedObjectContext {
+    if (_managedObjectContext != nil) {
+        return _managedObjectContext;
+    }
+    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
+    if (!coordinator) {
+        return nil;
+    }
+    _managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType: NSPrivateQueueConcurrencyType];
+    [_managedObjectContext setPersistentStoreCoordinator:coordinator];
+    return _managedObjectContext;
+}
+
 
 
 @end

@@ -9,15 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "NSString+PAMDateFormat.h"
 #import "PAMCustomDatePiker.h"
-#import "PAMPartyMakerSDK.h"
+#import "PAMPartyMakerAPI.h"
 #import "PAMDataStore.h"
 #import "PAMPartyCore.h"
-#import "PAMParty.h"
 
 @interface PAMCreatePartyViewController : UIViewController <UITextFieldDelegate, UIScrollViewDelegate, UITextViewDelegate, PAMDatePikerDelegate>
 
 @property(strong, nonatomic) PAMPartyCore *partyCore;
-@property(strong, nonatomic) PAMParty *party;
 
 @property (weak, nonatomic) IBOutlet UIButton *chooseButton;
 @property (weak, nonatomic) IBOutlet UITextField *partyNameTextField;

@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PAMUserCore : NSManagedObject
+@interface PAMUserCore : NSManagedObject //<NSCoding>
 
 // Insert code here to declare functionality of your managed object subclass
 

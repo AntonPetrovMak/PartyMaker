@@ -7,12 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PAMUser.h"
-#import "PAMParty.h"
 #import "PAMPartyTableCell.h"
 #import "PAMShowPartyViewController.h"
 #import "NSString+PAMDateFormat.h"
-#import "PAMPartyMakerSDK.h"
+#import "PAMPartyMakerAPI.h"
 #import "PAMPartyCore.h"
 #import "PAMDataStore.h"
 

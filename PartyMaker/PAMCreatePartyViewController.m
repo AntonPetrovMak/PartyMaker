@@ -10,6 +10,8 @@
 
 @interface PAMCreatePartyViewController ()
 
+@property(strong, nonatomic) NSString *descriptionSaver;
+
 @end
 
 @implementation PAMCreatePartyViewController
@@ -30,9 +32,6 @@
     rect.size.width = [UIScreen mainScreen].bounds.size.width - 128;
     self.typeEventScrollView.frame = rect;
     [self creatingScrollView];
-    
-    
-    self.party = [[PAMParty alloc] init];
     if(self.partyCore) {
         [self enterDataForEdit];
     }
@@ -160,7 +159,6 @@
         UIAlertAction *actionOK = [UIAlertAction actionWithTitle:@"OK"
                                                            style:UIAlertActionStyleDefault
                                                          handler: ^(UIAlertAction* action) {
-                                                             //[weakSelf actionChooseButton:sender];
                                                          }];
         [alert addAction:actionOK];
         [self presentViewController:alert animated:YES completion:nil];
@@ -172,55 +170,38 @@
         UIAlertAction *actionOK = [UIAlertAction actionWithTitle:@"OK"
                                                            style:UIAlertActionStyleDefault
                                                          handler: ^(UIAlertAction* action) {
-                                                             //[weakSelf.partyNameTextField becomeFirstResponder];
                                                          }];
         [alert addAction:actionOK];
         [self presentViewController:alert animated:YES completion:nil];
     } else {
         NSCalendar *calendar =[NSCalendar currentCalendar];
-        
         NSDateComponents *components = [calendar components:NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond
                                                    fromDate:self.partyDate];
-        
         NSInteger intervale = ((components.hour-2) * 60 * 60) + (components.minute * 60) + components.second;
-        
         NSDate *partyDate = [self.partyDate dateByAddingTimeInterval:-intervale];
-        self.party.partyId = arc4random_uniform(1000000);
-        self.party.partyName = self.partyNameTextField.text;
-        self.party.partyDescription = self.partyDescription.text;
-        self.party.partyStartDate = [[partyDate dateByAddingTimeInterval:self.startSlider.value * 60] timeIntervalSince1970];
-        self.party.partyEndDate = [[partyDate dateByAddingTimeInterval:self.endSlider.value * 60] timeIntervalSince1970];
-        self.party.partyType = self.typeEventPageControl.currentPage;
         
         __weak PAMCreatePartyViewController *weakSelf = self;
-        if(self.partyCore) {
-            NSManagedObjectID *objectID = [self.partyCore.objectID copy];
-            [[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *context) {
+        NSManagedObjectID *objectID = [self.partyCore.objectID copy];
+        
+        [[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *context) {
+            PAMPartyCore *partyCore;
+            if (objectID) {
                 NSError *error = nil;
-                PAMPartyCore *partyCore = [context existingObjectWithID:objectID error:&error];
+                partyCore = [context existingObjectWithID:objectID error:&error];
                 NSLog(@"%s, error happened - %@", __PRETTY_FUNCTION__, error);
-                partyCore.name = weakSelf.party.partyName;
-                partyCore.partyDescription = weakSelf.party.partyDescription;
-                partyCore.partyId = weakSelf.party.partyId;
-                partyCore.partyType = weakSelf.party.partyType;
-                partyCore.startDate = weakSelf.party.partyStartDate;
-                partyCore.endDate = weakSelf.party.partyEndDate;
-            } completion:^{
-                NSLog(@"completion edit");
-            }];
-        } else {
-            [[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *context) {
-                PAMPartyCore *partyCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMPartyCore" inManagedObjectContext:context];
-                partyCore.name = weakSelf.party.partyName;
-                partyCore.partyDescription = weakSelf.party.partyDescription;
-                partyCore.partyId = weakSelf.party.partyId;
-                partyCore.partyType = weakSelf.party.partyType;
-                partyCore.startDate = weakSelf.party.partyStartDate;
-                partyCore.endDate = weakSelf.party.partyEndDate;
-            } completion:^{
-                NSLog(@"completion write");
-            }];
-        }
+            } else {
+                partyCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMPartyCore" inManagedObjectContext:context];
+            }
+            partyCore.partyId = arc4random_uniform(1000000);
+            partyCore.name = weakSelf.partyNameTextField.text;
+            partyCore.partyDescription = weakSelf.partyDescription.text;
+            partyCore.partyType = weakSelf.typeEventPageControl.currentPage;
+            partyCore.startDate = [[partyDate dateByAddingTimeInterval:weakSelf.startSlider.value * 60] timeIntervalSince1970];
+            partyCore.endDate = [[partyDate dateByAddingTimeInterval:weakSelf.endSlider.value * 60] timeIntervalSince1970];
+
+        } completion:^{
+            NSLog(@"completion edit");
+        }];
         [self actionCloseButton:sender];
     }
 }
@@ -230,21 +211,23 @@
 }
 
 - (IBAction)actionSlideChanged:(UISlider *)sender {
+    //NSLog(@"SS START: %f END:%f SENDER:%f", self.startSlider.value, self.endSlider.value, sender.value);
     if([sender isEqual:self.startSlider]) {
         if(self.endSlider.value - sender.value <= 0) {
             self.endSlider.value = sender.value;
             self.startTimeLabel.text = [NSString stringHourAndMinutesWithInterval:sender.value];
-            self.endTimeLabel.text = [NSString stringHourAndMinutesWithInterval:sender.value + 30];
+            self.endTimeLabel.text = [NSString stringHourAndMinutesWithInterval:(sender.value + 30)];
         }
         self.startTimeLabel.text = [NSString stringHourAndMinutesWithInterval:sender.value];
     } else if([sender isEqual:self.endSlider]) {
-        if(self.startSlider.value - sender.value > 0) {
+        if(self.startSlider.value - sender.value >= 0) {
             self.startSlider.value = sender.value;
             self.endTimeLabel.text = [NSString stringHourAndMinutesWithInterval:sender.value];
-            self.startTimeLabel.text = [NSString stringHourAndMinutesWithInterval:sender.value - 30];
+            self.startTimeLabel.text = [NSString stringHourAndMinutesWithInterval:(sender.value - 30)];
         }
         self.endTimeLabel.text = [NSString stringHourAndMinutesWithInterval:sender.value];
     }
+    //NSLog(@"PP START: %f END:%f SENDER:%f", self.startSlider.value, self.endSlider.value, sender.value);
     
 }
 
@@ -255,12 +238,11 @@
 }
 
 - (void)actionCancelDescription:(UIBarButtonItem *)sender {
-    self.partyDescription.text = self.party.partyDescription;
+    self.partyDescription.text = self.descriptionSaver;
     [self.partyDescription resignFirstResponder];
 }
 
 - (void)actionDoneDescription:(UIBarButtonItem *)sender {
-    self.party.partyDescription = self.partyDescription.text;
     [self.partyDescription resignFirstResponder];
 }
 
@@ -288,7 +270,7 @@
 
 #pragma mark - UITextViewDelegate
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
-    self.party.partyDescription = textView.text;
+    self.descriptionSaver = textView.text;
     [self actionMoveCursor:textView];
     __weak PAMCreatePartyViewController *weakSelf = self;
     [UIView animateWithDuration:0.3

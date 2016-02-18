@@ -27,6 +27,7 @@
     return dataStore;
 }
 
+#pragma mark - Fetches Party
 - (void) performWriteOperation:(void (^)(NSManagedObjectContext*))writeBlock completion:(void(^)())completion {
     [self.managedObjectContext performBlock:^{
         writeBlock(self.managedObjectContext);
@@ -75,7 +76,6 @@
     }
     return [fetchedObjects lastObject];
 }
-
 - (NSArray *)fetchPartiesByUserId:(NSInteger) userId {
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"PAMPartyCore" inManagedObjectContext:self.managedObjectContext];
@@ -95,7 +95,6 @@
     }
     return fetchedObjects;
 }
-
 - (NSArray *)fetchAllParties {
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"PAMPartyCore" inManagedObjectContext:self.managedObjectContext];
@@ -140,6 +139,35 @@
 
 }
 
+#pragma mark - Fetches User
+- (NSArray *)fetchUserWithName:(NSString *) name email:(NSString *)email userId:(NSInteger) userId {
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PAMUserCore" inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@ AND email == %@ AND userId == %ld", name, email, userId];
+    [fetchRequest setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSArray *fetchedObjects = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (fetchedObjects == nil) {
+        NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
+    }
+    return [fetchedObjects lastObject];
+}
+
+- (NSArray *)fetchAllUsers {
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PAMUserCore" inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    
+    NSError *error = nil;
+    NSArray *fetchedObjects = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (fetchedObjects == nil) {
+        NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
+    }
+    return fetchedObjects;
+}
 
 #pragma mark - Core Data stack
 

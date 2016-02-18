@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PAMPartyMakerSDK.h"
-#import "PAMUser.h"
+#import "PAMPartyMakerAPI.h"
+#import "PAMDataStore.h"
+#import "PAMUserCore.h"
 
 @interface PAMLoginViewController : UIViewController <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *loginTextField;

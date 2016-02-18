@@ -57,9 +57,9 @@
 
 #pragma mark - Action
 - (IBAction)logOffUser:(UIBarButtonItem *)sender {
-//    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userId"];
-//    UITabBarController *tabBar = [self.storyboard instantiateViewControllerWithIdentifier:@"PAMLoginViewController"];
-//    [self presentViewController:tabBar animated:YES completion:nil];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userId"];
+    UITabBarController *tabBar = [self.storyboard instantiateViewControllerWithIdentifier:@"PAMLoginViewController"];
+    [self presentViewController:tabBar animated:YES completion:nil];
 }
 
 #pragma mark - UITableViewDataSource

@@ -16,8 +16,6 @@
 
 @implementation PAMLoginViewController
 
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     isKeyboardShow = NO;
@@ -78,18 +76,15 @@
 
 - (void) userLogin {
     __weak PAMLoginViewController *weakSelf = self;
-    PAMPartyMakerSDK *partyMakerSDK = [PAMPartyMakerSDK standartPartyMakerSDK];
-    [partyMakerSDK loginWithUserName: self.loginTextField.text
+    PAMPartyMakerAPI *partyMakerAPI = [PAMPartyMakerAPI standartPartyMakerAPI];
+    [partyMakerAPI loginWithUserName: self.loginTextField.text
                          andPassword: self.passwordTextField.text
                             callback:^(NSDictionary *response, NSError *error) {
         NSDictionary *answerServer = [response objectForKey:@"response"];
         if([[response objectForKey:@"statusCode"] isEqual:@200]) {
             if([[answerServer objectForKey:@"name"] isEqualToString:weakSelf.loginTextField.text]) {
-                PAMUser *user = [[PAMUser alloc] initWithName:[answerServer objectForKey:@"name"]
-                                                        email:[answerServer objectForKey:@"email"]
-                                                       userId:[[answerServer objectForKey:@"id"] intValue]];
-                NSData* userData = [NSKeyedArchiver archivedDataWithRootObject: user];
-                [[NSUserDefaults standardUserDefaults] setObject:userData forKey:@"userId"];
+                
+                [[NSUserDefaults standardUserDefaults] setObject:@([[answerServer objectForKey:@"id"] intValue]) forKey:@"userId"];
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     UITabBarController *tabBar = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"MainTabBarController"];
@@ -107,24 +102,68 @@
 
 #pragma mark - Action
 - (IBAction)actionClickRegister:(UIButton *)sender {
-    __weak PAMLoginViewController *weakSelf = self;
-    PAMPartyMakerSDK *partyMakerSDK = [PAMPartyMakerSDK standartPartyMakerSDK];
-    [partyMakerSDK registerWithUserName:self.loginTextField.text
-                            andPassword:self.passwordTextField.text
-                               andEmail:[NSString stringWithFormat:@"%@@gmail.com",weakSelf.loginTextField.text]
-                               callback:^(NSDictionary *response, NSError *error) {
-                                   NSDictionary *answerServer = [response objectForKey:@"response"];
-                                   if([[response objectForKey:@"statusCode"] isEqual:@200]) {
-                                       [weakSelf userLogin];
-                                   } else {
-                                       [weakSelf createInfoViewWithMessage:[answerServer objectForKey:@"msg"]];
-                                       NSLog(@"%@",[answerServer objectForKey:@"msg"]);
-                                   }
-                               }];
+    if(self.loginTextField.text.length && self.passwordTextField.text.length) {
+        __weak PAMLoginViewController *weakSelf = self;
+        PAMPartyMakerAPI *partyMakerAPI = [PAMPartyMakerAPI standartPartyMakerAPI];
+        
+        [partyMakerAPI registerWithUserName:self.loginTextField.text
+                                andPassword:self.passwordTextField.text
+                                   andEmail:[NSString stringWithFormat:@"%@@gmail.com",weakSelf.loginTextField.text]
+                                   callback:^(NSDictionary *response, NSError *error) {
+                                       NSDictionary *answerServer = [response objectForKey:@"response"];
+                                       if([[response objectForKey:@"statusCode"] isEqual:@200]) {
+                                           [partyMakerAPI performWriteOperation:^(NSManagedObjectContext *context) {
+                                               
+                                           } completion:^{
+                                               NSLog(@"Completion wride to CoreDate");
+                                           }];
+                                           NSLog(@"Register OK");
+                                       } else {
+                                           [weakSelf createInfoViewWithMessage:[answerServer objectForKey:@"msg"]];
+                                           NSLog(@"%@",[answerServer objectForKey:@"msg"]);
+                                       }
+                                   }];
+
+    }
+    /*[[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *context) {
+        PAMUserCore *userCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMUserCore" inManagedObjectContext:context];
+        userCore.name = @"Anton";
+        userCore.email = @"Anton@gmail.com";
+        userCore.userId = 12;
+        
+    } completion:^{
+        NSLog(@"completion add user");
+    }];*/
+
+    
 }
 
 - (IBAction)actionClickSingIn:(UIButton *)sender {
-    [self userLogin];
+    if(self.loginTextField.text.length && self.passwordTextField.text.length) {
+        __weak PAMLoginViewController *weakSelf = self;
+        PAMPartyMakerAPI *partyMakerAPI = [PAMPartyMakerAPI standartPartyMakerAPI];
+        [partyMakerAPI loginWithUserName: self.loginTextField.text
+                             andPassword: self.passwordTextField.text
+                                callback:^(NSDictionary *response, NSError *error) {
+                                    NSDictionary *answerServer = [response objectForKey:@"response"];
+                                    if([[response objectForKey:@"statusCode"] isEqual:@200]) {
+                                        if([[answerServer objectForKey:@"name"] isEqualToString:weakSelf.loginTextField.text]) {
+                                            [[NSUserDefaults standardUserDefaults] setObject:@([[answerServer objectForKey:@"id"] intValue]) forKey:@"userId"];
+                                            
+                                            dispatch_async(dispatch_get_main_queue(), ^{
+                                                UITabBarController *tabBar = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"MainTabBarController"];
+                                                [weakSelf presentViewController:tabBar animated:YES completion:nil];
+                                            });
+                                        }else {
+                                            [weakSelf createInfoViewWithMessage:@"Sorry, problem with server!"];
+                                        }
+                                    } else {
+                                        [weakSelf createInfoViewWithMessage:[answerServer objectForKey:@"msg"]];
+                                        NSLog(@"%@",[answerServer objectForKey:@"msg"]);
+                                    }
+                                }];
+    }
+    
 }
 
 #pragma mark - UITextFieldDelegate

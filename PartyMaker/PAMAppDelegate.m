@@ -7,7 +7,7 @@
 //
 
 #import "PAMAppDelegate.h"
-#import "PAMPartyMakerSDK.h"
+#import "PAMPartyMakerAPI.h"
 #import "PAMPartyCore.h"
 #import "PAMDataStore.h"
 
@@ -43,13 +43,14 @@
 //        NSLog(@"%@",response);
 //    }];
     
-//    if([[NSUserDefaults standardUserDefaults] objectForKey:@"userId"]) {
-//        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-//        UITabBarController *tabBar = [storyboard instantiateViewControllerWithIdentifier:@"MainTabBarController"];
-//        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-//        self.window.rootViewController = tabBar;
-//        [self.window makeKeyAndVisible];
-//    }
+    if([[NSUserDefaults standardUserDefaults] objectForKey:@"userId"]) {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        
+        UITabBarController *tabBar = [storyboard instantiateViewControllerWithIdentifier:@"MainTabBarController"];
+        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        self.window.rootViewController = tabBar;
+        [self.window makeKeyAndVisible];
+    }
     return YES;
 }
 

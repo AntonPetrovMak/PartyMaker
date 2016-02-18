@@ -11,6 +11,25 @@
 
 @implementation PAMUserCore
 
-// Insert code here to add functionality to your managed object subclass
+/*#pragma mark - NSCoding
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.name forKey:@"name"];
+    [aCoder encodeObject:self.email forKey:@"email"];
+    [aCoder encodeObject:@(self.userId) forKey:@"userId"];
+    [aCoder encodeBool:self.isLoaded forKey:@"isLoaded"];
+    [aCoder encodeObject:self.parties forKey:@"parties"];
+}
+
+- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if(!self) return nil;
+    self.name = [aDecoder decodeObjectForKey:@"name"];
+    self.email = [aDecoder decodeObjectForKey:@"email"];
+    self.userId = [[aDecoder decodeObjectForKey:@"userId"] intValue];
+    self.isLoaded = [aDecoder decodeBoolForKey:@"isLoaded"];
+    self.parties = [aDecoder decodeObjectForKey:@"parties"];
+    return self;
+}*/
+
 
 @end
