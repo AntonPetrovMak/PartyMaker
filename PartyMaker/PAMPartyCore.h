@@ -21,7 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSArray *) fetchPartiesWithContext:(NSManagedObjectContext *) context byUserId:(NSInteger) userId;
 + (NSArray *) fetchPartiesWithContext:(NSManagedObjectContext *) context;
 
-+ (void) deletePartyWithCompletion:(void (^ _Nullable )(void))completion byPartyId:(NSInteger) partyId;
++ (void) deletePartyByPartyId:(NSInteger) partyId withCompletion:(void (^ _Nullable )(void))completion;
++ (void) editPartyByPartyId:(NSInteger) partyId newParty:(PAMParty *) party withCompletion:(void (^ _Nullable )(void))completion;
 
 + (void) createParty:(PAMParty *) party withContext:(NSManagedObjectContext *) contex;
 

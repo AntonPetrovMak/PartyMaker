@@ -81,7 +81,7 @@
     return fetchedObjects;
 }
 
-+ (void)deletePartyWithCompletion:(void (^ _Nullable )(void))completion byPartyId:(NSInteger) partyId{
++ (void) deletePartyByPartyId:(NSInteger) partyId withCompletion:(void (^ _Nullable )(void))completion {
     NSManagedObjectContext *context = [[PAMDataStore standartDataStore] managedObjectContext];
     PAMPartyCore *partyObject = [PAMPartyCore fetchPartyWithContext:context byPartyId: partyId];
     [context deleteObject:partyObject];
@@ -95,6 +95,30 @@
         completion();
     }
 }
+
++ (void)editPartyByPartyId:(NSInteger) partyId newParty:(PAMParty *) party withCompletion:(void (^ _Nullable )(void))completion {
+    NSManagedObjectContext *context = [[PAMDataStore standartDataStore] managedObjectContext];
+    PAMPartyCore *partyCore = [PAMPartyCore fetchPartyWithContext:context byPartyId: partyId];
+    partyCore.name = party.partyName;
+    partyCore.partyDescription = party.partyDescription;
+    partyCore.partyId = party.partyId;
+    partyCore.partyType = party.partyType;
+    partyCore.startDate = party.partyStartDate;
+    partyCore.endDate = party.partyEndDate;
+    //partyCore.partyRelationship = ???
+    
+    NSError *error = nil;
+    [context save:&error];
+    if (error) {
+        NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
+    }
+    
+    if (completion) {
+        completion();
+    }
+}
+
+
 
 + (void) createParty:(PAMParty *) party withContext:(NSManagedObjectContext *) contex {
     PAMPartyCore *partyCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMPartyCore" inManagedObjectContext:contex];

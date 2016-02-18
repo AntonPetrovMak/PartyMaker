@@ -1,8 +1,8 @@
 //
-//  PAMNewViewController.h
+//  PAMCreatePartyViewController.h
 //  PartyMaker
 //
-//  Created by Petrov Anton on 08.02.16.
+//  Created by Petrov Anton on 18.02.16.
 //  Copyright © 2016 Softheme. All rights reserved.
 //
 
@@ -14,14 +14,12 @@
 #import "PAMPartyCore.h"
 #import "PAMParty.h"
 
-@interface PAMNewViewController : UIViewController <UITextFieldDelegate, UIScrollViewDelegate, UITextViewDelegate, PAMDatePikerDelegate>
+@interface PAMCreatePartyViewController : UIViewController <UITextFieldDelegate, UIScrollViewDelegate, UITextViewDelegate, PAMDatePikerDelegate>
 
-//@property(strong, nonatomic) PAMPartyCore *partyCore;
+@property(strong, nonatomic) PAMPartyCore *partyCore;
 @property(strong, nonatomic) PAMParty *party;
 
 @property (weak, nonatomic) IBOutlet UIButton *chooseButton;
-@property (weak, nonatomic) IBOutlet UIButton *closeButton;
-@property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @property (weak, nonatomic) IBOutlet UITextField *partyNameTextField;
 
 @property (weak, nonatomic) IBOutlet UISlider *startSlider;

@@ -821,7 +821,7 @@
         <!--CREATE PARTY-->
         <scene sceneID="TrU-gd-w87">
             <objects>
-                <viewController storyboardIdentifier="CreateParty" id="GDM-a4-Iq0" customClass="PAMNewViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CreateParty" id="GDM-a4-Iq0" customClass="PAMCreatePartyViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="mTy-UW-y7W"/>
                         <viewControllerLayoutGuide type="bottom" id="bvP-ee-dQF"/>

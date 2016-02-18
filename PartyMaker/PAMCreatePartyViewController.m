@@ -1,19 +1,18 @@
-
 //
-//  PAMNewViewController.m
+//  PAMCreatePartyViewController.m
 //  PartyMaker
 //
-//  Created by Petrov Anton on 08.02.16.
+//  Created by Petrov Anton on 18.02.16.
 //  Copyright © 2016 Softheme. All rights reserved.
 //
 
-#import "PAMNewViewController.h"
+#import "PAMCreatePartyViewController.h"
 
-@interface PAMNewViewController ()
+@interface PAMCreatePartyViewController ()
 
 @end
 
-@implementation PAMNewViewController
+@implementation PAMCreatePartyViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -32,24 +31,27 @@
     self.typeEventScrollView.frame = rect;
     [self creatingScrollView];
     self.party = [[PAMParty alloc] init];
+    if(self.partyCore) {
+        [self enterDataForEdit];
+    }
 }
 
 - (void)enterDataForEdit {
-    /*self.partyDate = self.party.partyStartDate;
-    [self.chooseButton setTitle: [NSString stringPrityDateWithDate:self.party.partyStartDate]
-                       forState: UIControlStateNormal];
-    self.partyNameTextField.text = self.party.partyName;
-    
-    self.startSlider.value = [self countMinutesInDay:self.party.partyStartDate];
-    self.startTimeLabel.text = [NSString stringHourAndMinutesWithInterval:self.startSlider.value];
-    
-    self.endSlider.value = [self countMinutesInDay:self.party.partyEndDate];
-    self.endTimeLabel.text = [NSString stringHourAndMinutesWithInterval:self.endSlider.value];
-    
-    CGPoint contentOffset = CGPointMake(self.party.partyType * self.typeEventScrollView.bounds.size.width, 0);
-    [self.typeEventScrollView setContentOffset:contentOffset animated:NO];
-    self.typeEventPageControl.currentPage = self.party.partyType;
-    self.partyDescription.text = self.party.partyDescription;*/
+    self.partyDate = [NSDate dateWithTimeIntervalSince1970:self.partyCore.startDate];
+     [self.chooseButton setTitle: [NSString stringPrityDateWithDate:[NSDate dateWithTimeIntervalSince1970:self.partyCore.startDate]]
+                        forState: UIControlStateNormal];
+     self.partyNameTextField.text = self.partyCore.name;
+     
+     self.startSlider.value = [self countMinutesInDay:[NSDate dateWithTimeIntervalSince1970:self.partyCore.startDate]];
+     self.startTimeLabel.text = [NSString stringHourAndMinutesWithDate:[NSDate dateWithTimeIntervalSince1970:self.partyCore.startDate]];
+     
+     self.endSlider.value = [self countMinutesInDay:[NSDate dateWithTimeIntervalSince1970:self.partyCore.endDate]];
+     self.endTimeLabel.text = [NSString stringHourAndMinutesWithDate:[NSDate dateWithTimeIntervalSince1970:self.partyCore.endDate]];
+     
+     CGPoint contentOffset = CGPointMake(self.partyCore.partyType * self.typeEventScrollView.bounds.size.width, 0);
+     [self.typeEventScrollView setContentOffset:contentOffset animated:NO];
+     self.typeEventPageControl.currentPage = self.partyCore.partyType;
+     self.partyDescription.text = self.partyCore.partyDescription;
 }
 
 #pragma mark - Helpers
@@ -62,7 +64,6 @@
     return interval;
 }
 
-#pragma mark - Fichi
 - (void)blockControllersBesides:(id) controller userInteractionEnabled:(BOOL) isBlock {
     for (UIView *view in self.view.subviews) {
         if(![view isEqual:controller]){
@@ -122,7 +123,7 @@
     } else {
         self.cursorTopConstraint.constant = sender.center.y;
     }
-    __weak PAMNewViewController* weakSelf = self;
+    __weak PAMCreatePartyViewController* weakSelf = self;
     [UIView animateWithDuration:0.3
                      animations:^{
                          [weakSelf.view layoutIfNeeded];
@@ -136,14 +137,14 @@
     [datePikerView.datePiker setMinimumDate:[NSDate date]];
     datePikerView.delegate = self;
     datePikerView.frame = CGRectMake(0, self.view.frame.size.height,
-                                    self.view.bounds.size.width, datePikerView.bounds.size.height);
+                                     self.view.bounds.size.width, datePikerView.bounds.size.height);
     [UIView animateWithDuration:0.3
                      animations:^{
                          CGRect rect = datePikerView.frame;
                          rect.origin.y -= CGRectGetMaxY(datePikerView.bounds);
                          datePikerView.frame = rect;
                      }];
-
+    
     [self.view addSubview:datePikerView];
 }
 
@@ -185,25 +186,32 @@
         self.party.partyId = arc4random_uniform(1000000);
         self.party.partyName = self.partyNameTextField.text;
         self.party.partyDescription = self.partyDescription.text;
-        self.party.partyStartDate = [[partyDate dateByAddingTimeInterval:self.startSlider.value] timeIntervalSince1970];
-        self.party.partyEndDate = [[partyDate dateByAddingTimeInterval:self.endSlider.value] timeIntervalSince1970];
+        self.party.partyStartDate = [[partyDate dateByAddingTimeInterval:self.startSlider.value * 60] timeIntervalSince1970];
+        self.party.partyEndDate = [[partyDate dateByAddingTimeInterval:self.endSlider.value * 60] timeIntervalSince1970];
         self.party.partyType = self.typeEventPageControl.currentPage;
-        NSManagedObjectContext *context = [[PAMDataStore standartDataStore] managedObjectContext];
-        [PAMPartyCore createParty:self.party withContext:context];
-//        if(self.isEdit) {
-//            NSMutableArray* paties = [[PAMDataStore standartDataStore] arrayWithParties];
-//            [paties removeObjectAtIndex:self.indexCurrentCell];
-//            [paties addObject:self.party];
-//            [[PAMDataStore standartDataStore] writePartiesToPlist:paties];
-//        } else {
-//            [[PAMDataStore standartDataStore] writePartyToPlist:self.party];
-//            NSLog(@"ADD CREATOR ID");
-//            NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
-//            PAMUser *user = [NSKeyedUnarchiver unarchiveObjectWithData: data];
-//            [[PAMPartyMakerSDK standartPartyMakerSDK] writeParty:self.party withCreatorId:@(user.userId) callback:^(NSDictionary *response, NSError *error) {
-//                NSLog(@"%@",response);
-//            }];
-//        }
+        
+        if(self.partyCore) {
+            [PAMPartyCore editPartyByPartyId:self.partyCore.partyId newParty:self.party withCompletion:nil];
+        } else {
+            NSManagedObjectContext *context = [[PAMDataStore standartDataStore] managedObjectContext];
+            [PAMPartyCore createParty:self.party withContext:context];
+        }
+        
+        
+        //        if(self.isEdit) {
+        //            NSMutableArray* paties = [[PAMDataStore standartDataStore] arrayWithParties];
+        //            [paties removeObjectAtIndex:self.indexCurrentCell];
+        //            [paties addObject:self.party];
+        //            [[PAMDataStore standartDataStore] writePartiesToPlist:paties];
+        //        } else {
+        //            [[PAMDataStore standartDataStore] writePartyToPlist:self.party];
+        //            NSLog(@"ADD CREATOR ID");
+        //            NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
+        //            PAMUser *user = [NSKeyedUnarchiver unarchiveObjectWithData: data];
+        //            [[PAMPartyMakerSDK standartPartyMakerSDK] writeParty:self.party withCreatorId:@(user.userId) callback:^(NSDictionary *response, NSError *error) {
+        //                NSLog(@"%@",response);
+        //            }];
+        //        }
         
         [self actionCloseButton:sender];
     }
@@ -229,7 +237,7 @@
         }
         self.endTimeLabel.text = [NSString stringHourAndMinutesWithInterval:sender.value];
     }
-
+    
 }
 
 - (IBAction)actionPageChange:(UIPageControl *)sender {
@@ -274,7 +282,7 @@
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
     self.party.partyDescription = textView.text;
     [self actionMoveCursor:textView];
-    __weak PAMNewViewController *weakSelf = self;
+    __weak PAMCreatePartyViewController *weakSelf = self;
     [UIView animateWithDuration:0.3
                      animations:^{
                          CGRect viewFrame = weakSelf.view.frame;
@@ -285,7 +293,7 @@
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
-    __weak PAMNewViewController *weakSelf = self;
+    __weak PAMCreatePartyViewController *weakSelf = self;
     [UIView animateWithDuration:0.2
                      animations:^{
                          CGRect viewFrame = weakSelf.view.frame;
@@ -320,5 +328,6 @@
     self.partyDate = sender.datePiker.date;
     [self actionCancelDatePiker:sender];
 }
+
 
 @end

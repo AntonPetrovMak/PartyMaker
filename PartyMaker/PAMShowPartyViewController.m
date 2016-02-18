@@ -16,7 +16,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     [self emptyParty];
     if(self.party) {
         [self configureWithParty:self.party];
@@ -28,8 +27,8 @@
     self.partyDescriptionLabel.text = [NSString stringWithFormat:@" \"%@\" ", party.partyDescription.length ? party.partyDescription : @"not description" ];
     self.partyTypeImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"PartyLogo_Small_%ld", (long)party.partyType]];
     self.partyDateLabel.text = [NSString stringPrityDateWithDate:[NSDate dateWithTimeIntervalSince1970:party.startDate]];
-    self.partyTimeStartLabel.text = [NSString stringHourAndMinutesWithInterval:party.startDate];
-    self.partyTimeEndLabel.text = [NSString stringHourAndMinutesWithInterval:party.endDate];
+    self.partyTimeStartLabel.text = [NSString stringHourAndMinutesWithDate:[NSDate dateWithTimeIntervalSince1970:party.startDate]];
+    self.partyTimeEndLabel.text = [NSString stringHourAndMinutesWithDate:[NSDate dateWithTimeIntervalSince1970:party.endDate]];
 }
 
 - (void)emptyParty{
@@ -43,8 +42,8 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"SegueEditParty"]) {
-        //PAMNewViewController *editView = [segue destinationViewController];
-        //editView.partyCore = self.party;
+        PAMCreatePartyViewController *editView = [segue destinationViewController];
+        editView.partyCore = self.party;
     }
 }
 
@@ -58,7 +57,7 @@
 
 - (IBAction)actionDeleteParty:(UIButton *)sender {
     // go to root controller
-    [PAMPartyCore deletePartyWithCompletion:nil byPartyId: self.party.partyId];
+    [PAMPartyCore deletePartyByPartyId:self.party.partyId withCompletion:nil];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 @end

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8301C18B1C68AA560070A745 /* PAMNewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8301C1891C68AA560070A745 /* PAMNewViewController.m */; };
 		830D099B1C74C5A5008114EB /* PAMUserCore+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 830D09941C74C5A5008114EB /* PAMUserCore+CoreDataProperties.m */; };
 		830D099C1C74C5A5008114EB /* PAMUserCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 830D09961C74C5A5008114EB /* PAMUserCore.m */; };
 		830D099D1C74C5A5008114EB /* PAMPartyCore+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 830D09981C74C5A5008114EB /* PAMPartyCore+CoreDataProperties.m */; };
@@ -24,6 +23,7 @@
 		836F477C1C6221CE007F5ECC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 836F477A1C6221CE007F5ECC /* Main.storyboard */; };
 		836F477E1C6221CE007F5ECC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 836F477D1C6221CE007F5ECC /* Assets.xcassets */; };
 		836F47811C6221CE007F5ECC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 836F477F1C6221CE007F5ECC /* LaunchScreen.storyboard */; };
+		837F257A1C75B7FE0011BFA3 /* PAMCreatePartyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 837F25791C75B7FE0011BFA3 /* PAMCreatePartyViewController.m */; };
 		838D66601C6CBF2B00C43BC8 /* PAMPartyTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 838D665F1C6CBF2B00C43BC8 /* PAMPartyTableCell.m */; };
 		838D66671C6CDBE600C43BC8 /* PAMShowPartyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 838D66651C6CDBE600C43BC8 /* PAMShowPartyViewController.m */; };
 		8397CA661C635C02006FDE42 /* MyriadProBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8397CA641C635C02006FDE42 /* MyriadProBold.ttf */; };
@@ -37,8 +37,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		8301C1881C68AA560070A745 /* PAMNewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMNewViewController.h; sourceTree = "<group>"; };
-		8301C1891C68AA560070A745 /* PAMNewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMNewViewController.m; sourceTree = "<group>"; };
 		830D09931C74C5A5008114EB /* PAMUserCore+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PAMUserCore+CoreDataProperties.h"; sourceTree = "<group>"; };
 		830D09941C74C5A5008114EB /* PAMUserCore+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PAMUserCore+CoreDataProperties.m"; sourceTree = "<group>"; };
 		830D09951C74C5A5008114EB /* PAMUserCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMUserCore.h; sourceTree = "<group>"; };
@@ -67,6 +65,8 @@
 		836F477D1C6221CE007F5ECC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		836F47801C6221CE007F5ECC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		836F47821C6221CE007F5ECC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		837F25781C75B7FE0011BFA3 /* PAMCreatePartyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMCreatePartyViewController.h; sourceTree = "<group>"; };
+		837F25791C75B7FE0011BFA3 /* PAMCreatePartyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMCreatePartyViewController.m; sourceTree = "<group>"; };
 		838D665E1C6CBF2B00C43BC8 /* PAMPartyTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMPartyTableCell.h; sourceTree = "<group>"; };
 		838D665F1C6CBF2B00C43BC8 /* PAMPartyTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMPartyTableCell.m; sourceTree = "<group>"; };
 		838D66641C6CDBE600C43BC8 /* PAMShowPartyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMShowPartyViewController.h; sourceTree = "<group>"; };
@@ -229,8 +229,8 @@
 				8342F0611C72043D000FC044 /* PAMLoginViewController.m */,
 				838D66641C6CDBE600C43BC8 /* PAMShowPartyViewController.h */,
 				838D66651C6CDBE600C43BC8 /* PAMShowPartyViewController.m */,
-				8301C1881C68AA560070A745 /* PAMNewViewController.h */,
-				8301C1891C68AA560070A745 /* PAMNewViewController.m */,
+				837F25781C75B7FE0011BFA3 /* PAMCreatePartyViewController.h */,
+				837F25791C75B7FE0011BFA3 /* PAMCreatePartyViewController.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -320,7 +320,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8301C18B1C68AA560070A745 /* PAMNewViewController.m in Sources */,
 				836A61FE1C733119001085C3 /* PAMPartyMakerSDK.m in Sources */,
 				830D099C1C74C5A5008114EB /* PAMUserCore.m in Sources */,
 				836F47761C6221CE007F5ECC /* PAMAppDelegate.m in Sources */,
@@ -338,6 +337,7 @@
 				831A74EA1C748715007BB322 /* PAMCoreData.xcdatamodeld in Sources */,
 				EADD7C791C6771E900EC4838 /* PAMParty.m in Sources */,
 				836A62011C736AE6001085C3 /* PAMUser.m in Sources */,
+				837F257A1C75B7FE0011BFA3 /* PAMCreatePartyViewController.m in Sources */,
 				830D099E1C74C5A5008114EB /* PAMPartyCore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

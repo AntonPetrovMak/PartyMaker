@@ -80,8 +80,8 @@
     PAMPartyCore *party = [self.arrayWithParties objectAtIndex:indexPath.row];
     
     NSString *strWithDate = [NSString stringWithFormat:@"%@     %@ - %@", [NSString stringPrityDateWithDate:[NSDate dateWithTimeIntervalSince1970:party.startDate]],
-                                                               [NSString stringHourAndMinutesWithInterval: party.startDate],
-                                                               [NSString stringHourAndMinutesWithInterval: party.endDate]];
+                                                               [NSString stringHourAndMinutesWithDate:[NSDate dateWithTimeIntervalSince1970:party.startDate]],
+                                                               [NSString stringHourAndMinutesWithDate:[NSDate dateWithTimeIntervalSince1970:party.endDate]]];
     [cell configureWithPartyName:party.name
                        partyDate:strWithDate
                        partyType:[UIImage imageNamed:[NSString stringWithFormat:@"PartyLogo_Small_%lld", party.partyType]]];
