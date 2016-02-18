@@ -13,7 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PAMUserCore : NSManagedObject
 
-// Insert code here to declare functionality of your managed object subclass
++ (NSArray *)fetchUsersWithContext:(NSManagedObjectContext *) context;
++ (PAMUserCore *)fetchUserWithContext:(NSManagedObjectContext *) context byUserId:(NSInteger) userId;
 
 @end
 

@@ -8,19 +8,22 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "PAMPartyCore.h"
 #import "PAMParty.h"
-@class PAMNewViewController;
+
 
 @interface PAMDataStore : NSObject
 
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
-@property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 + (PAMDataStore *) standartDataStore;
 
-- (void) writePartiesToPlist:(NSMutableArray *) arrayParties;
-- (void) writePartyToPlist:(PAMParty *) party;
-- (NSMutableArray *) arrayWithParties;
+- (void) performWriteOperation:(void (^)(NSManagedObjectContext*))writeBlock completion:(void(^)())completion;
+- (void) deletePartyByPartyId:(NSInteger) partyId withCompletion:(void (^)(void))completion;
 
+- (NSArray *)fetchPartyByPartyId:(NSInteger) partyId;
+- (NSArray *)fetchPartiesByUserId:(NSInteger) userId;
+- (NSArray *)fetchAllParties;
+
+- (void)fetchAllParties:(void (^)(NSArray*)) allPartiesBlock completion:(void(^)())completion;
 @end

@@ -19,10 +19,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.arrayWithParties = [[NSMutableArray alloc] init];
-    NSManagedObjectContext *context = [[PAMDataStore standartDataStore] managedObjectContext];
-    [PAMPartyCore fetchPartiesWithContext: context];
-    if([PAMPartyCore fetchPartiesWithContext: context]) {
-        self.arrayWithParties = [[NSMutableArray alloc] initWithArray:[PAMPartyCore fetchPartiesWithContext: context]];
+    if([[PAMDataStore standartDataStore] fetchAllParties]) {
+        self.arrayWithParties = [[NSMutableArray alloc] initWithArray:[[PAMDataStore standartDataStore] fetchAllParties]];
     }
 }
 
@@ -31,13 +29,12 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    //load new data from code data + add + delete + edit
-    NSManagedObjectContext *context = [[PAMDataStore standartDataStore] managedObjectContext];
-    [PAMPartyCore fetchPartiesWithContext: context];
-    if([PAMPartyCore fetchPartiesWithContext: context]) {
-        self.arrayWithParties = [[NSMutableArray alloc] initWithArray:[PAMPartyCore fetchPartiesWithContext: context]];
-    }
-    [self.tableView reloadData];
+    __weak PAMPartiesTableViewController *weakSelf = self;
+    [[PAMDataStore standartDataStore] fetchAllParties:^(NSArray *allPartiesArray) {
+        weakSelf.arrayWithParties = [[NSMutableArray alloc] initWithArray:allPartiesArray];
+    } completion:^{
+        [weakSelf.tableView reloadData];
+    }];
 }
 
 /*- (void)viewWillAppear:(BOOL)animated {

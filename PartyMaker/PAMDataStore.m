@@ -8,6 +8,14 @@
 
 #import "PAMDataStore.h"
 
+@interface PAMDataStore()
+
+@property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
+@property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+
+@end
+
+
 @implementation PAMDataStore
 
 + (PAMDataStore *) standartDataStore {
@@ -19,45 +27,119 @@
     return dataStore;
 }
 
-- (NSMutableArray *) arrayWithParties {
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-    NSString *documentsPathWithFile = [documentsPath stringByAppendingPathComponent:@"logs.plist"];
-    if ([fileManager fileExistsAtPath:documentsPathWithFile]) {
-        NSData *oldData =[NSData dataWithContentsOfFile:documentsPathWithFile];
-        NSArray *array = [NSKeyedUnarchiver unarchiveObjectWithData: oldData];
-        NSMutableArray *mattay = [[NSMutableArray alloc] initWithArray:array];
-        return mattay;
-    }
-    return [[NSMutableArray alloc] init];
+- (void) performWriteOperation:(void (^)(NSManagedObjectContext*))writeBlock completion:(void(^)())completion {
+    [self.managedObjectContext performBlock:^{
+        writeBlock(self.managedObjectContext);
+        
+        if (self.managedObjectContext.hasChanges) {
+            NSError *error = nil;
+            [self.managedObjectContext save:&error];
+            NSLog(@"%s, error happened - %@", __PRETTY_FUNCTION__, error);
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (completion) {
+                completion();
+            }
+        });
+    }];
 }
 
-- (void) writePartiesToPlist:(NSMutableArray *) arrayParties {
-    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-    NSString *documentsPathWithFile = [documentsPath stringByAppendingPathComponent:@"logs.plist"];
+- (void) deletePartyByPartyId:(NSInteger) partyId withCompletion:(void (^ _Nullable )(void))completion {
+    PAMPartyCore *partyObject = (PAMPartyCore*)[self fetchPartyByPartyId:partyId];
+    [self.managedObjectContext deleteObject:partyObject];
+    NSError *error = nil;
+    [self.managedObjectContext save:&error];
+    if (error) {
+        NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
+    }
     
-    NSArray *sortedParties = [arrayParties sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"partyStartDate" ascending: true],
-                                                                         [NSSortDescriptor sortDescriptorWithKey:@"partyName" ascending: true]]];
-    
-    NSData* newData = [NSKeyedArchiver archivedDataWithRootObject: sortedParties];
-    [newData writeToFile:documentsPathWithFile atomically:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (completion) {
+            completion();
+        }
+    });
 }
 
-- (void) writePartyToPlist:(PAMParty *) party {
-    NSError *error;
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-    NSString *documentsPathWithFile = [documentsPath stringByAppendingPathComponent:@"logs.plist"];
+- (NSArray *)fetchPartyByPartyId:(NSInteger) partyId {
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PAMPartyCore" inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:entity];
     
-    NSMutableArray *arrayParties = [self arrayWithParties];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"partyId == %ld", partyId];
+    [fetchRequest setPredicate:predicate];
     
-    if (!arrayParties.count) {
-        NSString *logsPlistPath = [[NSBundle mainBundle] pathForResource:@"logs" ofType:@"plist"];
-        [fileManager copyItemAtPath:logsPlistPath toPath:documentsPathWithFile error:&error];
+    NSError *error = nil;
+    NSArray *fetchedObjects = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (fetchedObjects == nil) {
+        NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
     }
-    [arrayParties addObject:party];
-    [self writePartiesToPlist:arrayParties];
+    return [fetchedObjects lastObject];
 }
+
+- (NSArray *)fetchPartiesByUserId:(NSInteger) userId {
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PAMPartyCore" inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userId == %ld", userId];
+    [fetchRequest setPredicate:predicate];
+    
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"startDate"
+                                                                   ascending:YES];
+    [fetchRequest setSortDescriptors:[NSArray arrayWithObjects:sortDescriptor, nil]];
+    
+    NSError *error = nil;
+    NSArray *fetchedObjects = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (fetchedObjects == nil) {
+        NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
+    }
+    return fetchedObjects;
+}
+
+- (NSArray *)fetchAllParties {
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PAMPartyCore" inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"startDate"
+                                                                   ascending:YES];
+    [fetchRequest setSortDescriptors:[NSArray arrayWithObjects:sortDescriptor, nil]];
+    
+    NSError *error = nil;
+    NSArray *fetchedObjects = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (fetchedObjects == nil) {
+        NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
+    }
+    return fetchedObjects;
+}
+
+- (void)fetchAllParties:(void (^)(NSArray*)) allPartiesBlock completion:(void(^)())completion {
+    [self.managedObjectContext performBlock:^{
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        NSEntityDescription *entity = [NSEntityDescription entityForName:@"PAMPartyCore" inManagedObjectContext:self.managedObjectContext];
+        [fetchRequest setEntity:entity];
+        
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"startDate"
+                                                                       ascending:YES];
+        [fetchRequest setSortDescriptors:[NSArray arrayWithObjects:sortDescriptor, nil]];
+        
+        NSError *error = nil;
+        NSArray *fetchedObjects = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+        if (fetchedObjects == nil) {
+            NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
+        }
+        allPartiesBlock(fetchedObjects);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (completion) {
+                completion();
+            }
+        });
+    }];
+
+
+}
+
 
 #pragma mark - Core Data stack
 

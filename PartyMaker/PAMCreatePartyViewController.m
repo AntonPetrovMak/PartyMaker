@@ -190,29 +190,35 @@
         self.party.partyEndDate = [[partyDate dateByAddingTimeInterval:self.endSlider.value * 60] timeIntervalSince1970];
         self.party.partyType = self.typeEventPageControl.currentPage;
         
+        __weak PAMCreatePartyViewController *weakSelf = self;
         if(self.partyCore) {
-            [PAMPartyCore editPartyByPartyId:self.partyCore.partyId newParty:self.party withCompletion:nil];
+            NSManagedObjectID *objectID = [self.partyCore.objectID copy];
+            [[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *context) {
+                NSError *error = nil;
+                PAMPartyCore *partyCore = [context existingObjectWithID:objectID error:&error];
+                NSLog(@"%s, error happened - %@", __PRETTY_FUNCTION__, error);
+                partyCore.name = weakSelf.party.partyName;
+                partyCore.partyDescription = weakSelf.party.partyDescription;
+                partyCore.partyId = weakSelf.party.partyId;
+                partyCore.partyType = weakSelf.party.partyType;
+                partyCore.startDate = weakSelf.party.partyStartDate;
+                partyCore.endDate = weakSelf.party.partyEndDate;
+            } completion:^{
+                NSLog(@"completion edit");
+            }];
         } else {
-            NSManagedObjectContext *context = [[PAMDataStore standartDataStore] managedObjectContext];
-            [PAMPartyCore createParty:self.party withContext:context];
+            [[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *context) {
+                PAMPartyCore *partyCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMPartyCore" inManagedObjectContext:context];
+                partyCore.name = weakSelf.party.partyName;
+                partyCore.partyDescription = weakSelf.party.partyDescription;
+                partyCore.partyId = weakSelf.party.partyId;
+                partyCore.partyType = weakSelf.party.partyType;
+                partyCore.startDate = weakSelf.party.partyStartDate;
+                partyCore.endDate = weakSelf.party.partyEndDate;
+            } completion:^{
+                NSLog(@"completion write");
+            }];
         }
-        
-        
-        //        if(self.isEdit) {
-        //            NSMutableArray* paties = [[PAMDataStore standartDataStore] arrayWithParties];
-        //            [paties removeObjectAtIndex:self.indexCurrentCell];
-        //            [paties addObject:self.party];
-        //            [[PAMDataStore standartDataStore] writePartiesToPlist:paties];
-        //        } else {
-        //            [[PAMDataStore standartDataStore] writePartyToPlist:self.party];
-        //            NSLog(@"ADD CREATOR ID");
-        //            NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
-        //            PAMUser *user = [NSKeyedUnarchiver unarchiveObjectWithData: data];
-        //            [[PAMPartyMakerSDK standartPartyMakerSDK] writeParty:self.party withCreatorId:@(user.userId) callback:^(NSDictionary *response, NSError *error) {
-        //                NSLog(@"%@",response);
-        //            }];
-        //        }
-        
         [self actionCloseButton:sender];
     }
 }
