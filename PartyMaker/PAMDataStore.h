@@ -9,26 +9,28 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import "PAMPartyCore.h"
+#import "PAMUserCore.h"
 
 
 @interface PAMDataStore : NSObject
 
-@property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (readonly, strong, nonatomic) NSManagedObjectContext *mainContext;
 
 + (PAMDataStore *) standartDataStore;
 
 - (void) performWriteOperation:(void (^)(NSManagedObjectContext*))writeBlock completion:(void(^)())completion;
-- (void) deletePartyByPartyId:(NSInteger) partyId withCompletion:(void (^)(void))completion;
 
 #pragma mark - Fetches Party
-- (NSArray *)fetchPartyByPartyId:(NSInteger) partyId;
-- (NSArray *)fetchPartiesByUserId:(NSInteger) userId;
+- (void) deleteAllParties;
+- (NSArray *)fetchPartyByPartyId:(NSInteger) partyId context:(NSManagedObjectContext*) context;
+- (NSArray *)fetchPartiesByUserId:(NSInteger) userId context:(NSManagedObjectContext*) context;
 - (NSArray *)fetchAllParties;
-- (void)fetchAllParties:(void (^)(NSArray*)) allPartiesBlock completion:(void(^)())completion;
 
 #pragma mark - Fetches User
-- (NSArray *)fetchUserWithName:(NSString *) name email:(NSString *)email userId:(NSInteger) userId;
+- (NSArray *) fetchUserByUserId:(NSInteger)userId context:(NSManagedObjectContext*) context;
 - (NSArray *)fetchAllUsers;
+
+- (void) writeUserToCoreDataInBackroundThread:(void (^)(NSManagedObjectContext*))writeBlock completion:(void(^)())completion;
 
 
 @end

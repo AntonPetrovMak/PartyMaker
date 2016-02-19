@@ -19,8 +19,44 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.arrayWithParties = [[NSMutableArray alloc] init];
-    if([[PAMDataStore standartDataStore] fetchAllParties]) {
-        self.arrayWithParties = [[NSMutableArray alloc] initWithArray:[[PAMDataStore standartDataStore] fetchAllParties]];
+    NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
+    NSManagedObjectContext *context = [[PAMDataStore standartDataStore] mainContext];
+    
+    NSArray *array = [[PAMDataStore standartDataStore] fetchPartiesByUserId:userId context:context];
+    if ( array ) {
+        self.arrayWithParties = [[NSMutableArray alloc] initWithArray:array];
+    }
+    
+    
+    PAMPartyMakerAPI *partyMakerAPI = [PAMPartyMakerAPI standartPartyMakerAPI];
+    __weak PAMPartiesTableViewController *weakSelf = self;
+    [partyMakerAPI partiesWithCreatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
+        NSArray *array = [response objectForKey:@"response"];
+        if(![array isEqual:[NSNull null]]) {
+            NSLog(@"response = %@",response);
+            [self addPartiesFromServerToCoreData:array];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.tableView reloadData];
+        });
+    }];
+
+}
+
+- (void) addPartiesFromServerToCoreData:(NSArray *) serverParty {
+    [[PAMDataStore standartDataStore] deleteAllParties];
+    for (id serverPary in serverParty) {
+        [[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *backgroundContext) {
+            PAMPartyCore *partyCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMPartyCore" inManagedObjectContext:backgroundContext];
+            partyCore.partyId = [[serverPary objectForKey:@"id"] longLongValue];
+            partyCore.name = [serverPary objectForKey:@"name"];
+            partyCore.partyDescription = [serverPary objectForKey:@"comment"];
+            partyCore.partyType = [[serverPary objectForKey:@"logo_id"] longLongValue];
+            partyCore.startDate = [[serverPary objectForKey:@"start_time"] longLongValue];
+            partyCore.endDate = [[serverPary objectForKey:@"end_time"] longLongValue];
+        } completion:^{
+            [self.tableView reloadData];
+        }];
     }
 }
 
@@ -29,29 +65,26 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    __weak PAMPartiesTableViewController *weakSelf = self;
-    [[PAMDataStore standartDataStore] fetchAllParties:^(NSArray *allPartiesArray) {
-        weakSelf.arrayWithParties = [[NSMutableArray alloc] initWithArray:allPartiesArray];
-    } completion:^{
-        [weakSelf.tableView reloadData];
-    }];
+    NSArray *array = [[PAMDataStore standartDataStore] fetchAllParties];
+    if ( array ) {
+        self.arrayWithParties = [[NSMutableArray alloc] initWithArray:array];
+    }
+    [self.tableView reloadData];
 }
 
 /*- (void)viewWillAppear:(BOOL)animated {
-    NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
-    PAMUser *user = [NSKeyedUnarchiver unarchiveObjectWithData: data];
-    PAMPartyMakerSDK *partyMakerSDK = [PAMPartyMakerSDK standartPartyMakerSDK];
+    NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
+    PAMPartyMakerAPI *partyMakerAPI = [PAMPartyMakerAPI standartPartyMakerAPI];
     __weak PAMPartiesTableViewController *weakSelf = self;
-    [partyMakerSDK partiesWithCreatorId:@(user.userId) callback:^(NSDictionary *response, NSError *error) {
-
+    [partyMakerAPI partiesWithCreatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
         if(![response objectForKey:@"response"]) {
-            weakSelf.arrayWithParties = [[NSMutableArray alloc] initWithArray:[response objectForKey:@"response"]];
+            NSLog(@"response = %@",response);
+            //weakSelf.arrayWithParties = [[NSMutableArray alloc] initWithArray:[response objectForKey:@"response"]];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf.tableView reloadData];
         });
-        
     }];
 }*/
 

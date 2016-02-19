@@ -182,27 +182,35 @@
         
         __weak PAMCreatePartyViewController *weakSelf = self;
         NSManagedObjectID *objectID = [self.partyCore.objectID copy];
-        
         [[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *context) {
             PAMPartyCore *partyCore;
             if (objectID) {
                 NSError *error = nil;
                 partyCore = [context existingObjectWithID:objectID error:&error];
-                NSLog(@"%s, error happened - %@", __PRETTY_FUNCTION__, error);
+                if(error) {
+                    NSLog(@"%s, error happened - %@", __PRETTY_FUNCTION__, error);
+                }
             } else {
                 partyCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMPartyCore" inManagedObjectContext:context];
             }
-            partyCore.partyId = arc4random_uniform(1000000);
+            
             partyCore.name = weakSelf.partyNameTextField.text;
             partyCore.partyDescription = weakSelf.partyDescription.text;
             partyCore.partyType = weakSelf.typeEventPageControl.currentPage;
             partyCore.startDate = [[partyDate dateByAddingTimeInterval:weakSelf.startSlider.value * 60] timeIntervalSince1970];
             partyCore.endDate = [[partyDate dateByAddingTimeInterval:weakSelf.endSlider.value * 60] timeIntervalSince1970];
-
+            
+            NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] longLongValue];
+            PAMUserCore *userCore = (PAMUserCore *)[[PAMDataStore standartDataStore] fetchUserByUserId:userId context:context];
+            partyCore.creatorParty = userCore;
+           
+            [[PAMPartyMakerAPI standartPartyMakerAPI] writeParty:partyCore creatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
+                NSLog(@"%@",response);
+            }];
+            
         } completion:^{
-            NSLog(@"completion edit");
+            [weakSelf actionCloseButton:sender];
         }];
-        [self actionCloseButton:sender];
     }
 }
 

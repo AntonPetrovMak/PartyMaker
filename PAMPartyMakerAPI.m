@@ -13,8 +13,6 @@ static NSString* APIURLLink = @"http://itworksinua.km.ua/party/";
 @interface PAMPartyMakerAPI ()
 
 @property(strong, nonatomic) NSURLSession *defaultSession;
-@property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
-@property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 @end
 
@@ -71,7 +69,6 @@ static NSString* APIURLLink = @"http://itworksinua.km.ua/party/";
 
 -(void) loginWithUserName:(NSString *) _username andPassword:(NSString *) _pass callback:(void(^)(NSDictionary *response, NSError *error)) block {
     NSMutableURLRequest *urlRequst = [self requestMethod:@"GET" methodAPI:@"login" parrametrs:@{@"name":_username, @"password":_pass} headers:nil];
-    
     [[self.defaultSession dataTaskWithRequest:urlRequst
                             completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
                                 if(block) {
@@ -91,14 +88,18 @@ static NSString* APIURLLink = @"http://itworksinua.km.ua/party/";
                            }] resume];
 }
 
-/*-(void) writeParty:(PAMParty *) party withCreatorId:(NSNumber *) creatorId callback:(void(^)(NSDictionary *response, NSError *error)) block {
-    NSDictionary *dictionaryWithParty = @{  @"party_id":@"",
-                                                @"name":party.partyName,
-                                          @"start_time":[NSString stringWithFormat:@"%ld",party.partyStartDate],
-                                            @"end_time":[NSString stringWithFormat:@"%ld",party.partyEndDate],
+-(void) writeParty:(PAMPartyCore *) party creatorId:(NSNumber *) creatorId callback:(void(^)(NSDictionary *response, NSError *error)) block {
+    if(party.partyId){
+        NSLog(@"party.partyId = %lld", party.partyId);
+    }
+    
+    NSDictionary *dictionaryWithParty = @{  @"party_id": party.partyId ? @(party.partyId) : @"",
+                                                @"name":party.name,
+                                          @"start_time":@(party.startDate),
+                                            @"end_time":@(party.endDate),
                                              @"logo_id":@(party.partyType),
                                              @"comment":party.partyDescription,
-                                          @"creator_id":creatorId,
+                                          @"creator_id":@(party.creatorParty.userId),
                                             @"latitude":@"",
                                            @"longitude":@""};
     
@@ -110,7 +111,7 @@ static NSString* APIURLLink = @"http://itworksinua.km.ua/party/";
                                     block([self serialize:data statusCode:[response valueForKey:@"statusCode"]],error);
                                 }
                             }] resume];
-}*/
+}
 
 -(void) registerWithUserName:(NSString *) _username andPassword:(NSString *) _pass andEmail:(NSString *) _email callback:(void(^)(NSDictionary *response, NSError *error)) block {
     NSMutableURLRequest *urlRequst = [self requestMethod:@"POST"
@@ -126,8 +127,8 @@ static NSString* APIURLLink = @"http://itworksinua.km.ua/party/";
                             }] resume];
 }
 
--(void) deletePartyById:(NSNumber *) partyId callback:(void(^)(NSDictionary *response, NSError *error)) block {
-    NSMutableURLRequest *urlRequst = [self requestMethod:@"GET" methodAPI:@"deleteParty" parrametrs:@{@"party_id":partyId} headers:nil];
+-(void) deletePartyById:(NSNumber *) partyId creator_id:(NSNumber *) creator_id callback:(void(^)(NSDictionary *response, NSError *error)) block {
+    NSMutableURLRequest *urlRequst = [self requestMethod:@"GET" methodAPI:@"deleteParty" parrametrs:@{@"party_id":partyId, @"creator_id":creator_id} headers:nil];
     
     [[self.defaultSession dataTaskWithRequest:urlRequst
                             completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
@@ -149,95 +150,5 @@ static NSString* APIURLLink = @"http://itworksinua.km.ua/party/";
     [dict setValue:jsonArray forKey:@"response"];
     return dict;
 }
-
-#pragma mark - Fetches
-
-#pragma mark - Fetches User
-- (NSArray *)fetchUserWithName:(NSString *) name email:(NSString *)email userId:(NSInteger) userId {
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PAMUserCore" inManagedObjectContext:self.managedObjectContext];
-    [fetchRequest setEntity:entity];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@ AND email == %@ AND userId == %ld", name, email, userId];
-    [fetchRequest setPredicate:predicate];
-    
-    NSError *error = nil;
-    NSArray *fetchedObjects = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
-    if (fetchedObjects == nil) {
-        NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
-    }
-    return [fetchedObjects lastObject];
-}
-
-- (void) performWriteOperation:(void (^)(NSManagedObjectContext*))writeBlock completion:(void(^)())completion {
-    [self.managedObjectContext performBlock:^{
-        writeBlock(self.managedObjectContext);
-        
-        if (self.managedObjectContext.hasChanges) {
-            NSError *error = nil;
-            [self.managedObjectContext save:&error];
-            NSLog(@"%s, error happened - %@", __PRETTY_FUNCTION__, error);
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (completion) {
-                completion();
-            }
-        });
-    }];
-}
-
-#pragma mark - Core Data stack
-
-@synthesize managedObjectContext = _managedObjectContext;
-@synthesize managedObjectModel = _managedObjectModel;
-@synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
-
-- (NSURL *)applicationDocumentsDirectory {
-    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-}
-
-- (NSManagedObjectModel *)managedObjectModel {
-    if (_managedObjectModel != nil) {
-        return _managedObjectModel;
-    }
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"PAMPartyMakerAPI" withExtension:@"momd"];
-    _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
-    return _managedObjectModel;
-}
-
-- (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
-    if (_persistentStoreCoordinator != nil) {
-        return _persistentStoreCoordinator;
-    }
-    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"PAMPartyMakerAPI.sqlite"];
-    NSError *error = nil;
-    NSString *failureReason = @"There was an error creating or loading the application's saved data.";
-    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
-        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[NSLocalizedDescriptionKey] = @"Failed to initialize the application's saved data";
-        dict[NSLocalizedFailureReasonErrorKey] = failureReason;
-        dict[NSUnderlyingErrorKey] = error;
-        error = [NSError errorWithDomain:@"YOUR_ERROR_DOMAIN" code:9999 userInfo:dict];
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }
-    return _persistentStoreCoordinator;
-}
-
-- (NSManagedObjectContext *)managedObjectContext {
-    if (_managedObjectContext != nil) {
-        return _managedObjectContext;
-    }
-    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
-    if (!coordinator) {
-        return nil;
-    }
-    _managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType: NSPrivateQueueConcurrencyType];
-    [_managedObjectContext setPersistentStoreCoordinator:coordinator];
-    return _managedObjectContext;
-}
-
-
 
 @end

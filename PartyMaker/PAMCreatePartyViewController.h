@@ -12,6 +12,7 @@
 #import "PAMPartyMakerAPI.h"
 #import "PAMDataStore.h"
 #import "PAMPartyCore.h"
+#import "PAMUserCore.h"
 
 @interface PAMCreatePartyViewController : UIViewController <UITextFieldDelegate, UIScrollViewDelegate, UITextViewDelegate, PAMDatePikerDelegate>
 

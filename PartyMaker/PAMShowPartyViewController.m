@@ -56,7 +56,24 @@
 }
 
 - (IBAction)actionDeleteParty:(UIButton *)sender {
-    [[PAMDataStore standartDataStore] deletePartyByPartyId:self.party.partyId withCompletion:nil];
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    __weak PAMShowPartyViewController *weakSelf = self;
+    NSManagedObjectID *objectId = [self.party.objectID copy];
+    [[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *backgroundContext) {
+        NSError *error = nil;
+        PAMPartyCore *partyObject= [backgroundContext existingObjectWithID:objectId error:&error];
+        if (error) {
+            NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
+        }
+        
+        NSLog(@"%lld",partyObject.partyId);
+        NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] longLongValue];
+        [[PAMPartyMakerAPI standartPartyMakerAPI] deletePartyById:@(partyObject.partyId) creator_id:@(userId) callback:^(NSDictionary *response, NSError *error) {
+            NSLog(@"%@",response);
+        }];
+        [backgroundContext deleteObject:partyObject];
+
+    } completion:^{
+        [weakSelf.navigationController popToRootViewControllerAnimated:YES];
+    }];
 }
 @end

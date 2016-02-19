@@ -22,6 +22,7 @@
 		838D66671C6CDBE600C43BC8 /* PAMShowPartyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 838D66651C6CDBE600C43BC8 /* PAMShowPartyViewController.m */; };
 		8397CA661C635C02006FDE42 /* MyriadProBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8397CA641C635C02006FDE42 /* MyriadProBold.ttf */; };
 		8397CA671C635C02006FDE42 /* MyriadProRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8397CA651C635C02006FDE42 /* MyriadProRegular.ttf */; };
+		839A01FD1C77135300009E3C /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 839A01FC1C77135300009E3C /* Reachability.m */; };
 		839A8ABF1C6B2BD900D715D3 /* PAMDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 839A8ABE1C6B2BD900D715D3 /* PAMDataStore.m */; };
 		839A8AC31C6B419E00D715D3 /* PAMPartiesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 839A8AC11C6B419E00D715D3 /* PAMPartiesTableViewController.m */; };
 		83FFB20A1C761A2C00423DD9 /* PAMUserCore+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 83FFB2031C761A2C00423DD9 /* PAMUserCore+CoreDataProperties.m */; };
@@ -58,6 +59,8 @@
 		838D66651C6CDBE600C43BC8 /* PAMShowPartyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMShowPartyViewController.m; sourceTree = "<group>"; };
 		8397CA641C635C02006FDE42 /* MyriadProBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MyriadProBold.ttf; sourceTree = "<group>"; };
 		8397CA651C635C02006FDE42 /* MyriadProRegular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MyriadProRegular.ttf; sourceTree = "<group>"; };
+		839A01FB1C77135300009E3C /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		839A01FC1C77135300009E3C /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		839A8ABD1C6B2BD900D715D3 /* PAMDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMDataStore.h; sourceTree = "<group>"; };
 		839A8ABE1C6B2BD900D715D3 /* PAMDataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMDataStore.m; sourceTree = "<group>"; };
 		839A8AC01C6B419E00D715D3 /* PAMPartiesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMPartiesTableViewController.h; sourceTree = "<group>"; };
@@ -188,6 +191,8 @@
 		EA74B4201C6A6D0000960CE0 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				839A01FB1C77135300009E3C /* Reachability.h */,
+				839A01FC1C77135300009E3C /* Reachability.m */,
 				836A61FC1C733119001085C3 /* PAMPartyMakerAPI.h */,
 				836A61FD1C733119001085C3 /* PAMPartyMakerAPI.m */,
 				839A8ABD1C6B2BD900D715D3 /* PAMDataStore.h */,
@@ -321,6 +326,7 @@
 				831A74EA1C748715007BB322 /* PAMCoreData.xcdatamodeld in Sources */,
 				837F257A1C75B7FE0011BFA3 /* PAMCreatePartyViewController.m in Sources */,
 				83FFB20D1C761A2C00423DD9 /* PAMPartyCore.m in Sources */,
+				839A01FD1C77135300009E3C /* Reachability.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

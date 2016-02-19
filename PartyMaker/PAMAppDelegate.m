@@ -9,6 +9,7 @@
 #import "PAMAppDelegate.h"
 #import "PAMPartyMakerAPI.h"
 #import "PAMPartyCore.h"
+#import "PAMUserCore.h"
 #import "PAMDataStore.h"
 
 @interface PAMAppDelegate ()
@@ -27,6 +28,16 @@
     //[PAMPartyCore fetchPartiesWithContext: context];
     //[PAMPartyCore deletePartyWithCompletion:nil byPartyId:12];
     //[PAMPartyCore fetchPartiesWithContext: context];
+    //[[PAMDataStore standartDataStore] fetchAllUsers];
+//    [[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *backroundContext) {
+//        PAMUserCore *userCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMUserCore" inManagedObjectContext:backroundContext];
+//        userCore.name = @"Koly";
+//        userCore.email = @"Koly@gmail.com";
+//        userCore.userId = 196;
+//        userCore.isLoaded = YES;
+//    } completion:^{
+//        
+//    }];
     
 //    PAMParty *party = [[PAMParty alloc] initWithPartyId:88
 //                                                   name:@"Test party 4"

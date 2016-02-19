@@ -75,70 +75,6 @@
 }
 
 - (void) userLogin {
-    __weak PAMLoginViewController *weakSelf = self;
-    PAMPartyMakerAPI *partyMakerAPI = [PAMPartyMakerAPI standartPartyMakerAPI];
-    [partyMakerAPI loginWithUserName: self.loginTextField.text
-                         andPassword: self.passwordTextField.text
-                            callback:^(NSDictionary *response, NSError *error) {
-        NSDictionary *answerServer = [response objectForKey:@"response"];
-        if([[response objectForKey:@"statusCode"] isEqual:@200]) {
-            if([[answerServer objectForKey:@"name"] isEqualToString:weakSelf.loginTextField.text]) {
-                
-                [[NSUserDefaults standardUserDefaults] setObject:@([[answerServer objectForKey:@"id"] intValue]) forKey:@"userId"];
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    UITabBarController *tabBar = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"MainTabBarController"];
-                    [weakSelf presentViewController:tabBar animated:YES completion:nil];
-                });
-            }else {
-                [weakSelf createInfoViewWithMessage:@"Sorry, problem with server!"];
-            }
-        } else {
-            [weakSelf createInfoViewWithMessage:[answerServer objectForKey:@"msg"]];
-            NSLog(@"%@",[answerServer objectForKey:@"msg"]);
-        }
-    }];
-}
-
-#pragma mark - Action
-- (IBAction)actionClickRegister:(UIButton *)sender {
-    if(self.loginTextField.text.length && self.passwordTextField.text.length) {
-        __weak PAMLoginViewController *weakSelf = self;
-        PAMPartyMakerAPI *partyMakerAPI = [PAMPartyMakerAPI standartPartyMakerAPI];
-        
-        [partyMakerAPI registerWithUserName:self.loginTextField.text
-                                andPassword:self.passwordTextField.text
-                                   andEmail:[NSString stringWithFormat:@"%@@gmail.com",weakSelf.loginTextField.text]
-                                   callback:^(NSDictionary *response, NSError *error) {
-                                       NSDictionary *answerServer = [response objectForKey:@"response"];
-                                       if([[response objectForKey:@"statusCode"] isEqual:@200]) {
-                                           [partyMakerAPI performWriteOperation:^(NSManagedObjectContext *context) {
-                                               
-                                           } completion:^{
-                                               NSLog(@"Completion wride to CoreDate");
-                                           }];
-                                           NSLog(@"Register OK");
-                                       } else {
-                                           [weakSelf createInfoViewWithMessage:[answerServer objectForKey:@"msg"]];
-                                           NSLog(@"%@",[answerServer objectForKey:@"msg"]);
-                                       }
-                                   }];
-
-    }
-    /*[[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *context) {
-        PAMUserCore *userCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMUserCore" inManagedObjectContext:context];
-        userCore.name = @"Anton";
-        userCore.email = @"Anton@gmail.com";
-        userCore.userId = 12;
-        
-    } completion:^{
-        NSLog(@"completion add user");
-    }];*/
-
-    
-}
-
-- (IBAction)actionClickSingIn:(UIButton *)sender {
     if(self.loginTextField.text.length && self.passwordTextField.text.length) {
         __weak PAMLoginViewController *weakSelf = self;
         PAMPartyMakerAPI *partyMakerAPI = [PAMPartyMakerAPI standartPartyMakerAPI];
@@ -163,7 +99,63 @@
                                     }
                                 }];
     }
-    
+}
+
+#pragma mark - Action
+- (IBAction)actionClickRegister:(UIButton *)sender {
+    if(self.loginTextField.text.length && self.passwordTextField.text.length) {
+        __weak PAMLoginViewController *weakSelf = self;
+        PAMPartyMakerAPI *partyMakerAPI = [PAMPartyMakerAPI standartPartyMakerAPI];
+        
+        [partyMakerAPI registerWithUserName:self.loginTextField.text
+                                andPassword:self.passwordTextField.text
+                                   andEmail:[NSString stringWithFormat:@"%@@gmail.com",weakSelf.loginTextField.text]
+                                   callback:^(NSDictionary *response, NSError *error) {
+                                       NSDictionary *answerServer = [response objectForKey:@"response"];
+                                       if([[response objectForKey:@"statusCode"] isEqual:@200]) {
+                                           [self userLogin];
+                                           NSLog(@"Register OK");
+                                       } else {
+                                           [weakSelf createInfoViewWithMessage:[answerServer objectForKey:@"msg"]];
+                                           NSLog(@"%@",[answerServer objectForKey:@"msg"]);
+                                       }
+                                   }];
+
+    }
+}
+
+- (void) loginAndWriteToCoreData {
+    __weak PAMLoginViewController *weakSelf = self;
+    PAMPartyMakerAPI *partyMakerAPI = [PAMPartyMakerAPI standartPartyMakerAPI];
+    [partyMakerAPI loginWithUserName: self.loginTextField.text
+                         andPassword: self.passwordTextField.text
+                            callback:^(NSDictionary *response, NSError *error) {
+                                NSDictionary *answerServer = [response objectForKey:@"response"];
+                                if([[response objectForKey:@"statusCode"] isEqual:@200]) {
+                                    if([[answerServer objectForKey:@"name"] isEqualToString:weakSelf.loginTextField.text]) {
+                                        //write to core data
+                                        [[PAMDataStore standartDataStore] writeUserToCoreDataInBackroundThread:^(NSManagedObjectContext *backroundContext) {
+                                            PAMUserCore *userCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMUserCore" inManagedObjectContext:backroundContext];
+                                            userCore.name = [answerServer objectForKey:@"name"];
+                                            userCore.email = [answerServer objectForKey:@"email"];
+                                            userCore.userId = [[answerServer objectForKey:@"userId"] integerValue];
+                                        } completion:^{
+                                            NSLog(@"completion save user to CoreData");
+                                        }];
+                                        
+                                        [[NSUserDefaults standardUserDefaults] setObject:@([[answerServer objectForKey:@"id"] intValue]) forKey:@"userId"];
+                                    }else {
+                                        [weakSelf createInfoViewWithMessage:@"Sorry, problem with server!"];
+                                    }
+                                } else {
+                                    [weakSelf createInfoViewWithMessage:[answerServer objectForKey:@"msg"]];
+                                    NSLog(@"%@",[answerServer objectForKey:@"msg"]);
+                                }
+                            }];
+}
+
+- (IBAction)actionClickSingIn:(UIButton *)sender {
+    [self userLogin];
 }
 
 #pragma mark - UITextFieldDelegate

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "PAMPartyMakerAPI.h"
+#import "Reachability.h"
 #import "PAMDataStore.h"
 #import "PAMUserCore.h"
 

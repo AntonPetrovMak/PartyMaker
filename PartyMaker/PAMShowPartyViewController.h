@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "NSString+PAMDateFormat.h"
 #import "PAMCreatePartyViewController.h"
+#import "PAMPartyMakerAPI.h"
 #import "PAMPartyCore.h"
 #import "PAMDataStore.h"
 
