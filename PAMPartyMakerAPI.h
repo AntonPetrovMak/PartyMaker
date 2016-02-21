@@ -20,5 +20,7 @@
 - (void)partiesWithCreatorId:(NSNumber *) creatorId callback:(void(^)(NSDictionary *response, NSError *error)) block;
 - (void)writeParty:(PAMPartyCore *) party creatorId:(NSNumber *) creatorId callback:(void(^)(NSDictionary *response, NSError *error)) block;
 - (void)deletePartyById:(NSNumber *) partyId creator_id:(NSNumber *) creator_id callback:(void(^)(NSDictionary *response, NSError *error)) block;
+- (void)allUsersWithCallback:(void(^)(NSDictionary *response, NSError *error)) block;
+- (void)deleteUserById:(NSNumber *) creator_id callback:(void(^)(NSDictionary *response, NSError *error)) block;
 
 @end

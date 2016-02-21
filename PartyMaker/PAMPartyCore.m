@@ -2,7 +2,7 @@
 //  PAMPartyCore.m
 //  PartyMaker
 //
-//  Created by Petrov Anton on 18.02.16.
+//  Created by iMac309 on 21.02.16.
 //  Copyright © 2016 Softheme. All rights reserved.
 //
 
@@ -11,9 +11,9 @@
 
 @implementation PAMPartyCore
 
-- (NSString *)description {
-    return [NSString stringWithFormat:@"\nId: %d\nName: %@ \nStart: %@ \nEnd: %@ \nType: %d \nDescription: %@\n\n",
-            (int)self.partyId, self.name , [NSDate dateWithTimeIntervalSince1970:self.startDate], [NSDate dateWithTimeIntervalSince1970:self.endDate], (int)self.partyType, self.partyDescription];
-}
+//- (NSString *)description {
+//    return [NSString stringWithFormat:@"\nId: %d\nName: %@ \nStart: %@ \nEnd: %@ \nType: %d \nDescription: %@\n\n",
+//            (int)self.partyId, self.name , [NSDate dateWithTimeIntervalSince1970:self.startDate], [NSDate dateWithTimeIntervalSince1970:self.endDate], (int)self.partyType, self.partyDescription];
+//}
 
 @end

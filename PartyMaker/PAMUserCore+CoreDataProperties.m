@@ -2,7 +2,7 @@
 //  PAMUserCore+CoreDataProperties.m
 //  PartyMaker
 //
-//  Created by Petrov Anton on 18.02.16.
+//  Created by iMac309 on 21.02.16.
 //  Copyright © 2016 Softheme. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -13,10 +13,9 @@
 
 @implementation PAMUserCore (CoreDataProperties)
 
-@dynamic email;
+@dynamic isLoaded;
 @dynamic name;
 @dynamic userId;
-@dynamic isLoaded;
 @dynamic parties;
 
 @end

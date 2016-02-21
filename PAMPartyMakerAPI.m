@@ -113,6 +113,18 @@ static NSString* APIURLLink = @"http://itworksinua.km.ua/party/";
                             }] resume];
 }
 
+-(void) allUsersWithCallback:(void(^)(NSDictionary *response, NSError *error)) block {
+
+    NSMutableURLRequest *urlRequst = [self requestMethod:@"GET" methodAPI:@"allUsers" parrametrs:@{} headers:nil];
+    
+    [[self.defaultSession dataTaskWithRequest:urlRequst
+                            completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                                if(block) {
+                                    block([self serialize:data statusCode:[response valueForKey:@"statusCode"]],error);
+                                }
+                            }] resume];
+}
+
 -(void) registerWithUserName:(NSString *) _username andPassword:(NSString *) _pass andEmail:(NSString *) _email callback:(void(^)(NSDictionary *response, NSError *error)) block {
     NSMutableURLRequest *urlRequst = [self requestMethod:@"POST"
                                                methodAPI:@"register"
@@ -129,6 +141,17 @@ static NSString* APIURLLink = @"http://itworksinua.km.ua/party/";
 
 -(void) deletePartyById:(NSNumber *) partyId creator_id:(NSNumber *) creator_id callback:(void(^)(NSDictionary *response, NSError *error)) block {
     NSMutableURLRequest *urlRequst = [self requestMethod:@"GET" methodAPI:@"deleteParty" parrametrs:@{@"party_id":partyId, @"creator_id":creator_id} headers:nil];
+    
+    [[self.defaultSession dataTaskWithRequest:urlRequst
+                            completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                                if(block) {
+                                    block([self serialize:data statusCode:[response valueForKey:@"statusCode"]],error);
+                                }
+                            }] resume];
+}
+
+-(void) deleteUserById:(NSNumber *) creator_id callback:(void(^)(NSDictionary *response, NSError *error)) block {
+    NSMutableURLRequest *urlRequst = [self requestMethod:@"GET" methodAPI:@"deleteUser" parrametrs:@{@"creator_id":creator_id} headers:nil];
     
     [[self.defaultSession dataTaskWithRequest:urlRequst
                             completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {

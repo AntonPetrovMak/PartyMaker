@@ -182,11 +182,13 @@
         
         __weak PAMCreatePartyViewController *weakSelf = self;
         NSManagedObjectID *objectID = [self.partyCore.objectID copy];
+        NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] longLongValue];
         [[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *context) {
             PAMPartyCore *partyCore;
             if (objectID) {
                 NSError *error = nil;
                 partyCore = [context existingObjectWithID:objectID error:&error];
+                
                 if(error) {
                     NSLog(@"%s, error happened - %@", __PRETTY_FUNCTION__, error);
                 }
@@ -199,14 +201,15 @@
             partyCore.partyType = weakSelf.typeEventPageControl.currentPage;
             partyCore.startDate = [[partyDate dateByAddingTimeInterval:weakSelf.startSlider.value * 60] timeIntervalSince1970];
             partyCore.endDate = [[partyDate dateByAddingTimeInterval:weakSelf.endSlider.value * 60] timeIntervalSince1970];
+            partyCore.isLoaded = NO;
             
-            NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] longLongValue];
             PAMUserCore *userCore = (PAMUserCore *)[[PAMDataStore standartDataStore] fetchUserByUserId:userId context:context];
             partyCore.creatorParty = userCore;
-           
             [[PAMPartyMakerAPI standartPartyMakerAPI] writeParty:partyCore creatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
                 NSLog(@"%@",response);
             }];
+
+            
             
         } completion:^{
             [weakSelf actionCloseButton:sender];

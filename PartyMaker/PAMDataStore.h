@@ -10,6 +10,7 @@
 #import <CoreData/CoreData.h>
 #import "PAMPartyCore.h"
 #import "PAMUserCore.h"
+#import "PAMPartyMakerAPI.h"
 
 
 @interface PAMDataStore : NSObject
@@ -21,16 +22,23 @@
 - (void) performWriteOperation:(void (^)(NSManagedObjectContext*))writeBlock completion:(void(^)())completion;
 
 #pragma mark - Fetches Party
-- (void) deleteAllParties;
+- (void)addPartiesFromServerToCoreData:(NSArray *) serverParty byCreatorParty:(PAMUserCore *)creatorParty completion:(void(^)())completion;
 - (NSArray *)fetchPartyByPartyId:(NSInteger) partyId context:(NSManagedObjectContext*) context;
 - (NSArray *)fetchPartiesByUserId:(NSInteger) userId context:(NSManagedObjectContext*) context;
-- (NSArray *)fetchAllParties;
+- (NSArray *)fetchAllPartiesInContext:(NSManagedObjectContext*) context;
+- (BOOL) isNeedUpDateByUserId:(NSInteger) userId;
 
 #pragma mark - Fetches User
-- (NSArray *) fetchUserByUserId:(NSInteger)userId context:(NSManagedObjectContext*) context;
-- (NSArray *)fetchAllUsers;
+- (void)writeUserToCoreDataInBackroundThread:(void (^)(NSManagedObjectContext*))writeBlock completion:(void(^)())completion;
+- (void)addUsersFromServerToCoreData:(NSArray *) serverUsers completion:(void(^)())completion;
+- (void)clearPartiesByUserId:(NSInteger) userId;
+- (NSArray *)fetchUserByUserId:(NSInteger)userId context:(NSManagedObjectContext*) context;
+- (NSArray *)fetchAllUsersInContext:(NSManagedObjectContext*) context;
 
-- (void) writeUserToCoreDataInBackroundThread:(void (^)(NSManagedObjectContext*))writeBlock completion:(void(^)())completion;
+- (void)addAllUsersWithPartiesFromServer;
+- (void)dropAllUsersWithPartiesOnServer;
+- (void)clearCoreData;
+
 
 
 @end

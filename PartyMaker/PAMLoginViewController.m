@@ -22,6 +22,8 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [[PAMDataStore standartDataStore] clearCoreData];
+    [[PAMDataStore standartDataStore] addAllUsersWithPartiesFromServer];
     [self.substrateForLoginView.layer setBorderWidth:2.f];
     [self.substrateForLoginView.layer setBorderColor:[UIColor whiteColor].CGColor];
     [self.loginTextField setFont:[UIFont fontWithName:@"MariadPro-Regular" size:16]];
@@ -84,7 +86,8 @@
                                     NSDictionary *answerServer = [response objectForKey:@"response"];
                                     if([[response objectForKey:@"statusCode"] isEqual:@200]) {
                                         if([[answerServer objectForKey:@"name"] isEqualToString:weakSelf.loginTextField.text]) {
-                                            [[NSUserDefaults standardUserDefaults] setObject:@([[answerServer objectForKey:@"id"] intValue]) forKey:@"userId"];
+                                            NSLog(@"Login user id: %ld", [[answerServer objectForKey:@"id"] integerValue]);
+                                            [[NSUserDefaults standardUserDefaults] setObject:@([[answerServer objectForKey:@"id"] integerValue]) forKey:@"userId"];
                                             
                                             dispatch_async(dispatch_get_main_queue(), ^{
                                                 UITabBarController *tabBar = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"MainTabBarController"];
@@ -137,7 +140,6 @@
                                         [[PAMDataStore standartDataStore] writeUserToCoreDataInBackroundThread:^(NSManagedObjectContext *backroundContext) {
                                             PAMUserCore *userCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMUserCore" inManagedObjectContext:backroundContext];
                                             userCore.name = [answerServer objectForKey:@"name"];
-                                            userCore.email = [answerServer objectForKey:@"email"];
                                             userCore.userId = [[answerServer objectForKey:@"userId"] integerValue];
                                         } completion:^{
                                             NSLog(@"completion save user to CoreData");

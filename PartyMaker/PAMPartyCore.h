@@ -2,7 +2,7 @@
 //  PAMPartyCore.h
 //  PartyMaker
 //
-//  Created by Petrov Anton on 18.02.16.
+//  Created by iMac309 on 21.02.16.
 //  Copyright © 2016 Softheme. All rights reserved.
 //
 
