@@ -18,6 +18,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
+
+    self.wifiReachability = [Reachability reachabilityForLocalWiFi];
+    [self.wifiReachability startNotifier];
+    [self updateInterfaceWithReachability:self.wifiReachability];
+    
     self.arrayWithParties = [[NSMutableArray alloc] init];
     NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
     
@@ -30,34 +36,6 @@
     if ( array ) {
         self.arrayWithParties = [[NSMutableArray alloc] initWithArray:array];
     }
-}
-
-- (void) upDateTable {
-     NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
-    PAMPartyMakerAPI *partyMakerAPI = [PAMPartyMakerAPI standartPartyMakerAPI];
-    __weak PAMPartiesTableViewController *weakSelf = self;
-    [partyMakerAPI partiesWithCreatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
-        NSLog(@"response = %@",response);
-        if([response objectForKey:@"response"]) {
-            NSArray *array = [response objectForKey:@"response"];
-            if(![array isEqual:[NSNull null]]){
-                [[PAMDataStore standartDataStore] clearPartiesByUserId:userId];
-                NSManagedObjectContext *context = [[PAMDataStore standartDataStore] mainContext];
-                [[PAMDataStore standartDataStore] addPartiesFromServerToCoreData:array byCreatorPartyId:userId completion:^{
-                    NSArray *array = [[PAMDataStore standartDataStore] fetchPartiesByUserId:userId context:context];
-                    if ( array ) {
-                        weakSelf.arrayWithParties = [[NSMutableArray alloc] initWithArray:array];
-                    }
-                }];
-            }
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.tableView reloadData];
-        });
-    }];
-
-    [self.tableView reloadData];
-    [self.refreshControl endRefreshing];
 }
 
 - (void)addPartiesFromServerToCoreData:(NSArray *) serverParty {
@@ -84,7 +62,7 @@
     [super didReceiveMemoryWarning];
 }
 
-/*- (void)viewWillAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
     NSManagedObjectContext *context = [[PAMDataStore standartDataStore] mainContext];
@@ -93,45 +71,61 @@
         self.arrayWithParties = [[NSMutableArray alloc] initWithArray:array];
     }
     [self.tableView reloadData];
-}*/
 
+}
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kReachabilityChangedNotification object:nil];
+}
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
-    
-    if([[PAMDataStore standartDataStore] isNeedUpDateByUserId:userId]) {
-        
-        PAMPartyMakerAPI *partyMakerAPI = [PAMPartyMakerAPI standartPartyMakerAPI];
-        __weak PAMPartiesTableViewController *weakSelf = self;
-        [partyMakerAPI partiesWithCreatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
-            NSLog(@"response = %@",response);
-            if([response objectForKey:@"response"]) {
-                NSArray *array = [response objectForKey:@"response"];
-                if(![array isEqual:[NSNull null]]){
-                    [[PAMDataStore standartDataStore] clearPartiesByUserId:userId];
-                    NSManagedObjectContext *context = [[PAMDataStore standartDataStore] mainContext];
-                    [[PAMDataStore standartDataStore] addPartiesFromServerToCoreData:array byCreatorPartyId:userId completion:^{
-                        NSArray *array = [[PAMDataStore standartDataStore] fetchPartiesByUserId:userId context:context];
-                        if ( array ) {
-                            weakSelf.arrayWithParties = [[NSMutableArray alloc] initWithArray:array];
-                        }
-                    }];
-                }
-            }
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf.tableView reloadData];
-            });
-        }];
-    } else {
-        NSManagedObjectContext *context = [[PAMDataStore standartDataStore] mainContext];
-        NSArray *array = [[PAMDataStore standartDataStore] fetchPartiesByUserId:userId context:context];
-        if ( array ) {
-            self.arrayWithParties = [[NSMutableArray alloc] initWithArray:array];
-        }
-        [self.tableView reloadData];
+#pragma mark - Reachability
+
+- (void)updateInterfaceWithReachability:(Reachability *)reachability {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    if([self.wifiReachability currentReachabilityStatus] == ReachableViaWiFi) {
+        NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
+        [[PAMDataStore standartDataStore] upDateOfflinePartiesByUserId:userId];
     }
+}
+
+-(void) reachabilityChanged:(NSNotification *) notification {
+    if([self.wifiReachability currentReachabilityStatus] == ReachableViaWiFi) {
+        NSLog(@"Ok");
+        NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
+        [[PAMDataStore standartDataStore] upDateOfflinePartiesByUserId:userId];
+        [self.tableView reloadData];
+    } else {
+        
+        NSLog(@"Neok");
+    }
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+}
+
+#pragma mark - Helpers
+- (void)upDateTable {
+    NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
+    PAMPartyMakerAPI *partyMakerAPI = [PAMPartyMakerAPI standartPartyMakerAPI];
+    __weak PAMPartiesTableViewController *weakSelf = self;
+    [partyMakerAPI partiesWithCreatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
+        //NSLog(@"response = %@",response);
+        if([response objectForKey:@"response"]) {
+            NSArray *array = [response objectForKey:@"response"];
+            if(![array isEqual:[NSNull null]]){
+                [[PAMDataStore standartDataStore] clearPartiesByUserId:userId];
+                NSManagedObjectContext *context = [[PAMDataStore standartDataStore] mainContext];
+                [[PAMDataStore standartDataStore] addPartiesFromServerToCoreData:array byCreatorPartyId:userId completion:^{
+                    NSArray *array = [[PAMDataStore standartDataStore] fetchPartiesByUserId:userId context:context];
+                    if ( array ) {
+                        weakSelf.arrayWithParties = [[NSMutableArray alloc] initWithArray:array];
+                    }
+                }];
+            }
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.tableView reloadData];
+            [weakSelf.refreshControl endRefreshing];
+        });
+    }];
 }
 
 #pragma mark - Action

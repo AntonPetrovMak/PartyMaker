@@ -136,34 +136,6 @@
     }
 }
 
-- (void) loginAndWriteToCoreData {
-    __weak PAMLoginViewController *weakSelf = self;
-    PAMPartyMakerAPI *partyMakerAPI = [PAMPartyMakerAPI standartPartyMakerAPI];
-    [partyMakerAPI loginWithUserName: self.loginTextField.text
-                         andPassword: self.passwordTextField.text
-                            callback:^(NSDictionary *response, NSError *error) {
-                                NSDictionary *answerServer = [response objectForKey:@"response"];
-                                if([[response objectForKey:@"statusCode"] isEqual:@200]) {
-                                    if([[answerServer objectForKey:@"name"] isEqualToString:weakSelf.loginTextField.text]) {
-                                        //write to core data
-                                        [[PAMDataStore standartDataStore] writeUserToCoreDataInBackroundThread:^(NSManagedObjectContext *backroundContext) {
-                                            PAMUserCore *userCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMUserCore" inManagedObjectContext:backroundContext];
-                                            userCore.name = [answerServer objectForKey:@"name"];
-                                            userCore.userId = [[answerServer objectForKey:@"userId"] integerValue];
-                                        } completion:^{
-                                            NSLog(@"completion save user to CoreData");
-                                        }];
-                                        
-                                        [[NSUserDefaults standardUserDefaults] setObject:@([[answerServer objectForKey:@"id"] intValue]) forKey:@"userId"];
-                                    }else {
-                                        [weakSelf createInfoViewWithMessage:@"Sorry, problem with server!"];
-                                    }
-                                } else {
-                                    [weakSelf createInfoViewWithMessage:[answerServer objectForKey:@"msg"]];
-                                    NSLog(@"%@",[answerServer objectForKey:@"msg"]);
-                                }
-                            }];
-}
 
 - (IBAction)actionClickSingIn:(UIButton *)sender {
     [self userLogin];

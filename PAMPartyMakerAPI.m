@@ -31,8 +31,8 @@ static NSString* APIURLLink = @"http://itworksinua.km.ua/party/";
 
 -(void)configureSessionAndAPI {
     NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
-    sessionConfig.timeoutIntervalForRequest = 5.0;
-    sessionConfig.timeoutIntervalForResource = 10.0;
+    sessionConfig.timeoutIntervalForRequest = 10.0;
+    sessionConfig.timeoutIntervalForResource = 20.0;
     sessionConfig.allowsCellularAccess = NO;
     self.defaultSession = [NSURLSession sessionWithConfiguration:sessionConfig];
 }

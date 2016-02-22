@@ -205,7 +205,9 @@
             PAMUserCore *userCore = (PAMUserCore *)[[PAMDataStore standartDataStore] fetchUserByUserId:userId context:context];
             partyCore.creatorParty = userCore;
             [[PAMPartyMakerAPI standartPartyMakerAPI] writeParty:partyCore creatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
-                NSLog(@"%@",response);
+                if([[response objectForKey:@"statusCode"] isEqual:@200]) {
+                    partyCore.isLoaded = YES;
+                }
             }];
 
         } completion:^{

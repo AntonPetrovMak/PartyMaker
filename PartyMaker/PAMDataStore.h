@@ -18,19 +18,16 @@
 @property (readonly, strong, nonatomic) NSManagedObjectContext *mainContext;
 
 + (PAMDataStore *) standartDataStore;
-
 - (void) performWriteOperation:(void (^)(NSManagedObjectContext*))writeBlock completion:(void(^)())completion;
 
 #pragma mark - Fetches Party
-- (void)addPartiesFromServerToCoreData:(NSArray *) serverParty byCreatorParty:(PAMUserCore *)creatorParty completion:(void(^)())completion;
 - (void)addPartiesFromServerToCoreData:(NSArray *) serverParty byCreatorPartyId:(NSInteger)creatorId completion:(void(^)())completion;
 - (NSArray *)fetchPartyByPartyId:(NSInteger) partyId context:(NSManagedObjectContext*) context;
 - (NSArray *)fetchPartiesByUserId:(NSInteger) userId context:(NSManagedObjectContext*) context;
 - (NSArray *)fetchAllPartiesInContext:(NSManagedObjectContext*) context;
-- (BOOL) isNeedUpDateByUserId:(NSInteger) userId;
+- (void)upDateOfflinePartiesByUserId:(NSInteger) userId;
 
 #pragma mark - Fetches User
-- (void)writeUserToCoreDataInBackroundThread:(void (^)(NSManagedObjectContext*))writeBlock completion:(void(^)())completion;
 - (void)addUsersFromServerToCoreData:(NSArray *) serverUsers completion:(void(^)())completion;
 - (void)clearPartiesByUserId:(NSInteger) userId;
 - (NSArray *)fetchUserByUserId:(NSInteger)userId context:(NSManagedObjectContext*) context;

@@ -49,44 +49,7 @@
     }];
 }
 
-- (void)addPartiesFromServerToCoreData:(NSArray *) serverParty byCreatorParty:(PAMUserCore *)creatorParty completion:(void(^)())completion{
-    
-    [self.backgroundContext performBlock:^{
-        for (id serverPary in serverParty) {
-            PAMPartyCore *partyCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMPartyCore" inManagedObjectContext:self.backgroundContext];
-            partyCore.partyId = [[serverPary objectForKey:@"id"] longLongValue];
-            partyCore.name = [serverPary objectForKey:@"name"];
-            partyCore.partyDescription = [serverPary objectForKey:@"comment"];
-            partyCore.partyType = [[serverPary objectForKey:@"logo_id"] longLongValue];
-            partyCore.startDate = [[serverPary objectForKey:@"start_time"] longLongValue];
-            partyCore.endDate = [[serverPary objectForKey:@"end_time"] longLongValue];
-            partyCore.isLoaded = YES;
-            partyCore.creatorParty = creatorParty;
-//            partyCore.partyId = 12;
-//            partyCore.name = @"Anton";
-//            partyCore.partyDescription = @"Description Anton";
-//            partyCore.partyType = 1;
-//            partyCore.startDate = [[NSDate date] timeIntervalSince1970];
-//            partyCore.endDate = [[NSDate date] timeIntervalSince1970];
-//            partyCore.creatorParty = creatorParty;
-        }
-        if (self.backgroundContext.hasChanges) {
-            NSError *error = nil;
-            [self.backgroundContext save:&error];
-            if(error) {
-                NSLog(@"%s, error happened - %@", __PRETTY_FUNCTION__, error);
-            }
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (completion) {
-                completion();
-            }
-        });
-    }];
-}
-
 - (void)addPartiesFromServerToCoreData:(NSArray *) serverParty byCreatorPartyId:(NSInteger)creatorId completion:(void(^)())completion{
-    
     [self.backgroundContext performBlock:^{
         for (id serverPary in serverParty) {
             PAMPartyCore *partyCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMPartyCore" inManagedObjectContext:self.backgroundContext];
@@ -113,15 +76,6 @@
             }
         });
     }];
-}
-
-- (BOOL) isNeedUpDateByUserId:(NSInteger) userId {
-    for (PAMPartyCore *party in [self fetchPartiesByUserId:userId context:self.mainContext]) {
-        if(!party.isLoaded) {
-            return YES;
-        }
-    }
-    return NO;
 }
 
 - (NSArray *)fetchPartyByPartyId:(NSInteger) partyId context:(NSManagedObjectContext*) context{
@@ -174,31 +128,13 @@
     if (fetchedObjects == nil) {
         NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
     }
-    for (PAMPartyCore *party in fetchedObjects) {
+    /*for (PAMPartyCore *party in fetchedObjects) {
         NSLog(@"Creator party: %@ Name party: %@", party.creatorParty.name, party.name);
-    }
+    }*/
     return fetchedObjects;
 }
 
 #pragma mark - Fetches User
-
-- (void)writeUserToCoreDataInBackroundThread:(void (^)(NSManagedObjectContext*))writeBlock completion:(void(^)())completion {
-    NSManagedObjectContext *backroundContext = [[NSManagedObjectContext alloc] initWithConcurrencyType: NSPrivateQueueConcurrencyType];
-    [self.backgroundContext performBlock:^{
-        writeBlock(backroundContext);
-        
-        NSError *error = nil;
-        [backroundContext save:&error];
-        if(error) {
-            NSLog(@"%s, error happened - %@", __PRETTY_FUNCTION__, error);
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (completion) {
-                completion();
-            }
-        });
-    }];
-}
 
 - (void)addUsersFromServerToCoreData:(NSArray *) serverUsers completion:(void(^)())completion{
     [self.backgroundContext performBlock:^{
@@ -280,7 +216,7 @@
                 if([[response objectForKey:@"statusCode"] isEqual:@200]){
                     NSArray *array = [response objectForKey:@"response"];
                     if(![array isEqual:[NSNull null]]) {
-                        [[PAMDataStore standartDataStore] addPartiesFromServerToCoreData:array byCreatorParty:userCore completion:^{
+                        [[PAMDataStore standartDataStore] addPartiesFromServerToCoreData:array byCreatorPartyId:userCore.userId completion:^{
 
                         }];
                     } else {
@@ -291,6 +227,20 @@
         }
     } completion:^{
         
+    }];
+}
+
+- (void)upDateTable {
+    NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
+    PAMPartyMakerAPI *partyMakerAPI = [PAMPartyMakerAPI standartPartyMakerAPI];
+    [partyMakerAPI partiesWithCreatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
+        if([response objectForKey:@"response"]) {
+            NSArray *array = [response objectForKey:@"response"];
+            if(![array isEqual:[NSNull null]]){
+                [[PAMDataStore standartDataStore] clearPartiesByUserId:userId];
+                [[PAMDataStore standartDataStore] addPartiesFromServerToCoreData:array byCreatorPartyId:userId completion:nil];
+            }
+        }
     }];
 }
 
@@ -306,6 +256,18 @@
         [[PAMPartyMakerAPI standartPartyMakerAPI] deleteUserById:@(userCore.userId) callback:^(NSDictionary *response, NSError *error) {
             NSLog(@"User %@", response);
         }];
+    }
+}
+
+- (void)upDateOfflinePartiesByUserId:(NSInteger) userId {
+    NSManagedObjectContext *context = [[PAMDataStore standartDataStore] mainContext];
+    NSArray * parties = [[PAMDataStore standartDataStore] fetchPartiesByUserId:userId context:context];
+    for (PAMPartyCore *party in parties) {
+        if(!party.isLoaded) {
+            [[PAMPartyMakerAPI standartPartyMakerAPI] writeParty:party creatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
+                NSLog(@"Party '%@' is loaded", party.name);
+            }];
+        }
     }
 }
 

@@ -11,6 +11,7 @@
 #import "PAMPartyCore.h"
 #import "PAMUserCore.h"
 #import "PAMDataStore.h"
+#import "Reachability.h"
 
 @interface PAMAppDelegate ()
 
@@ -20,6 +21,7 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
     NSDictionary *attributes1 = @{ NSFontAttributeName:[UIFont fontWithName:@"MyriadPro-Bold" size:15],
                                    NSForegroundColorAttributeName:[UIColor whiteColor]};
     [[UINavigationBar appearance] setTitleTextAttributes:attributes1];

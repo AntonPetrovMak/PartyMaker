@@ -13,8 +13,10 @@
 #import "PAMPartyMakerAPI.h"
 #import "PAMPartyCore.h"
 #import "PAMDataStore.h"
+#import "Reachability.h"
 
 @interface PAMPartiesTableViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource>
 - (IBAction)logOffUser:(UIBarButtonItem *)sender;
 
+@property (nonatomic) Reachability *wifiReachability;
 @end
