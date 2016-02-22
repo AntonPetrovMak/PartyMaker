@@ -51,7 +51,7 @@
      
      CGPoint contentOffset = CGPointMake(self.partyCore.partyType * self.typeEventScrollView.bounds.size.width, 0);
      [self.typeEventScrollView setContentOffset:contentOffset animated:NO];
-     self.typeEventPageControl.currentPage = self.partyCore.partyType;
+     self.typeEventPageControl.currentPage = (int)self.partyCore.partyType;
      self.partyDescription.text = self.partyCore.partyDescription;
 }
 
@@ -202,15 +202,12 @@
             partyCore.startDate = [[partyDate dateByAddingTimeInterval:weakSelf.startSlider.value * 60] timeIntervalSince1970];
             partyCore.endDate = [[partyDate dateByAddingTimeInterval:weakSelf.endSlider.value * 60] timeIntervalSince1970];
             partyCore.isLoaded = NO;
-            
             PAMUserCore *userCore = (PAMUserCore *)[[PAMDataStore standartDataStore] fetchUserByUserId:userId context:context];
             partyCore.creatorParty = userCore;
             [[PAMPartyMakerAPI standartPartyMakerAPI] writeParty:partyCore creatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
                 NSLog(@"%@",response);
             }];
 
-            
-            
         } completion:^{
             [weakSelf actionCloseButton:sender];
         }];

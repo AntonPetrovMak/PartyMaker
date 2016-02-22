@@ -50,6 +50,7 @@
 }
 
 - (void)addPartiesFromServerToCoreData:(NSArray *) serverParty byCreatorParty:(PAMUserCore *)creatorParty completion:(void(^)())completion{
+    
     [self.backgroundContext performBlock:^{
         for (id serverPary in serverParty) {
             PAMPartyCore *partyCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMPartyCore" inManagedObjectContext:self.backgroundContext];
@@ -68,6 +69,36 @@
 //            partyCore.startDate = [[NSDate date] timeIntervalSince1970];
 //            partyCore.endDate = [[NSDate date] timeIntervalSince1970];
 //            partyCore.creatorParty = creatorParty;
+        }
+        if (self.backgroundContext.hasChanges) {
+            NSError *error = nil;
+            [self.backgroundContext save:&error];
+            if(error) {
+                NSLog(@"%s, error happened - %@", __PRETTY_FUNCTION__, error);
+            }
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (completion) {
+                completion();
+            }
+        });
+    }];
+}
+
+- (void)addPartiesFromServerToCoreData:(NSArray *) serverParty byCreatorPartyId:(NSInteger)creatorId completion:(void(^)())completion{
+    
+    [self.backgroundContext performBlock:^{
+        for (id serverPary in serverParty) {
+            PAMPartyCore *partyCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMPartyCore" inManagedObjectContext:self.backgroundContext];
+            partyCore.partyId = [[serverPary objectForKey:@"id"] longLongValue];
+            partyCore.name = [serverPary objectForKey:@"name"];
+            partyCore.partyDescription = [serverPary objectForKey:@"comment"];
+            partyCore.partyType = [[serverPary objectForKey:@"logo_id"] longLongValue];
+            partyCore.startDate = [[serverPary objectForKey:@"start_time"] longLongValue];
+            partyCore.endDate = [[serverPary objectForKey:@"end_time"] longLongValue];
+            partyCore.isLoaded = YES;
+            PAMUserCore *userCore = (PAMUserCore *)[[PAMDataStore standartDataStore] fetchUserByUserId:creatorId context:self.backgroundContext];
+            partyCore.creatorParty = userCore;
         }
         if (self.backgroundContext.hasChanges) {
             NSError *error = nil;
@@ -213,7 +244,6 @@
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"PAMUserCore" inManagedObjectContext:context];
     [fetchRequest setEntity:entity];
-
     NSError *error = nil;
     NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:&error];
     if (fetchedObjects == nil) {
@@ -232,13 +262,14 @@
         if([[response objectForKey:@"statusCode"] isEqual:@200]){
             NSArray *array = [response objectForKey:@"response"];
             if(![array isEqual:[NSNull null]]) {
+                [self clearCoreData];
                 [[PAMDataStore standartDataStore] addUsersFromServerToCoreData: array completion:^{
                     NSArray *usersIsCoreData = [[PAMDataStore standartDataStore] fetchAllUsersInContext:[[PAMDataStore standartDataStore] mainContext]];
                     NSLog(@"Added all users (%ld) from server to core date", [usersIsCoreData count]);
                     [self addAllPartiesFromServer];
                 }];
             }
-        }
+        } 
     }];
 }
 
@@ -250,13 +281,11 @@
                     NSArray *array = [response objectForKey:@"response"];
                     if(![array isEqual:[NSNull null]]) {
                         [[PAMDataStore standartDataStore] addPartiesFromServerToCoreData:array byCreatorParty:userCore completion:^{
-                            NSLog(@"Added all parties for user: %@", userCore.name);
+
                         }];
                     } else {
-                        NSLog(@"parties is NULL for user: %@", userCore.name);
                     }
                 } else {
-                    NSLog(@"statusCode in not 200 for user: %@", userCore.name);
                 }
             }];
         }

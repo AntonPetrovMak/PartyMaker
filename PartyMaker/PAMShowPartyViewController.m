@@ -66,7 +66,7 @@
         }
         
         NSLog(@"%lld",partyObject.partyId);
-        NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] longLongValue];
+        NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
         [[PAMPartyMakerAPI standartPartyMakerAPI] deletePartyById:@(partyObject.partyId) creator_id:@(userId) callback:^(NSDictionary *response, NSError *error) {
             NSLog(@"%@",response);
         }];

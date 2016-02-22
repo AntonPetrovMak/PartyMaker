@@ -20,30 +20,47 @@
     [super viewDidLoad];
     self.arrayWithParties = [[NSMutableArray alloc] init];
     NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
-    NSLog(@"Login user id: %ld", userId);
+    
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(upDateTable) forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = refreshControl;
+    
     NSManagedObjectContext *context = [[PAMDataStore standartDataStore] mainContext];
     NSArray *array = [[PAMDataStore standartDataStore] fetchPartiesByUserId:userId context:context];
     if ( array ) {
         self.arrayWithParties = [[NSMutableArray alloc] initWithArray:array];
     }
-    
-    /*PAMPartyMakerAPI *partyMakerAPI = [PAMPartyMakerAPI standartPartyMakerAPI];
+}
+
+- (void) upDateTable {
+     NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
+    PAMPartyMakerAPI *partyMakerAPI = [PAMPartyMakerAPI standartPartyMakerAPI];
     __weak PAMPartiesTableViewController *weakSelf = self;
     [partyMakerAPI partiesWithCreatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
-        NSArray *array = [response objectForKey:@"response"];
-        if(![array isEqual:[NSNull null]]) {
-            NSLog(@"response = %@",response);
-            [self addPartiesFromServerToCoreData:array];
+        NSLog(@"response = %@",response);
+        if([response objectForKey:@"response"]) {
+            NSArray *array = [response objectForKey:@"response"];
+            if(![array isEqual:[NSNull null]]){
+                [[PAMDataStore standartDataStore] clearPartiesByUserId:userId];
+                NSManagedObjectContext *context = [[PAMDataStore standartDataStore] mainContext];
+                [[PAMDataStore standartDataStore] addPartiesFromServerToCoreData:array byCreatorPartyId:userId completion:^{
+                    NSArray *array = [[PAMDataStore standartDataStore] fetchPartiesByUserId:userId context:context];
+                    if ( array ) {
+                        weakSelf.arrayWithParties = [[NSMutableArray alloc] initWithArray:array];
+                    }
+                }];
+            }
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf.tableView reloadData];
         });
-    }];*/
+    }];
 
+    [self.tableView reloadData];
+    [self.refreshControl endRefreshing];
 }
 
 - (void)addPartiesFromServerToCoreData:(NSArray *) serverParty {
-    //[[PAMDataStore standartDataStore] deleteAllParties];
     for (id serverPary in serverParty) {
         [[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *backgroundContext) {
             PAMPartyCore *partyCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMPartyCore" inManagedObjectContext:backgroundContext];
@@ -53,6 +70,9 @@
             partyCore.partyType = [[serverPary objectForKey:@"logo_id"] longLongValue];
             partyCore.startDate = [[serverPary objectForKey:@"start_time"] longLongValue];
             partyCore.endDate = [[serverPary objectForKey:@"end_time"] longLongValue];
+            NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
+            PAMUserCore *userCore = (PAMUserCore *)[[PAMDataStore standartDataStore] fetchUserByUserId:userId context:backgroundContext];
+            partyCore.creatorParty = userCore;
         } completion:^{
             
         }];
@@ -65,6 +85,7 @@
 }
 
 /*- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
     NSManagedObjectContext *context = [[PAMDataStore standartDataStore] mainContext];
     NSArray *array = [[PAMDataStore standartDataStore] fetchPartiesByUserId:userId context:context];
@@ -74,12 +95,14 @@
     [self.tableView reloadData];
 }*/
 
+
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
     
     if([[PAMDataStore standartDataStore] isNeedUpDateByUserId:userId]) {
-        [[PAMDataStore standartDataStore] clearPartiesByUserId:userId];
+        
         PAMPartyMakerAPI *partyMakerAPI = [PAMPartyMakerAPI standartPartyMakerAPI];
         __weak PAMPartiesTableViewController *weakSelf = self;
         [partyMakerAPI partiesWithCreatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
@@ -87,9 +110,9 @@
             if([response objectForKey:@"response"]) {
                 NSArray *array = [response objectForKey:@"response"];
                 if(![array isEqual:[NSNull null]]){
-                        NSManagedObjectContext *context = [[PAMDataStore standartDataStore] mainContext];
-                        PAMUserCore *userCore = (PAMUserCore *)[[PAMDataStore standartDataStore] fetchUserByUserId:userId context:context];
-                        [[PAMDataStore standartDataStore] addPartiesFromServerToCoreData:array byCreatorParty:userCore completion:^{
+                    [[PAMDataStore standartDataStore] clearPartiesByUserId:userId];
+                    NSManagedObjectContext *context = [[PAMDataStore standartDataStore] mainContext];
+                    [[PAMDataStore standartDataStore] addPartiesFromServerToCoreData:array byCreatorPartyId:userId completion:^{
                         NSArray *array = [[PAMDataStore standartDataStore] fetchPartiesByUserId:userId context:context];
                         if ( array ) {
                             weakSelf.arrayWithParties = [[NSMutableArray alloc] initWithArray:array];
@@ -97,7 +120,6 @@
                     }];
                 }
             }
-            
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf.tableView reloadData];
             });
@@ -110,7 +132,6 @@
         }
         [self.tableView reloadData];
     }
-    
 }
 
 #pragma mark - Action

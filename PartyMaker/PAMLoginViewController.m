@@ -22,8 +22,10 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    [[PAMDataStore standartDataStore] clearCoreData];
+    
+    //[[PAMDataStore standartDataStore] clearCoreData];
     [[PAMDataStore standartDataStore] addAllUsersWithPartiesFromServer];
+    
     [self.substrateForLoginView.layer setBorderWidth:2.f];
     [self.substrateForLoginView.layer setBorderColor:[UIColor whiteColor].CGColor];
     [self.loginTextField setFont:[UIFont fontWithName:@"MariadPro-Regular" size:16]];
@@ -83,6 +85,7 @@
         [partyMakerAPI loginWithUserName: self.loginTextField.text
                              andPassword: self.passwordTextField.text
                                 callback:^(NSDictionary *response, NSError *error) {
+                                    
                                     NSDictionary *answerServer = [response objectForKey:@"response"];
                                     if([[response objectForKey:@"statusCode"] isEqual:@200]) {
                                         if([[answerServer objectForKey:@"name"] isEqualToString:weakSelf.loginTextField.text]) {
@@ -96,6 +99,9 @@
                                         }else {
                                             [weakSelf createInfoViewWithMessage:@"Sorry, problem with server!"];
                                         }
+                                    } else if([[response objectForKey:@"statusCode"] isEqual:@505]) {
+                                        [weakSelf createInfoViewWithMessage:@"No internet"];
+                                        NSLog(@"No internet");
                                     } else {
                                         [weakSelf createInfoViewWithMessage:[answerServer objectForKey:@"msg"]];
                                         NSLog(@"%@",[answerServer objectForKey:@"msg"]);
@@ -118,6 +124,9 @@
                                        if([[response objectForKey:@"statusCode"] isEqual:@200]) {
                                            [self userLogin];
                                            NSLog(@"Register OK");
+                                       } else if([[response objectForKey:@"statusCode"] isEqual:@505]) {
+                                           [weakSelf createInfoViewWithMessage:@"No internet"];
+                                           NSLog(@"No internet");
                                        } else {
                                            [weakSelf createInfoViewWithMessage:[answerServer objectForKey:@"msg"]];
                                            NSLog(@"%@",[answerServer objectForKey:@"msg"]);
