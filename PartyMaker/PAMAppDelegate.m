@@ -42,10 +42,23 @@
     return YES;
 }
 
+
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
     NSLog(@"%d", status);
     if (status == kCLAuthorizationStatusNotDetermined) {
         [self.locationManager requestAlwaysAuthorization];
+    }
+}
+
+- (void) application:(UIApplication *) application didReceiveLocalNotification:(nonnull UILocalNotification *)notification {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    if([[NSUserDefaults standardUserDefaults] objectForKey:@"userId"]) {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        
+        UITabBarController *tabBar = [storyboard instantiateViewControllerWithIdentifier:@"MainTabBarController"];
+        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        self.window.rootViewController = tabBar;
+        [self.window makeKeyAndVisible];
     }
 }
 

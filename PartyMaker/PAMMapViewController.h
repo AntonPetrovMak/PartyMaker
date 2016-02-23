@@ -11,6 +11,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "PAMMapAnnotation.h"
 
+
 @interface PAMMapViewController : UIViewController <MKMapViewDelegate, UIGestureRecognizerDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 
