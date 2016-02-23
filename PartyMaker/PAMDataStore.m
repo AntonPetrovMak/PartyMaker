@@ -307,7 +307,6 @@
     for (PAMPartyCore *party in parties) {
         if(!party.isLoaded) {
             [[PAMPartyMakerAPI standartPartyMakerAPI] writeParty:party creatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
-                //NSLog(@"Party '%@' is loaded", party.name);
             }];
         }
     }

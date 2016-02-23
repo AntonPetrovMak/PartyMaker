@@ -21,6 +21,8 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    self.locationManager = [CLLocationManager new];
+    self.locationManager.delegate = self;
     
     NSDictionary *attributes1 = @{ NSFontAttributeName:[UIFont fontWithName:@"MyriadPro-Bold" size:15],
                                    NSForegroundColorAttributeName:[UIColor whiteColor]};
@@ -35,13 +37,16 @@
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         self.window.rootViewController = tabBar;
         [self.window makeKeyAndVisible];
-    }  else {
-        //[[PAMDataStore standartDataStore] clearCoreData];
-        //[[PAMDataStore standartDataStore] addAllUsersWithPartiesFromServer];
     }
     
-    
     return YES;
+}
+
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+    NSLog(@"%d", status);
+    if (status == kCLAuthorizationStatusNotDetermined) {
+        [self.locationManager requestAlwaysAuthorization];
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

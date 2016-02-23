@@ -1096,6 +1096,7 @@
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="actionMoveCursor:" destination="GDM-a4-Iq0" eventType="touchDown" id="cDE-3q-pu1"/>
+                                    <segue destination="f9o-q5-Aer" kind="show" id="dqu-aN-Ngw"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LOCATION" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e97-Bm-Z8V">
@@ -1269,6 +1270,42 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F91-nW-ByK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2121" y="186"/>
+        </scene>
+        <!--Map View Controller-->
+        <scene sceneID="xpb-aA-hHE">
+            <objects>
+                <viewController storyboardIdentifier="PAMMapViewController" id="f9o-q5-Aer" customClass="PAMMapViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="8Su-QN-PYv"/>
+                        <viewControllerLayoutGuide type="bottom" id="yS8-5a-xUp"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Dml-Fs-hSh">
+                        <rect key="frame" x="0.0" y="64" width="320" height="455"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="TiD-VR-pPe">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="455"/>
+                                <connections>
+                                    <outlet property="delegate" destination="f9o-q5-Aer" id="G4v-pk-aFG"/>
+                                </connections>
+                            </mapView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="TiD-VR-pPe" firstAttribute="top" secondItem="8Su-QN-PYv" secondAttribute="bottom" id="ak3-xS-HaS"/>
+                            <constraint firstItem="yS8-5a-xUp" firstAttribute="top" secondItem="TiD-VR-pPe" secondAttribute="bottom" id="jN1-dJ-z7f"/>
+                            <constraint firstItem="TiD-VR-pPe" firstAttribute="leading" secondItem="Dml-Fs-hSh" secondAttribute="leading" id="m9e-OX-4ji"/>
+                            <constraint firstAttribute="trailing" secondItem="TiD-VR-pPe" secondAttribute="trailing" id="zAr-aC-RfT"/>
+                        </constraints>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                    <connections>
+                        <outlet property="mapView" destination="TiD-VR-pPe" id="lqn-KJ-TeN"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2Re-Td-Pic" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2584" y="186"/>
         </scene>
     </scenes>
     <resources>
