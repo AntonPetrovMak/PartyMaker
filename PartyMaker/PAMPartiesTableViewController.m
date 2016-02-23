@@ -103,29 +103,33 @@
 
 #pragma mark - Helpers
 - (void)upDateTable {
-    NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
-    PAMPartyMakerAPI *partyMakerAPI = [PAMPartyMakerAPI standartPartyMakerAPI];
-    __weak PAMPartiesTableViewController *weakSelf = self;
-    [partyMakerAPI partiesWithCreatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
-        //NSLog(@"response = %@",response);
-        if([response objectForKey:@"response"]) {
-            NSArray *array = [response objectForKey:@"response"];
-            if(![array isEqual:[NSNull null]]){
-                [[PAMDataStore standartDataStore] clearPartiesByUserId:userId];
-                NSManagedObjectContext *context = [[PAMDataStore standartDataStore] mainContext];
-                [[PAMDataStore standartDataStore] addPartiesFromServerToCoreData:array byCreatorPartyId:userId completion:^{
-                    NSArray *array = [[PAMDataStore standartDataStore] fetchPartiesByUserId:userId context:context];
-                    if ( array ) {
-                        weakSelf.arrayWithParties = [[NSMutableArray alloc] initWithArray:array];
-                    }
-                }];
+    if([self.wifiReachability currentReachabilityStatus] == ReachableViaWiFi) {
+        NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
+        PAMPartyMakerAPI *partyMakerAPI = [PAMPartyMakerAPI standartPartyMakerAPI];
+        __weak PAMPartiesTableViewController *weakSelf = self;
+        [partyMakerAPI partiesWithCreatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
+            //NSLog(@"response = %@",response);
+            if([response objectForKey:@"response"]) {
+                NSArray *array = [response objectForKey:@"response"];
+                if(![array isEqual:[NSNull null]]){
+                    [[PAMDataStore standartDataStore] clearPartiesByUserId:userId];
+                    NSManagedObjectContext *context = [[PAMDataStore standartDataStore] mainContext];
+                    [[PAMDataStore standartDataStore] addPartiesFromServerToCoreData:array byCreatorPartyId:userId completion:^{
+                        NSArray *array = [[PAMDataStore standartDataStore] fetchPartiesByUserId:userId context:context];
+                        if ( array ) {
+                            weakSelf.arrayWithParties = [[NSMutableArray alloc] initWithArray:array];
+                        }
+                    }];
+                }
             }
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.tableView reloadData];
-            [weakSelf.refreshControl endRefreshing];
-        });
-    }];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.tableView reloadData];
+                [weakSelf.refreshControl endRefreshing];
+            });
+        }];
+    } else {
+        [self.refreshControl endRefreshing];
+    }
 }
 
 #pragma mark - Action

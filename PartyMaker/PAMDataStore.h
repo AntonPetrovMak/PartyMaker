@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 #import "PAMPartyCore.h"
 #import "PAMUserCore.h"
@@ -19,7 +20,6 @@
 
 + (PAMDataStore *) standartDataStore;
 - (void) performWriteOperation:(void (^)(NSManagedObjectContext*))writeBlock completion:(void(^)())completion;
-
 #pragma mark - Fetches Party
 - (void)addPartiesFromServerToCoreData:(NSArray *) serverParty byCreatorPartyId:(NSInteger)creatorId completion:(void(^)())completion;
 - (NSArray *)fetchPartyByPartyId:(NSInteger) partyId context:(NSManagedObjectContext*) context;

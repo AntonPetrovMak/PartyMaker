@@ -32,11 +32,12 @@
 
 #pragma mark - Fetches Party
 - (void)performWriteOperation:(void (^)(NSManagedObjectContext*))writeBlock completion:(void(^)())completion {
+    __weak PAMDataStore *weakSelf = self;
     [self.backgroundContext performBlock:^{
-        writeBlock(self.backgroundContext);
-        if (self.backgroundContext.hasChanges) {
+        writeBlock(weakSelf.backgroundContext);
+        if (weakSelf.backgroundContext.hasChanges) {
             NSError *error = nil;
-            [self.backgroundContext save:&error];
+            [weakSelf.backgroundContext save:&error];
             if(error) {
                  NSLog(@"%s, error happened - %@", __PRETTY_FUNCTION__, error);
             }
@@ -50,9 +51,10 @@
 }
 
 - (void)addPartiesFromServerToCoreData:(NSArray *) serverParty byCreatorPartyId:(NSInteger)creatorId completion:(void(^)())completion{
+    __weak PAMDataStore *weakSelf = self;
     [self.backgroundContext performBlock:^{
         for (id serverPary in serverParty) {
-            PAMPartyCore *partyCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMPartyCore" inManagedObjectContext:self.backgroundContext];
+            PAMPartyCore *partyCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMPartyCore" inManagedObjectContext:weakSelf.backgroundContext];
             partyCore.partyId = [[serverPary objectForKey:@"id"] longLongValue];
             partyCore.name = [serverPary objectForKey:@"name"];
             partyCore.partyDescription = [serverPary objectForKey:@"comment"];
@@ -60,12 +62,12 @@
             partyCore.startDate = [[serverPary objectForKey:@"start_time"] longLongValue];
             partyCore.endDate = [[serverPary objectForKey:@"end_time"] longLongValue];
             partyCore.isLoaded = YES;
-            PAMUserCore *userCore = (PAMUserCore *)[[PAMDataStore standartDataStore] fetchUserByUserId:creatorId context:self.backgroundContext];
+            PAMUserCore *userCore = (PAMUserCore *)[[PAMDataStore standartDataStore] fetchUserByUserId:creatorId context:weakSelf.backgroundContext];
             partyCore.creatorParty = userCore;
         }
-        if (self.backgroundContext.hasChanges) {
+        if (weakSelf.backgroundContext.hasChanges) {
             NSError *error = nil;
-            [self.backgroundContext save:&error];
+            [weakSelf.backgroundContext save:&error];
             if(error) {
                 NSLog(@"%s, error happened - %@", __PRETTY_FUNCTION__, error);
             }
@@ -137,6 +139,7 @@
 #pragma mark - Fetches User
 
 - (void)addUsersFromServerToCoreData:(NSArray *) serverUsers completion:(void(^)())completion{
+     __weak PAMDataStore *weakSelf = self;
     [self.backgroundContext performBlock:^{
         for (id serverUser in serverUsers) {
             PAMUserCore *userCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMUserCore" inManagedObjectContext:self.backgroundContext];
@@ -144,18 +147,18 @@
             userCore.name = [serverUser objectForKey:@"name"];
             userCore.isLoaded = YES;
         }
-        if (self.backgroundContext.hasChanges) {
+        if (weakSelf.backgroundContext.hasChanges) {
             NSError *error = nil;
-            [self.backgroundContext save:&error];
+            [weakSelf.backgroundContext save:&error];
             if(error) {
                 NSLog(@"%s, error happened - %@", __PRETTY_FUNCTION__, error);
             }
         }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (completion) {
-                completion();
-            }
-        });
+        
+        if (completion) {
+            completion();
+        }
+        
     }];
 }
 
@@ -200,34 +203,73 @@
             if(![array isEqual:[NSNull null]]) {
                 [self clearCoreData];
                 [[PAMDataStore standartDataStore] addUsersFromServerToCoreData: array completion:^{
-                    NSArray *usersIsCoreData = [[PAMDataStore standartDataStore] fetchAllUsersInContext:[[PAMDataStore standartDataStore] mainContext]];
-                    NSLog(@"Added all users (%ld) from server to core date", [usersIsCoreData count]);
                     [self addAllPartiesFromServer];
                 }];
+                
             }
         } 
     }];
 }
 
-- (void)addAllPartiesFromServer {
-    [[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *backgroundContext) {
-        for (PAMUserCore *userCore in [[PAMDataStore standartDataStore] fetchAllUsersInContext:backgroundContext]) {
-            [[PAMPartyMakerAPI standartPartyMakerAPI] partiesWithCreatorId:@(userCore.userId) callback:^(NSDictionary *response, NSError *error) {
-                if([[response objectForKey:@"statusCode"] isEqual:@200]){
-                    NSArray *array = [response objectForKey:@"response"];
-                    if(![array isEqual:[NSNull null]]) {
-                        [[PAMDataStore standartDataStore] addPartiesFromServerToCoreData:array byCreatorPartyId:userCore.userId completion:^{
+- (void) notificationForRarty:(PAMPartyCore *) party {
+    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+    localNotification.alertBody = @"Party time!";
+    localNotification.alertAction = @"Pool party is about to begin!";
+    localNotification.fireDate = [NSDate dateWithTimeIntervalSince1970:party.startDate];
+    localNotification.userInfo = @{ @"party_id" : @(party.partyId) };
+    localNotification.soundName = UILocalNotificationDefaultSoundName;
+    localNotification.repeatInterval = 0;
+    localNotification.category = @"LocalNotificationDefaultCategory";
+    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+    UIMutableUserNotificationAction *doneAction = [[UIMutableUserNotificationAction alloc] init];
+    doneAction.identifier = @"doneActionIdentifier";
+    doneAction.destructive = NO;
+    doneAction.title = @"Mark done";
+    doneAction.activationMode = UIUserNotificationActivationModeBackground;
+    doneAction.authenticationRequired = NO;
+    UIMutableUserNotificationCategory *category = [[UIMutableUserNotificationCategory alloc] init];
+    category.identifier = @"LocalNotificationDefaultCategory";
+    [category setActions:@[doneAction] forContext:UIUserNotificationActionContextMinimal];
+    [category setActions:@[doneAction] forContext:UIUserNotificationActionContextDefault];
+    NSSet *categories = [[NSSet alloc] initWithArray:@[category]];
+    UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings
+                                                        settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeSound categories:categories];
+    [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
+}
 
-                        }];
-                    } else {
-                    }
+
+- (void)addAllPartiesFromServer {
+    for (PAMUserCore *userCore in [[PAMDataStore standartDataStore] fetchAllUsersInContext:self.backgroundContext]) {
+        [[PAMPartyMakerAPI standartPartyMakerAPI] partiesWithCreatorId:@(userCore.userId) callback:^(NSDictionary *response, NSError *error) {
+            if([[response objectForKey:@"statusCode"] isEqual:@200]){
+                NSArray *array = [response objectForKey:@"response"];
+                if(![array isEqual:[NSNull null]]) {
+                    [[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *backgroundContext) {
+                        for (id serverPary in array) {
+                            PAMPartyCore *partyCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMPartyCore" inManagedObjectContext:backgroundContext];
+                            partyCore.partyId = [[serverPary objectForKey:@"id"] longLongValue];
+                            partyCore.name = [serverPary objectForKey:@"name"];
+                            partyCore.partyDescription = [serverPary objectForKey:@"comment"];
+                            partyCore.partyType = [[serverPary objectForKey:@"logo_id"] longLongValue];
+                            partyCore.startDate = [[serverPary objectForKey:@"start_time"] longLongValue];
+                            partyCore.endDate = [[serverPary objectForKey:@"end_time"] longLongValue];
+                            partyCore.isLoaded = YES;
+                            partyCore.creatorParty = userCore;
+                            [self notificationForRarty: partyCore];
+                            
+                        }
+                    } completion:^{
+                        
+                    }];
                 } else {
+                    
                 }
-            }];
-        }
-    } completion:^{
-        
-    }];
+            } else {
+                NSLog(@"server answer %@",[response objectForKey:@"statusCode"]);
+            }
+        }];
+    }
+   
 }
 
 - (void)upDateTable {
@@ -265,7 +307,7 @@
     for (PAMPartyCore *party in parties) {
         if(!party.isLoaded) {
             [[PAMPartyMakerAPI standartPartyMakerAPI] writeParty:party creatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
-                NSLog(@"Party '%@' is loaded", party.name);
+                //NSLog(@"Party '%@' is loaded", party.name);
             }];
         }
     }
@@ -283,6 +325,11 @@
 }
 
 - (void)clearCoreData{
+    UIApplication *application = [UIApplication sharedApplication];
+    for (UILocalNotification *notification in [application scheduledLocalNotifications]) {
+        [application cancelLocalNotification:notification];
+    }
+
     [[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *backgroundContext) {
         NSArray * parties = [[PAMDataStore standartDataStore] fetchAllPartiesInContext:backgroundContext];
         NSLog(@"Will delete (%ld) paries", [parties count]);

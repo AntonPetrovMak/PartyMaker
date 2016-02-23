@@ -6,6 +6,7 @@
 //  Copyright © 2016 Softheme. All rights reserved.
 //
 
+
 #import "PAMLoginViewController.h"
 
 @interface PAMLoginViewController () {
@@ -23,7 +24,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     
-    //[[PAMDataStore standartDataStore] clearCoreData];
+    
     [[PAMDataStore standartDataStore] addAllUsersWithPartiesFromServer];
     
     [self.substrateForLoginView.layer setBorderWidth:2.f];
