@@ -62,6 +62,8 @@
             partyCore.startDate = [[serverPary objectForKey:@"start_time"] longLongValue];
             partyCore.endDate = [[serverPary objectForKey:@"end_time"] longLongValue];
             partyCore.isLoaded = YES;
+            partyCore.longitude = [serverPary objectForKey:@"longitude"];
+            partyCore.latitude = [serverPary objectForKey:@"latitude"];
             PAMUserCore *userCore = (PAMUserCore *)[[PAMDataStore standartDataStore] fetchUserByUserId:creatorId context:weakSelf.backgroundContext];
             partyCore.creatorParty = userCore;
         }
@@ -253,6 +255,8 @@
                             partyCore.partyType = [[serverPary objectForKey:@"logo_id"] longLongValue];
                             partyCore.startDate = [[serverPary objectForKey:@"start_time"] longLongValue];
                             partyCore.endDate = [[serverPary objectForKey:@"end_time"] longLongValue];
+                            partyCore.longitude = [serverPary objectForKey:@"longitude"];
+                            partyCore.latitude = [serverPary objectForKey:@"latitude"];
                             partyCore.isLoaded = YES;
                             partyCore.creatorParty = userCore;
                             [self notificationForRarty: partyCore];
@@ -306,7 +310,7 @@
     NSArray * parties = [[PAMDataStore standartDataStore] fetchPartiesByUserId:userId context:context];
     for (PAMPartyCore *party in parties) {
         if(!party.isLoaded) {
-            [[PAMPartyMakerAPI standartPartyMakerAPI] writeParty:party creatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
+            [[PAMPartyMakerAPI standartPartyMakerAPI] addParty:party creatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
             }];
         }
     }

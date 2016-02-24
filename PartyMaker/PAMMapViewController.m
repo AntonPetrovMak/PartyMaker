@@ -11,7 +11,6 @@
 
 @interface PAMMapViewController ()
 
-@property(strong, nonatomic) CLGeocoder* geocoder;
 @property(strong, nonatomic) MKPinAnnotationView *pinView;
 
 @end
@@ -20,34 +19,58 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.geocoder = [[CLGeocoder alloc] init];
     self.mapView.showsUserLocation = YES;
     self.mapView.delegate = self;
+    self.trashPartyPinItem.enabled = NO;
     
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(mapLongPress:)];
     longPress.minimumPressDuration = 0.5f;
     longPress.delegate = self;
     [self.mapView addGestureRecognizer:longPress];
+    
+    NSString *coordinateString = [self.partyInfo objectForKey:@"coordinate"];
+    if(coordinateString.length) {
+        NSArray* coordinate = [coordinateString componentsSeparatedByString:@";"];
+        NSLog(@"%@", coordinate);
+        if([coordinate count] == 2) {
+            NSLog(@"%f , %f", [coordinate[0] floatValue], [coordinate[1] floatValue]);
+            CLLocationCoordinate2D partyCoordinate = CLLocationCoordinate2DMake([coordinate[0] floatValue], [coordinate[1] floatValue]);
+            [self addAnnotationWith:partyCoordinate];
+        }
+    }
 }
 
 -(void)viewDidAppear:(BOOL)animated {
     
 }
 
-#pragma makr - UIGestureRecognizerDelegate
+#pragma mark - Helpers
+- (void)addAnnotationWith:(CLLocationCoordinate2D) coordinate {
+    NSString *partyName = [self.partyInfo objectForKey:@"name"];
+    PAMMapAnnotation * annotation = [[PAMMapAnnotation alloc] initWithCoordinate:coordinate andTitle:partyName.length ? partyName : @"Party name"];
+    [annotation setAddressToSubtitle];
+    [self.mapView addAnnotation:annotation];
+    self.trashPartyPinItem.enabled = YES;
+}
+
+#pragma mark - Action
+- (void)actionTrashPartyPin:(UIBarButtonItem *)sender {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(actionMapCoordinate:nameLocation:)]) {
+        [self.delegate performSelector:@selector(actionMapCoordinate:nameLocation:) withObject:@"" withObject:@""];
+    }
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+#pragma mark - UIGestureRecognizerDelegate
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     return YES;
 }
 
-
 -(IBAction)mapLongPress:(UITapGestureRecognizer *)recognizer {
     if (recognizer.state == UIGestureRecognizerStateBegan && self.mapView.annotations.count <= 1) {
         CGPoint point = [recognizer locationInView:self.mapView];
-        CLLocationCoordinate2D tapPoint = [self.mapView convertPoint:point toCoordinateFromView:self.mapView];
-        PAMMapAnnotation * annotation = [[PAMMapAnnotation alloc] initWithCoordinate:tapPoint];
-        annotation.title = @"Party name";
-        [annotation setAddressToSubtitle];
-        [self.mapView addAnnotation:annotation];
+        CLLocationCoordinate2D partyCoordinate = [self.mapView convertPoint:point toCoordinateFromView:self.mapView];
+        [self addAnnotationWith:partyCoordinate];
     }
 }
 
@@ -56,8 +79,8 @@
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
     MKCoordinateRegion theRegion = self.mapView.region;
     theRegion.center = userLocation.location.coordinate;
-    theRegion.span.longitudeDelta /=70;
-    theRegion.span.latitudeDelta /=70;
+    theRegion.span.longitudeDelta /=50;
+    theRegion.span.latitudeDelta /=50;
     [self.mapView setRegion:theRegion animated:YES];
 }
 
@@ -83,10 +106,10 @@
         if(!pinView) {
             pinView = [[MKPinAnnotationView alloc] initWithAnnotation: annotation reuseIdentifier:@"CustomPinAnnotationView"];
             pinView.pinTintColor = [MKPinAnnotationView redPinColor];
-            pinView.draggable = YES;
+            pinView.draggable = self.isDraggablePin;
             pinView.animatesDrop = YES;
             pinView.canShowCallout = YES;
-            UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+            UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
             [rightButton addTarget:nil action:@selector(addLocation) forControlEvents:UIControlEventTouchUpInside];
             pinView.rightCalloutAccessoryView = rightButton;
         } else {
@@ -99,7 +122,7 @@
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view didChangeDragState:(MKAnnotationViewDragState)newState
-   fromOldState:(MKAnnotationViewDragState)oldState NS_AVAILABLE(10_9, 4_0) {
+   fromOldState:(MKAnnotationViewDragState)oldState {
     PAMMapAnnotation *customAnnotation = (PAMMapAnnotation *)view.annotation;
     [customAnnotation setAddressToSubtitle];
     
@@ -112,7 +135,7 @@
     PAMMapAnnotation *customAnnotation = (PAMMapAnnotation *)view.annotation;
     NSString *locationString = [NSString stringWithFormat:@"%f;%f", customAnnotation.coordinate.latitude, customAnnotation.coordinate.longitude];
     if(self.delegate && [self.delegate respondsToSelector:@selector(actionMapCoordinate:nameLocation:)]) {
-        [self.delegate performSelector:@selector(actionMapCoordinate:nameLocation:) withObject:locationString withObject:customAnnotation.title];
+        [self.delegate performSelector:@selector(actionMapCoordinate:nameLocation:) withObject:locationString withObject:customAnnotation.subtitle];
     }
 }
 

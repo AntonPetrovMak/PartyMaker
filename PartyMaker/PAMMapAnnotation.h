@@ -17,7 +17,7 @@
 @property (nonatomic, copy) NSString *subtitle;
 
 
-- (instancetype) initWithCoordinate:(CLLocationCoordinate2D) coordinate;
+- (instancetype) initWithCoordinate:(CLLocationCoordinate2D) coordinate andTitle:(NSString *) title;
 - (void) setAddressToSubtitle;
 - (MKAnnotationView *) annotatinView;
 

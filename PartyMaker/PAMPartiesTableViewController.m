@@ -39,15 +39,17 @@
 }
 
 - (void)addPartiesFromServerToCoreData:(NSArray *) serverParty {
-    for (id serverPary in serverParty) {
+    for (id party in serverParty) {
         [[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *backgroundContext) {
             PAMPartyCore *partyCore = [NSEntityDescription insertNewObjectForEntityForName:@"PAMPartyCore" inManagedObjectContext:backgroundContext];
-            partyCore.partyId = [[serverPary objectForKey:@"id"] longLongValue];
-            partyCore.name = [serverPary objectForKey:@"name"];
-            partyCore.partyDescription = [serverPary objectForKey:@"comment"];
-            partyCore.partyType = [[serverPary objectForKey:@"logo_id"] longLongValue];
-            partyCore.startDate = [[serverPary objectForKey:@"start_time"] longLongValue];
-            partyCore.endDate = [[serverPary objectForKey:@"end_time"] longLongValue];
+            partyCore.partyId = [[party objectForKey:@"id"] longLongValue];
+            partyCore.name = [party objectForKey:@"name"];
+            partyCore.partyDescription = [party objectForKey:@"comment"];
+            partyCore.partyType = [[party objectForKey:@"logo_id"] longLongValue];
+            partyCore.startDate = [[party objectForKey:@"start_time"] longLongValue];
+            partyCore.endDate = [[party objectForKey:@"end_time"] longLongValue];
+            partyCore.longitude = [party objectForKey:@"longitude"];
+            partyCore.latitude = [party objectForKey:@"latitude"];
             NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
             PAMUserCore *userCore = (PAMUserCore *)[[PAMDataStore standartDataStore] fetchUserByUserId:userId context:backgroundContext];
             partyCore.creatorParty = userCore;
@@ -153,14 +155,16 @@
     }
     PAMPartyCore *party = [self.arrayWithParties objectAtIndex:indexPath.row];
     
-    NSString *strWithDate = [NSString stringWithFormat:@"%@     %@ - %@ id: %lld", [NSString stringPrityDateWithDate:[NSDate dateWithTimeIntervalSince1970:party.startDate]],
+    NSString *strWithDate = [NSString stringWithFormat:@"%@     %@ - %@", [NSString stringPrityDateWithDate:[NSDate dateWithTimeIntervalSince1970:party.startDate]],
                                                                [NSString stringHourAndMinutesWithDate:[NSDate dateWithTimeIntervalSince1970:party.startDate]],
-                                                               [NSString stringHourAndMinutesWithDate:[NSDate dateWithTimeIntervalSince1970:party.endDate]],
-                                                                party.partyId];
+                                                               [NSString stringHourAndMinutesWithDate:[NSDate dateWithTimeIntervalSince1970:party.endDate]]];
     [cell configureWithPartyName:party.name
                        partyDate:strWithDate
-                       partyType:[UIImage imageNamed:[NSString stringWithFormat:@"PartyLogo_Small_%lld", party.partyType]]];
-
+                       partyType:[UIImage imageNamed:[NSString stringWithFormat:@"PartyLogo_Small_%lld", party.partyType]]
+                    partyAddress:party.latitude];
+    if(!party.latitude.length) {
+        [cell.partyDateLabel setTextColor:[UIColor colorWithRed:98/255.f green:105/255.f blue:119/255.f alpha:1]];
+    }
     return cell;
 }
 

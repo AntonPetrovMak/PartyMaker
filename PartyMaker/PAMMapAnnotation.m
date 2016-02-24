@@ -16,10 +16,11 @@
 
 @implementation PAMMapAnnotation
 
-- (instancetype) initWithCoordinate:(CLLocationCoordinate2D) coordinate {
+- (instancetype) initWithCoordinate:(CLLocationCoordinate2D) coordinate andTitle:(NSString *) title{
     self = [super init];
     if (self) {
         self.coordinate = coordinate;
+        self.title = title;
         self.geocoder = [[CLGeocoder alloc] init];
     }
     return self;

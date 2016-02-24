@@ -13,9 +13,10 @@
 @property (strong, nonatomic) IBOutlet UIImageView *patryTypeImage;
 @property (strong, nonatomic) IBOutlet UILabel *partyNameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *partyDateLabel;
+@property (strong, nonatomic) IBOutlet UILabel *partyAddressLabel;
 
 + (NSString *) reuseIdentifire;
 
-- (void) configureWithPartyName:(NSString *) partyName partyDate:(NSString *) partyDate partyType:(UIImage *) partyType;
+- (void) configureWithPartyName:(NSString *) partyName partyDate:(NSString *) partyDate partyType:(UIImage *) partyType partyAddress:(NSString *) address;
 
 @end

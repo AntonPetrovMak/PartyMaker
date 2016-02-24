@@ -44,7 +44,12 @@
     if ([segue.identifier isEqualToString:@"SegueEditParty"]) {
         PAMCreatePartyViewController *editView = [segue destinationViewController];
         editView.partyCore = self.party;
+    } else if ([segue.identifier isEqualToString:@"ChooseLocationSegue"]) {
+        PAMMapViewController *mapViewController = [segue destinationViewController];
+        [mapViewController.navigationController setTitle:[@"PARTY LOCATION" uppercaseString]];
+        mapViewController.partyInfo = @{@"coordinate":self.party.longitude ,@"name":self.party.name};
     }
+    
 }
 
 

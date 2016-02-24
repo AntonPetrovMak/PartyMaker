@@ -14,13 +14,21 @@
 
 
 @protocol PAMMapCoordinateDelegate <NSObject>
-- (void)actionMapCoordinate:(NSString *) location nameLocation:(NSString *) namaLocation;
+- (void)actionMapCoordinate:(NSString *) location nameLocation:(NSString *) nameLocation;
 @end
 
 @interface PAMMapViewController : UIViewController <MKMapViewDelegate, UIGestureRecognizerDelegate>
-@property (weak, nonatomic) IBOutlet MKMapView *mapView;
-@property (strong, nonatomic) PAMPartyCore *party;
 
 @property (weak, nonatomic) id <PAMMapCoordinateDelegate> delegate;
+
+@property (strong, nonatomic) NSDictionary *partyInfo;
+
+@property (weak, nonatomic) IBOutlet MKMapView *mapView;
+@property (weak, nonatomic) UIBarButtonItem *trashPartyPinItem;
+@property (assign, nonatomic) BOOL isDraggablePin;
+
+- (void)actionTrashPartyPin:(UIBarButtonItem *)sender;
+
+
 
 @end

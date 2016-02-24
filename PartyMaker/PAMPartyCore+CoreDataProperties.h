@@ -2,7 +2,7 @@
 //  PAMPartyCore+CoreDataProperties.h
 //  PartyMaker
 //
-//  Created by iMac309 on 21.02.16.
+//  Created by iMac309 on 24.02.16.
 //  Copyright © 2016 Softheme. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -22,6 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) int64_t partyId;
 @property (nonatomic) int64_t partyType;
 @property (nonatomic) int64_t startDate;
+@property (nullable, nonatomic, retain) NSString *latitude;
+@property (nullable, nonatomic, retain) NSString *longitude;
+@property (nonatomic) BOOL isWasDeleted;
 @property (nullable, nonatomic, retain) PAMUserCore *creatorParty;
 
 @end

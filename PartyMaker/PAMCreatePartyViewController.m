@@ -11,6 +11,7 @@
 @interface PAMCreatePartyViewController ()
 
 @property(strong, nonatomic) NSString *descriptionSaver;
+@property(strong, nonatomic) NSString *coordinatesSaver;
 
 @end
 
@@ -19,40 +20,55 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"CREATE PARTY";
-    //[self.navigationItem setHidesBackButton:YES];
     [self creatingTextField];
     [self creatingTextView];
-    
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+    self.coordinatesSaver = @"";
+    if(self.partyCore) {
+        [self enterDataForEdit];
+    }
     CGRect rect = self.typeEventScrollView.frame;
     rect.size.height = ([UIScreen mainScreen].bounds.size.height - 369)/2;
     rect.size.width = [UIScreen mainScreen].bounds.size.width - 128;
     self.typeEventScrollView.frame = rect;
     [self creatingScrollView];
-    if(self.partyCore) {
-        [self enterDataForEdit];
-    }
+
 }
 
 - (void)enterDataForEdit {
     self.partyDate = [NSDate dateWithTimeIntervalSince1970:self.partyCore.startDate];
-     [self.chooseButton setTitle: [NSString stringPrityDateWithDate:[NSDate dateWithTimeIntervalSince1970:self.partyCore.startDate]]
-                        forState: UIControlStateNormal];
-     self.partyNameTextField.text = self.partyCore.name;
-     
-     self.startSlider.value = [self countMinutesInDay:[NSDate dateWithTimeIntervalSince1970:self.partyCore.startDate]];
-     self.startTimeLabel.text = [NSString stringHourAndMinutesWithDate:[NSDate dateWithTimeIntervalSince1970:self.partyCore.startDate]];
-     
-     self.endSlider.value = [self countMinutesInDay:[NSDate dateWithTimeIntervalSince1970:self.partyCore.endDate]];
-     self.endTimeLabel.text = [NSString stringHourAndMinutesWithDate:[NSDate dateWithTimeIntervalSince1970:self.partyCore.endDate]];
-     
-     CGPoint contentOffset = CGPointMake(self.partyCore.partyType * self.typeEventScrollView.bounds.size.width, 0);
-     [self.typeEventScrollView setContentOffset:contentOffset animated:NO];
-     self.typeEventPageControl.currentPage = (int)self.partyCore.partyType;
-     self.partyDescription.text = self.partyCore.partyDescription;
+    [self.chooseButton setTitle: [NSString stringPrityDateWithDate:[NSDate dateWithTimeIntervalSince1970:self.partyCore.startDate]]
+                    forState: UIControlStateNormal];
+    self.partyNameTextField.text = self.partyCore.name;
+
+    self.startSlider.value = [self countMinutesInDay:[NSDate dateWithTimeIntervalSince1970:self.partyCore.startDate]];
+    self.startTimeLabel.text = [NSString stringHourAndMinutesWithDate:[NSDate dateWithTimeIntervalSince1970:self.partyCore.startDate]];
+
+    self.endSlider.value = [self countMinutesInDay:[NSDate dateWithTimeIntervalSince1970:self.partyCore.endDate]];
+    self.endTimeLabel.text = [NSString stringHourAndMinutesWithDate:[NSDate dateWithTimeIntervalSince1970:self.partyCore.endDate]];
+
+    CGPoint contentOffset = CGPointMake(self.partyCore.partyType * self.typeEventScrollView.bounds.size.width, 0);
+    [self.typeEventScrollView setContentOffset:contentOffset animated:NO];
+    self.typeEventPageControl.currentPage = (int)self.partyCore.partyType;
+    self.partyDescription.text = self.partyCore.partyDescription;
+    if(self.partyCore.longitude.length && self.partyCore.latitude.length) {
+        self.coordinatesSaver = self.partyCore.longitude;
+        [self.chooseLocation setTitle:[self.partyCore.latitude uppercaseString] forState:UIControlStateNormal];
+    }
+    
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"ChooseLocationSegue"]) {
+        PAMMapViewController *mapViewController = [segue destinationViewController];
+        UIBarButtonItem *treshItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash
+                                                                                   target:mapViewController
+                                                                                   action:@selector(actionTrashPartyPin:)];
+        mapViewController.isDraggablePin = YES;
+        mapViewController.trashPartyPinItem = treshItem;
+        mapViewController.navigationItem.rightBarButtonItem = mapViewController.trashPartyPinItem;
+        mapViewController.delegate = self;
+        mapViewController.partyInfo = @{@"coordinate":self.coordinatesSaver,@"name":self.partyNameTextField.text};
+    }
 }
 
 #pragma mark - Helpers
@@ -201,10 +217,12 @@
             partyCore.partyType = weakSelf.typeEventPageControl.currentPage;
             partyCore.startDate = [[partyDate dateByAddingTimeInterval:weakSelf.startSlider.value * 60] timeIntervalSince1970];
             partyCore.endDate = [[partyDate dateByAddingTimeInterval:weakSelf.endSlider.value * 60] timeIntervalSince1970];
+            partyCore.longitude = self.coordinatesSaver;
+            partyCore.latitude = [self.chooseLocation.titleLabel.text isEqualToString:@"CHOOSE LOCATION"] ? @"" : self.chooseLocation.titleLabel.text;
             partyCore.isLoaded = NO;
             PAMUserCore *userCore = (PAMUserCore *)[[PAMDataStore standartDataStore] fetchUserByUserId:userId context:context];
             partyCore.creatorParty = userCore;
-            [[PAMPartyMakerAPI standartPartyMakerAPI] writeParty:partyCore creatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
+            [[PAMPartyMakerAPI standartPartyMakerAPI] addParty:partyCore creatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
                 if([[response objectForKey:@"statusCode"] isEqual:@200]) {
                     partyCore.isLoaded = YES;
                 }
@@ -221,10 +239,7 @@
 }
 
 - (IBAction)actionChooseLocation:(UIButton *)sender {
-    PAMMapViewController *mapViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"PAMMapViewController"];
-    mapViewController.delegate = self;
-    mapViewController.party = self.partyCore;
-    [self.navigationController pushViewController:mapViewController animated:YES];
+
 }
 
 - (IBAction)actionSlideChanged:(UISlider *)sender {
@@ -264,8 +279,15 @@
 }
 
 #pragma mark - PAMMapCoordinateDelegate
-- (void)actionMapCoordinate:(NSString *) location nameLocation:(NSString *) namaLocation {
-    NSLog(@"actionMapCoordinate: %@ nameLocation: %@", location, namaLocation);
+- (void)actionMapCoordinate:(NSString *) location nameLocation:(NSString *) nameLocation {
+    if(location.length && nameLocation.length) {
+        NSLog(@"actionMapCoordinate: %@ nameLocation: %@", location, nameLocation);
+        self.coordinatesSaver = location;
+        [self.chooseLocation setTitle:[nameLocation uppercaseString] forState:UIControlStateNormal];
+    } else {
+        self.coordinatesSaver = @"";
+        [self.chooseLocation setTitle:[@"CHOOSE LOCATION" uppercaseString] forState:UIControlStateNormal];
+    }
 }
 
 #pragma mark - UITextFieldDelegate

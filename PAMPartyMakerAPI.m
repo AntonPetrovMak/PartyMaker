@@ -88,20 +88,20 @@ static NSString* APIURLLink = @"http://itworksinua.km.ua/party/";
                            }] resume];
 }
 
--(void) writeParty:(PAMPartyCore *) party creatorId:(NSNumber *) creatorId callback:(void(^)(NSDictionary *response, NSError *error)) block {
+-(void) addParty:(PAMPartyCore *) party creatorId:(NSNumber *) creatorId callback:(void(^)(NSDictionary *response, NSError *error)) block {
     if(party.partyId){
         NSLog(@"party.partyId = %lld", party.partyId);
     }
     
-    NSDictionary *dictionaryWithParty = @{  @"party_id": party.partyId ? @(party.partyId) : @"",
+    NSDictionary *dictionaryWithParty = @{  @"party_id":party.partyId ? @(party.partyId) : @"",
                                                 @"name":party.name,
                                           @"start_time":@(party.startDate),
                                             @"end_time":@(party.endDate),
                                              @"logo_id":@(party.partyType),
                                              @"comment":party.partyDescription,
                                           @"creator_id":@(party.creatorParty.userId),
-                                            @"latitude":@"",
-                                           @"longitude":@""};
+                                            @"latitude":party.latitude,
+                                           @"longitude":party.longitude};
     
     NSMutableURLRequest *urlRequst = [self requestMethod:@"POST" methodAPI:@"addParty" parrametrs:dictionaryWithParty headers:nil];
     

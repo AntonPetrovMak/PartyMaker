@@ -20,6 +20,7 @@
 @property(strong, nonatomic) PAMPartyCore *partyCore;
 
 @property (weak, nonatomic) IBOutlet UIButton *chooseButton;
+@property (weak, nonatomic) IBOutlet UIButton *chooseLocation;
 @property (weak, nonatomic) IBOutlet UITextField *partyNameTextField;
 
 @property (weak, nonatomic) IBOutlet UISlider *startSlider;

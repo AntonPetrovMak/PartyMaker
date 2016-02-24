@@ -209,6 +209,10 @@
 		83D738791C7CA9CF004B7B19 /* Map views */ = {
 			isa = PBXGroup;
 			children = (
+				83D738761C7CA9CA004B7B19 /* PAMMapAnnotation.h */,
+				83D738771C7CA9CA004B7B19 /* PAMMapAnnotation.m */,
+				83D7386E1C7C9603004B7B19 /* PAMMapViewController.h */,
+				83D7386F1C7C9603004B7B19 /* PAMMapViewController.m */,
 			);
 			name = "Map views";
 			sourceTree = "<group>";
@@ -247,10 +251,6 @@
 			isa = PBXGroup;
 			children = (
 				83D738791C7CA9CF004B7B19 /* Map views */,
-				83D738761C7CA9CA004B7B19 /* PAMMapAnnotation.h */,
-				83D738771C7CA9CA004B7B19 /* PAMMapAnnotation.m */,
-				83D7386E1C7C9603004B7B19 /* PAMMapViewController.h */,
-				83D7386F1C7C9603004B7B19 /* PAMMapViewController.m */,
 				83A134131C6DD09600EE6097 /* Date Picker */,
 				83A134141C6DD0E800EE6097 /* Table Show Party */,
 				8342F0601C72043D000FC044 /* PAMLoginViewController.h */,
