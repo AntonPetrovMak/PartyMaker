@@ -8,13 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "NSString+PAMDateFormat.h"
+#import "PAMMapViewController.h"
 #import "PAMCustomDatePiker.h"
 #import "PAMPartyMakerAPI.h"
 #import "PAMDataStore.h"
 #import "PAMPartyCore.h"
 #import "PAMUserCore.h"
 
-@interface PAMCreatePartyViewController : UIViewController <UITextFieldDelegate, UIScrollViewDelegate, UITextViewDelegate, PAMDatePikerDelegate>
+@interface PAMCreatePartyViewController : UIViewController <UITextFieldDelegate, UIScrollViewDelegate, UITextViewDelegate, PAMDatePikerDelegate, PAMMapCoordinateDelegate>
 
 @property(strong, nonatomic) PAMPartyCore *partyCore;
 
@@ -41,6 +42,7 @@
 - (IBAction)actionChooseButton:(UIButton *)sender;
 - (IBAction)actionSaveButton:(id)sender;
 - (IBAction)actionCloseButton:(id)sender;
+- (IBAction)actionChooseLocation:(UIButton *)sender;
 
 - (IBAction)actionSlideChanged:(UISlider *)sender;
 

@@ -18,7 +18,7 @@
 
 
 - (instancetype) initWithCoordinate:(CLLocationCoordinate2D) coordinate;
-
+- (void) setAddressToSubtitle;
 - (MKAnnotationView *) annotatinView;
 
 @end

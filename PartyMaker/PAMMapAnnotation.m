@@ -8,12 +8,19 @@
 
 #import "PAMMapAnnotation.h"
 
+@interface PAMMapAnnotation()
+
+@property(strong, nonatomic) CLGeocoder* geocoder;
+@end
+
+
 @implementation PAMMapAnnotation
 
 - (instancetype) initWithCoordinate:(CLLocationCoordinate2D) coordinate {
     self = [super init];
     if (self) {
         self.coordinate = coordinate;
+        self.geocoder = [[CLGeocoder alloc] init];
     }
     return self;
 }
@@ -26,6 +33,24 @@
     annotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeContactAdd];
     return annotationView;
 }
+
+- (void) setAddressToSubtitle {
+    if([self.geocoder isGeocoding]) {
+        [self.geocoder cancelGeocode];
+    }
+    CLLocation *location = [[CLLocation alloc] initWithLatitude:self.coordinate.latitude longitude:self.coordinate.longitude];
+    
+    [self.geocoder reverseGeocodeLocation:location completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+        if ([placemarks count] > 0) {
+            CLPlacemark *placeMark = [placemarks firstObject];
+            self.subtitle = [NSString stringWithFormat:@"%@",placeMark.name];
+        }
+    }];
+}
+
+//- (void)setCoordinate:(CLLocationCoordinate2D)newCoordinate {
+//    self.coordinate = newCoordinate;
+//}
 
 @end
 

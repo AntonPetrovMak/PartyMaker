@@ -12,6 +12,7 @@
 @interface PAMMapViewController ()
 
 @property(strong, nonatomic) CLGeocoder* geocoder;
+@property(strong, nonatomic) MKPinAnnotationView *pinView;
 
 @end
 
@@ -30,7 +31,7 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated {
-
+    
 }
 
 #pragma makr - UIGestureRecognizerDelegate
@@ -40,26 +41,12 @@
 
 
 -(IBAction)mapLongPress:(UITapGestureRecognizer *)recognizer {
-    if (recognizer.state == UIGestureRecognizerStateBegan ) {
+    if (recognizer.state == UIGestureRecognizerStateBegan && self.mapView.annotations.count <= 1) {
         CGPoint point = [recognizer locationInView:self.mapView];
         CLLocationCoordinate2D tapPoint = [self.mapView convertPoint:point toCoordinateFromView:self.mapView];
         PAMMapAnnotation * annotation = [[PAMMapAnnotation alloc] initWithCoordinate:tapPoint];
-        
-        if([self.geocoder isGeocoding]) {
-            [self.geocoder cancelGeocode];
-        }
-        
-        CLLocation *location = [[CLLocation alloc] initWithLatitude:annotation.coordinate.latitude longitude:annotation.coordinate.longitude];
-        
-        [self.geocoder reverseGeocodeLocation:location completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
-            if ([placemarks count] > 0) {
-                CLPlacemark *placeMark = [placemarks firstObject];
-                annotation.title = @"";
-                annotation.subtitle = [NSString stringWithFormat:@"%@, %@",placeMark.locality, placeMark.thoroughfare];
-            }
-        }];
-        
-        
+        annotation.title = @"Party name";
+        [annotation setAddressToSubtitle];
         [self.mapView addAnnotation:annotation];
     }
 }
@@ -74,22 +61,23 @@
     [self.mapView setRegion:theRegion animated:YES];
 }
 
-- (void) addLocation {
-    
+- (void) addLocation{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
     if([annotation isKindOfClass:[PAMMapAnnotation class]]) {
-//        PAMMapAnnotation *myLocation = (PAMMapAnnotation *)annotation;
-//        MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:@"PAMMapAnnotation"];
-//        if(!annotationView) {
-//            annotationView = [myLocation annotatinView];
-//            annotationView.canShowCallout = YES;
-//            annotationView.draggable = YES;
-//        } else {
-//            annotationView.annotation = annotation;
-//        }
-//        return annotationView;
+        /*PAMMapAnnotation *myLocation = (PAMMapAnnotation *)annotation;
+        MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:@"PAMMapAnnotation"];
+        if(!annotationView) {
+            annotationView = [myLocation annotatinView];
+            annotationView.canShowCallout = YES;
+            annotationView.draggable = YES;
+        } else {
+            annotationView.annotation = annotation;
+        }
+        return annotationView;*/
+        
         MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"CustomPinAnnotationView"];
         
         if(!pinView) {
@@ -112,11 +100,20 @@
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view didChangeDragState:(MKAnnotationViewDragState)newState
    fromOldState:(MKAnnotationViewDragState)oldState NS_AVAILABLE(10_9, 4_0) {
+    PAMMapAnnotation *customAnnotation = (PAMMapAnnotation *)view.annotation;
+    [customAnnotation setAddressToSubtitle];
+    
     NSLog(@"newState: %lu oldState: %lu", newState, oldState);
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
     NSLog(@"calloutAccessoryControlTapped");
+    
+    PAMMapAnnotation *customAnnotation = (PAMMapAnnotation *)view.annotation;
+    NSString *locationString = [NSString stringWithFormat:@"%f;%f", customAnnotation.coordinate.latitude, customAnnotation.coordinate.longitude];
+    if(self.delegate && [self.delegate respondsToSelector:@selector(actionMapCoordinate:nameLocation:)]) {
+        [self.delegate performSelector:@selector(actionMapCoordinate:nameLocation:) withObject:locationString withObject:customAnnotation.title];
+    }
 }
 
 @end

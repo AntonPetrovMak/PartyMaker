@@ -220,6 +220,13 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
+- (IBAction)actionChooseLocation:(UIButton *)sender {
+    PAMMapViewController *mapViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"PAMMapViewController"];
+    mapViewController.delegate = self;
+    mapViewController.party = self.partyCore;
+    [self.navigationController pushViewController:mapViewController animated:YES];
+}
+
 - (IBAction)actionSlideChanged:(UISlider *)sender {
     //NSLog(@"SS START: %f END:%f SENDER:%f", self.startSlider.value, self.endSlider.value, sender.value);
     if([sender isEqual:self.startSlider]) {
@@ -254,6 +261,11 @@
 
 - (void)actionDoneDescription:(UIBarButtonItem *)sender {
     [self.partyDescription resignFirstResponder];
+}
+
+#pragma mark - PAMMapCoordinateDelegate
+- (void)actionMapCoordinate:(NSString *) location nameLocation:(NSString *) namaLocation {
+    NSLog(@"actionMapCoordinate: %@ nameLocation: %@", location, namaLocation);
 }
 
 #pragma mark - UITextFieldDelegate
