@@ -23,3 +23,5 @@
 "ENTER_DADA" = "Enter login and password!";
 
 "COPY_USER" = "The user with the same name is already registered";
+
+"CHOOSE_LOCATION" = "CHOOSE LOCATION";

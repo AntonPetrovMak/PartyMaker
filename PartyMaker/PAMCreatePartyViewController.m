@@ -218,14 +218,11 @@
             partyCore.startDate = [[partyDate dateByAddingTimeInterval:weakSelf.startSlider.value * 60] timeIntervalSince1970];
             partyCore.endDate = [[partyDate dateByAddingTimeInterval:weakSelf.endSlider.value * 60] timeIntervalSince1970];
             partyCore.longitude = self.coordinatesSaver;
-            partyCore.latitude = [self.chooseLocation.titleLabel.text isEqualToString:@"CHOOSE LOCATION"] ? @"" : self.chooseLocation.titleLabel.text;
+            partyCore.latitude = [self.chooseLocation.titleLabel.text isEqualToString:NSLocalizedStringFromTable(@"CHOOSE_LOCATION", @"Language", nil)] ? @"" : self.chooseLocation.titleLabel.text;
             partyCore.isLoaded = NO;
             PAMUserCore *userCore = (PAMUserCore *)[[PAMDataStore standartDataStore] fetchUserByUserId:userId context:context];
             partyCore.creatorParty = userCore;
             [[PAMPartyMakerAPI standartPartyMakerAPI] addParty:partyCore creatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
-                if([[response objectForKey:@"statusCode"] isEqual:@200]) {
-                    //partyCore.isLoaded = YES;
-                }
             }];
 
         } completion:^{
@@ -286,7 +283,7 @@
         [self.chooseLocation setTitle:[nameLocation uppercaseString] forState:UIControlStateNormal];
     } else {
         self.coordinatesSaver = @"";
-        [self.chooseLocation setTitle:[@"CHOOSE LOCATION" uppercaseString] forState:UIControlStateNormal];
+        [self.chooseLocation setTitle:[NSLocalizedStringFromTable(@"CHOOSE_LOCATION", @"Language", nil) uppercaseString] forState:UIControlStateNormal];
     }
 }
 
