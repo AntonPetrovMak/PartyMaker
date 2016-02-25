@@ -1,0 +1,25 @@
+/* 
+  Language.strings
+  PartyMaker
+
+  Created by Petrov Anton on 25.02.16.
+  Copyright © 2016 Softheme. All rights reserved.
+*/
+
+
+"LOGIN_PLACEHOLDER" = "Login";
+
+"PASSWORD_PLACEHOLDER" = "Password";
+
+"PARTY_NAME_PLACEHOLDER" = "Your party name";
+
+
+"PROBLEM_WITH_SERVER" = "Sorry, problem with server!";
+
+"NO_INTERNET" = "No internet";
+
+"INCORRECT_DATA" = "Incorrect nane or password";
+
+"ENTER_DADA" = "Enter login and password!";
+
+"COPY_USER" = "The user with the same name is already registered";

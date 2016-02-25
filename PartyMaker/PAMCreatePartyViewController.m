@@ -19,7 +19,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"CREATE PARTY";
+    //self.title = @"CREATE PARTY";
     [self creatingTextField];
     [self creatingTextView];
     self.coordinatesSaver = @"";
@@ -93,7 +93,7 @@
 - (void)creatingTextField {
     [self.partyNameTextField setFont:[UIFont fontWithName:@"MariadPro-Regular" size:16]];
     NSDictionary *attributedDictionary = @{ NSForegroundColorAttributeName: [UIColor colorWithRed:76/255. green:82/255. blue:92/255. alpha:1]};
-    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:@"Your party Name"
+    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTable(@"PARTY_NAME_PLACEHOLDER", @"Language", nil)
                                                                            attributes:attributedDictionary];
     [self.partyNameTextField setAttributedPlaceholder:attributedString];
 }
@@ -224,7 +224,7 @@
             partyCore.creatorParty = userCore;
             [[PAMPartyMakerAPI standartPartyMakerAPI] addParty:partyCore creatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
                 if([[response objectForKey:@"statusCode"] isEqual:@200]) {
-                    partyCore.isLoaded = YES;
+                    //partyCore.isLoaded = YES;
                 }
             }];
 

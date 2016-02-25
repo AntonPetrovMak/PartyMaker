@@ -1,0 +1,25 @@
+/* 
+  Language.strings
+  PartyMaker
+
+  Created by Petrov Anton on 25.02.16.
+  Copyright © 2016 Softheme. All rights reserved.
+*/
+
+
+"LOGIN_PLACEHOLDER" = "Им'я";
+
+"PASSWORD_PLACEHOLDER" = "Пароль";
+
+"PARTY_NAME_PLACEHOLDER" = "Ім'я паті";
+
+
+"PROBLEM_WITH_SERVER" = "Вибачте, за тимчасові проблеми з сервером";
+
+"NO_INTERNET" = "Немає з'єднання з інтернетом";
+
+"INCORRECT_DATA" = "Неправильне ім'я або пароль";
+
+"ENTER_DADA" = "Введіть ім'я та пароль";
+
+"COPY_USER" = "Користувач з таким ім'ям вже існує";

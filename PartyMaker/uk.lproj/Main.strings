@@ -1,0 +1,126 @@
+
+/* Class = "UILabel"; text = "00:00"; ObjectID = "1Bt-Ie-KMy"; */
+"1Bt-Ie-KMy.text" = "00:00";
+
+/* Class = "UILabel"; text = "PARTY NAME"; ObjectID = "30E-rw-Ivh"; */
+"30E-rw-Ivh.text" = "ІМ'Я ВЕЧІРКИ";
+
+/* Class = "UITabBarItem"; title = "Settings"; ObjectID = "39q-5T-MxL"; */
+"39q-5T-MxL.title" = "Налаштування";
+
+/* Class = "UIBarButtonItem"; title = "Back"; ObjectID = "3Tt-Ns-9ad"; */
+"3Tt-Ns-9ad.title" = "Назад";
+
+/* Class = "UILabel"; text = "END"; ObjectID = "3Wj-VH-SeI"; */
+"3Wj-VH-SeI.text" = "КІНЕЦЬ";
+
+/* Class = "UINavigationItem"; title = "SETTINGS"; ObjectID = "57L-Q2-4Qf"; */
+"57L-Q2-4Qf.title" = "НАЛАШТУВАННЯ";
+
+/* Class = "UINavigationItem"; title = "PARTY MAKER"; ObjectID = "5dN-i6-i89"; */
+"5dN-i6-i89.title" = "ПАТІ МЕЙКЕР";
+
+/* Class = "UINavigationItem"; title = "CHOOSE PARTY LOCATION"; ObjectID = "7Em-Mw-hbr"; */
+"7Em-Mw-hbr.title" = "ОБРАТИ МІСЦЕ";
+
+/* Class = "UIButton"; normalTitle = "EDIT"; ObjectID = "CyR-54-Kt7"; */
+"CyR-54-Kt7.normalTitle" = "РЕДАГУВАННЯ";
+
+/* Class = "UILabel"; text = "00:00"; ObjectID = "Eo7-bi-8eC"; */
+"Eo7-bi-8eC.text" = "00:00";
+
+/* Class = "UILabel"; text = "START"; ObjectID = "F1D-f6-9Cp"; */
+"F1D-f6-9Cp.text" = "ПОЧАТОК";
+
+/* Class = "UILabel"; text = "11.20.2016"; ObjectID = "FF3-YP-vkm"; */
+"FF3-YP-vkm.text" = "11.20.2016";
+
+/* Class = "UITextField"; placeholder = "Login"; ObjectID = "J1G-4V-3Eb"; */
+"J1G-4V-3Eb.placeholder" = "ЛОГІН";
+
+/* Class = "UILabel"; text = "HELLO!"; ObjectID = "NPM-gb-xae"; */
+"NPM-gb-xae.text" = "ПРИВІТ!";
+
+/* Class = "UILabel"; text = "END"; ObjectID = "PEL-Zw-a2U"; */
+"PEL-Zw-a2U.text" = "КІНЕЦЬ";
+
+/* Class = "UIButton"; normalTitle = "SIGN IN"; ObjectID = "QZR-bx-GGK"; */
+"QZR-bx-GGK.normalTitle" = "УВІЙТИ";
+
+/* Class = "UIBarButtonItem"; title = "Back"; ObjectID = "SHE-F5-Kpf"; */
+"SHE-F5-Kpf.title" = "Назад";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "UTV-ss-AtV"; */
+"UTV-ss-AtV.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "XOb-XQ-BhI"; */
+"XOb-XQ-BhI.text" = "Label";
+
+/* Class = "UILabel"; text = "DESCRIPTION"; ObjectID = "c0x-g0-CJu"; */
+"c0x-g0-CJu.text" = "ОПИС";
+
+/* Class = "UILabel"; text = "CHOOSE DAY"; ObjectID = "c7F-xe-kbP"; */
+"c7F-xe-kbP.text" = "ОБРАТИ ДАТУ";
+
+/* Class = "UILabel"; text = "DATE"; ObjectID = "dfh-54-4go"; */
+"dfh-54-4go.text" = "ДАТА";
+
+/* Class = "UILabel"; text = "LOCATION"; ObjectID = "e97-Bm-Z8V"; */
+"e97-Bm-Z8V.text" = "МІСЦЕ";
+
+/* Class = "UIButton"; normalTitle = "DELETE"; ObjectID = "fnb-FM-n72"; */
+"fnb-FM-n72.normalTitle" = "ВИДАЛИТИ";
+
+/* Class = "UITextField"; placeholder = "Party name"; ObjectID = "hHj-Em-MG8"; */
+"hHj-Em-MG8.placeholder" = "Ім'я вечірки";
+
+/* Class = "UILabel"; text = "00:30"; ObjectID = "hbT-NU-mKP"; */
+"hbT-NU-mKP.text" = "00:30";
+
+/* Class = "UIButton"; normalTitle = "CHOOSE DATE"; ObjectID = "hsF-8K-sc2"; */
+"hsF-8K-sc2.normalTitle" = "ОБРАТИ ДАТУ";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "jZ5-Zu-GPo"; */
+"jZ5-Zu-GPo.text" = "Label";
+
+/* Class = "UINavigationItem"; title = "PARTY INFO"; ObjectID = "jwA-qb-gLT"; */
+"jwA-qb-gLT.title" = "ІНФОРМАЦІЯ";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "kNG-q0-f6e"; */
+"kNG-q0-f6e.text" = "Label";
+
+/* Class = "UIButton"; normalTitle = "REGISTER"; ObjectID = "kOs-Ll-69U"; */
+"kOs-Ll-69U.normalTitle" = "РЕЄСТРАЦІЯ";
+
+/* Class = "UILabel"; text = "START"; ObjectID = "lpx-hc-mlk"; */
+"lpx-hc-mlk.text" = "ПОЧАТОК";
+
+/* Class = "UIButton"; normalTitle = "LOCATION"; ObjectID = "nnd-S3-yCU"; */
+"nnd-S3-yCU.normalTitle" = "МІСЦЕ ЗНАХОДЖЕННЯ";
+
+/* Class = "UINavigationItem"; title = "CREATE PARTY"; ObjectID = "o96-ax-zNB"; */
+"o96-ax-zNB.title" = "СТВОРИТИ ВЕЧІРКУ";
+
+/* Class = "UITabBarItem"; title = "Parties"; ObjectID = "pw7-fT-RjP"; */
+"pw7-fT-RjP.title" = "Мої паті";
+
+/* Class = "UILabel"; text = "label label labellabelv"; ObjectID = "qUe-fQ-UDP"; */
+"qUe-fQ-UDP.text" = "label label labellabelv";
+
+/* Class = "UITextField"; placeholder = "Password"; ObjectID = "qop-EX-f6e"; */
+"qop-EX-f6e.placeholder" = "Пароль";
+
+/* Class = "UIBarButtonItem"; title = "Back"; ObjectID = "u5H-XA-z63"; */
+"u5H-XA-z63.title" = "Назад";
+
+/* Class = "UILabel"; text = "00:00"; ObjectID = "yMg-RE-V4N"; */
+"yMg-RE-V4N.text" = "00:00";
+
+/* Class = "UILabel"; text = "LOGO"; ObjectID = "ykZ-rq-1V2"; */
+"ykZ-rq-1V2.text" = "ЛОГОТИП";
+
+/* Class = "UIBarButtonItem"; title = "Log off"; ObjectID = "ym7-cf-VjD"; */
+"ym7-cf-VjD.title" = "Вихід";
+
+/* Class = "UIButton"; normalTitle = "CHOOSE LOCATION"; ObjectID = "zbf-y8-6w5"; */
+"zbf-y8-6w5.normalTitle" = "ОБРАТИ МІСЦЕ";

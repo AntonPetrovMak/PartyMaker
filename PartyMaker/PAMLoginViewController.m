@@ -32,9 +32,9 @@
     [self.loginTextField setFont:[UIFont fontWithName:@"MariadPro-Regular" size:16]];
     [self.passwordTextField setFont:[UIFont fontWithName:@"MariadPro-Regular" size:16]];
     NSDictionary *attributedDictionary = @{ NSForegroundColorAttributeName: [UIColor colorWithRed:76/255. green:82/255. blue:92/255. alpha:1]};
-    NSAttributedString *attributedForLogin = [[NSAttributedString alloc] initWithString:@"Login"
+    NSAttributedString *attributedForLogin = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTable(@"LOGIN_PLACEHOLDER", @"Language", nil)
                                                                            attributes:attributedDictionary];
-    NSAttributedString *attributedForPassword = [[NSAttributedString alloc] initWithString:@"Password"
+    NSAttributedString *attributedForPassword = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTable(@"PASSWORD_PLACEHOLDER", @"Language", nil)
                                                                                 attributes:attributedDictionary];
     [self.loginTextField setAttributedPlaceholder:attributedForLogin];
     [self.passwordTextField setAttributedPlaceholder:attributedForPassword];
@@ -49,9 +49,10 @@
         [viewWithMessage.layer setBorderWidth:2.f];
         [viewWithMessage.layer setBorderColor:[UIColor colorWithRed:236/255.f green:71/255.f blue:19/255.f alpha:1].CGColor];
         UILabel *messageLable = [[UILabel alloc] initWithFrame:CGRectMake(6, 0, CGRectGetMaxX(self.view.bounds)-24, 60)];
+        messageLable.numberOfLines = 2;
         [messageLable setText:message];
         [messageLable setTextColor:[UIColor whiteColor]];
-        [messageLable setFont:[UIFont fontWithName:@"MariadPro-Regular" size:16]];
+        [messageLable setFont:[UIFont fontWithName:@"MariadPro-Regular" size:15]];
         [viewWithMessage addSubview:messageLable];
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         [self.view addSubview:viewWithMessage];
@@ -86,7 +87,6 @@
         [partyMakerAPI loginWithUserName: self.loginTextField.text
                              andPassword: self.passwordTextField.text
                                 callback:^(NSDictionary *response, NSError *error) {
-                                    
                                     NSDictionary *answerServer = [response objectForKey:@"response"];
                                     if([[response objectForKey:@"statusCode"] isEqual:@200]) {
                                         if([[answerServer objectForKey:@"name"] isEqualToString:weakSelf.loginTextField.text]) {
@@ -98,16 +98,16 @@
                                                 [weakSelf presentViewController:tabBar animated:YES completion:nil];
                                             });
                                         }else {
-                                            [weakSelf createInfoViewWithMessage:@"Sorry, problem with server!"];
+                                            [weakSelf createInfoViewWithMessage:NSLocalizedStringFromTable(@"PROBLEM_WITH_SERVER", @"Language", nil)];
                                         }
                                     } else if([[response objectForKey:@"statusCode"] isEqual:@505]) {
-                                        [weakSelf createInfoViewWithMessage:@"No internet"];
-                                        NSLog(@"No internet");
+                                        [weakSelf createInfoViewWithMessage:NSLocalizedStringFromTable(@"NO_INTERNET", @"Language", nil)];
                                     } else {
-                                        [weakSelf createInfoViewWithMessage:[answerServer objectForKey:@"msg"]];
-                                        NSLog(@"%@",[answerServer objectForKey:@"msg"]);
+                                        [weakSelf createInfoViewWithMessage:NSLocalizedStringFromTable(@"INCORRECT_DATA", @"Language", nil)];
                                     }
                                 }];
+    } else {
+        [self createInfoViewWithMessage:NSLocalizedStringFromTable(@"ENTER_DADA", @"Language", nil)];
     }
 }
 
@@ -121,19 +121,17 @@
                                 andPassword:self.passwordTextField.text
                                    andEmail:[NSString stringWithFormat:@"%@@gmail.com",weakSelf.loginTextField.text]
                                    callback:^(NSDictionary *response, NSError *error) {
-                                       NSDictionary *answerServer = [response objectForKey:@"response"];
                                        if([[response objectForKey:@"statusCode"] isEqual:@200]) {
                                            [self userLogin];
-                                           NSLog(@"Register OK");
                                        } else if([[response objectForKey:@"statusCode"] isEqual:@505]) {
-                                           [weakSelf createInfoViewWithMessage:@"No internet"];
-                                           NSLog(@"No internet");
+                                           [weakSelf createInfoViewWithMessage:NSLocalizedStringFromTable(@"NO_INTERNET", @"Language", nil)];
                                        } else {
-                                           [weakSelf createInfoViewWithMessage:[answerServer objectForKey:@"msg"]];
-                                           NSLog(@"%@",[answerServer objectForKey:@"msg"]);
+                                           [weakSelf createInfoViewWithMessage:NSLocalizedStringFromTable(@"COPY_USER", @"Language", nil)];
                                        }
                                    }];
 
+    } else {
+        [self createInfoViewWithMessage:NSLocalizedStringFromTable(@"ENTER_DADA", @"Language", nil)];
     }
 }
 

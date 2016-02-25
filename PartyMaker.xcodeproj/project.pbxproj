@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		830EA98B1C7F1E0D00F31ED3 /* Language.strings in Resources */ = {isa = PBXBuildFile; fileRef = 830EA98D1C7F1E0D00F31ED3 /* Language.strings */; };
 		831231241C6A2B7100422D00 /* PAMCustomDatePiker.m in Sources */ = {isa = PBXBuildFile; fileRef = 831231231C6A2B7100422D00 /* PAMCustomDatePiker.m */; };
 		831231261C6A2D0400422D00 /* PAMCustomDatePiker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 831231251C6A2D0400422D00 /* PAMCustomDatePiker.xib */; };
 		831A74EA1C748715007BB322 /* PAMCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 831A74E81C748715007BB322 /* PAMCoreData.xcdatamodeld */; };
@@ -40,6 +41,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		830EA9861C7F129900F31ED3 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Main.strings; sourceTree = "<group>"; };
+		830EA9881C7F172B00F31ED3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
+		830EA98C1C7F1E0D00F31ED3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Language.strings; sourceTree = "<group>"; };
+		830EA98E1C7F1E1000F31ED3 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Language.strings; sourceTree = "<group>"; };
 		831231221C6A2B7100422D00 /* PAMCustomDatePiker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMCustomDatePiker.h; sourceTree = "<group>"; };
 		831231231C6A2B7100422D00 /* PAMCustomDatePiker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMCustomDatePiker.m; sourceTree = "<group>"; };
 		831231251C6A2D0400422D00 /* PAMCustomDatePiker.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PAMCustomDatePiker.xib; path = ../PAMCustomDatePiker.xib; sourceTree = "<group>"; };
@@ -161,6 +166,7 @@
 				836F47821C6221CE007F5ECC /* Info.plist */,
 				EA3ED6161C668B1D00CBCD45 /* logs.plist */,
 				836F47721C6221CE007F5ECC /* main.m */,
+				830EA98D1C7F1E0D00F31ED3 /* Language.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -314,6 +320,7 @@
 			knownRegions = (
 				en,
 				Base,
+				uk,
 			);
 			mainGroup = 836F47651C6221CE007F5ECC;
 			productRefGroup = 836F476F1C6221CE007F5ECC /* Products */;
@@ -333,6 +340,7 @@
 				836F47811C6221CE007F5ECC /* LaunchScreen.storyboard in Resources */,
 				8397CA661C635C02006FDE42 /* MyriadProBold.ttf in Resources */,
 				836F477E1C6221CE007F5ECC /* Assets.xcassets in Resources */,
+				830EA98B1C7F1E0D00F31ED3 /* Language.strings in Resources */,
 				836F477C1C6221CE007F5ECC /* Main.storyboard in Resources */,
 				EA9F4E001C707DAE003B683F /* MyriadPro-It.otf in Resources */,
 				831231261C6A2D0400422D00 /* PAMCustomDatePiker.xib in Resources */,
@@ -373,10 +381,21 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		830EA98D1C7F1E0D00F31ED3 /* Language.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				830EA98C1C7F1E0D00F31ED3 /* en */,
+				830EA98E1C7F1E1000F31ED3 /* uk */,
+			);
+			name = Language.strings;
+			sourceTree = "<group>";
+		};
 		836F477A1C6221CE007F5ECC /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				836F477B1C6221CE007F5ECC /* Base */,
+				830EA9861C7F129900F31ED3 /* uk */,
+				830EA9881C7F172B00F31ED3 /* en */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
