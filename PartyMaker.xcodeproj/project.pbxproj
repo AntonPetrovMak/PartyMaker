@@ -38,6 +38,7 @@
 		EA984AB71C79CDD6002BF6C5 /* PAMPartyCore.m in Sources */ = {isa = PBXBuildFile; fileRef = EA984AB31C79CDD6002BF6C5 /* PAMPartyCore.m */; };
 		EA9F4E001C707DAE003B683F /* MyriadPro-It.otf in Resources */ = {isa = PBXBuildFile; fileRef = EA9F4DFF1C707DAE003B683F /* MyriadPro-It.otf */; };
 		EA9F4E071C70DD8B003B683F /* NSString+PAMDateFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = EA9F4E061C70DD8B003B683F /* NSString+PAMDateFormat.m */; };
+		EAC6D44E1C7FA0AA00166C6E /* PAMLocalNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC6D44D1C7FA0AA00166C6E /* PAMLocalNotification.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -94,6 +95,8 @@
 		EA9F4DFF1C707DAE003B683F /* MyriadPro-It.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MyriadPro-It.otf"; sourceTree = "<group>"; };
 		EA9F4E051C70DD8B003B683F /* NSString+PAMDateFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+PAMDateFormat.h"; sourceTree = "<group>"; };
 		EA9F4E061C70DD8B003B683F /* NSString+PAMDateFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+PAMDateFormat.m"; sourceTree = "<group>"; };
+		EAC6D44C1C7FA0AA00166C6E /* PAMLocalNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMLocalNotification.h; sourceTree = "<group>"; };
+		EAC6D44D1C7FA0AA00166C6E /* PAMLocalNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMLocalNotification.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,6 +229,8 @@
 		EA74B41F1C6A6CF500960CE0 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				EAC6D44C1C7FA0AA00166C6E /* PAMLocalNotification.h */,
+				EAC6D44D1C7FA0AA00166C6E /* PAMLocalNotification.m */,
 				831A75291C74BE8F007BB322 /* CoreData Models  */,
 			);
 			name = Models;
@@ -373,6 +378,7 @@
 				839A8AC31C6B419E00D715D3 /* PAMPartiesTableViewController.m in Sources */,
 				831A74EA1C748715007BB322 /* PAMCoreData.xcdatamodeld in Sources */,
 				837F257A1C75B7FE0011BFA3 /* PAMCreatePartyViewController.m in Sources */,
+				EAC6D44E1C7FA0AA00166C6E /* PAMLocalNotification.m in Sources */,
 				83D738781C7CA9CA004B7B19 /* PAMMapAnnotation.m in Sources */,
 				839A01FD1C77135300009E3C /* Reachability.m in Sources */,
 			);

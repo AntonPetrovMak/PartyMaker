@@ -15,7 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PAMPartyCore : NSManagedObject
 
-// Insert code here to declare functionality of your managed object subclass
++ (NSArray *)fetchPartyByPartyId:(NSInteger) partyId context:(NSManagedObjectContext*) context;
++ (NSArray *)fetchPartiesByUserId:(NSInteger) userId context:(NSManagedObjectContext*) context;
++ (NSArray *)fetchAllPartiesInContext:(NSManagedObjectContext*) context;
 
 @end
 

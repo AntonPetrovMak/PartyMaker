@@ -94,8 +94,10 @@
         MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:@"PAMMapAnnotation"];
         if(!annotationView) {
             annotationView = [myLocation annotatinView];
-            annotationView.canShowCallout = YES;
-            annotationView.draggable = YES;
+            annotationView.draggable = self.isDraggablePin;
+            UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+            [rightButton addTarget:nil action:@selector(addLocation) forControlEvents:UIControlEventTouchUpInside];
+            annotationView.rightCalloutAccessoryView = rightButton;
         } else {
             annotationView.annotation = annotation;
         }

@@ -40,4 +40,31 @@
     return [NSDate date];
 }
 
++ (NSString *)escapeSpecialCharactersWithString:(NSString *) string {
+    NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString:@"'"];
+    NSArray *components = [string componentsSeparatedByCharactersInSet:characterSet];
+    if([components count] > 1) {
+        NSString *newString = @"";
+        for (int i =0; i < [components count] - 1; i++) {
+            newString = [NSString stringWithFormat:@"%@%@\\`",newString, components[i]];
+        }
+        newString = [NSString stringWithFormat:@"%@%@",newString, [components lastObject]];
+        return newString;
+    }
+    return string;
+}
+
++ (NSString *)removeEscapeSpecialCharactersWithString:(NSString *) string {
+    NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString:@"\\"];
+    NSArray *components = [string componentsSeparatedByCharactersInSet:characterSet];
+    if([components count] > 1) {
+        NSString *newString = @"";
+        for (NSString *str in components) {
+            newString = [NSString stringWithFormat:@"%@%@",newString, str];
+        }
+        return newString;
+    }
+    return string;
+}
+
 @end

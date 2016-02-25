@@ -29,7 +29,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *deleteButton;
 
 @property (nonatomic, strong) PAMPartyCore *party;
-@property (nonatomic, strong) UITableView *tableViewWithPaties;
 
 - (IBAction)actionEditParty:(UIButton *)sender;
 - (IBAction)actionDeleteParty:(UIButton *)sender;

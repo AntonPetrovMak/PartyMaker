@@ -24,7 +24,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     
-    
     [[PAMDataStore standartDataStore] addAllUsersWithPartiesFromServer];
     
     [self.substrateForLoginView.layer setBorderWidth:2.f];
@@ -169,6 +168,15 @@
         }
         
         [textField resignFirstResponder];
+    }
+    return YES;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if([self.loginTextField isEqual:textField]){
+        NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString:@"`~!@#$%^&*()_+-=[]{};:\'\\|/?,.<>\" "];
+        NSArray *components = [string componentsSeparatedByCharactersInSet:characterSet];
+        if([components count] > 1) return NO;
     }
     return YES;
 }

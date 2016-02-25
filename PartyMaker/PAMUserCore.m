@@ -11,6 +11,35 @@
 
 @implementation PAMUserCore
 
-// Insert code here to add functionality to your managed object subclass
++ (NSArray *)fetchUserByUserId:(NSInteger)userId context:(NSManagedObjectContext*)context {
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PAMUserCore" inManagedObjectContext:context];
+    [fetchRequest setEntity:entity];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userId == %lld", (long long)userId];
+    [fetchRequest setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:&error];
+    if (fetchedObjects == nil) {
+        NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
+    }
+    return [fetchedObjects lastObject];
+}
+
++ (NSArray *)fetchAllUsersInContext:(NSManagedObjectContext*) context {
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PAMUserCore" inManagedObjectContext:context];
+    [fetchRequest setEntity:entity];
+    NSError *error = nil;
+    NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:&error];
+    if (fetchedObjects == nil) {
+        NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
+    }
+    //    for (PAMUserCore *userCore in fetchedObjects) {
+    //        NSLog(@"User core name: %@",userCore.name);
+    //    }
+    return fetchedObjects;
+}
 
 @end

@@ -15,4 +15,7 @@
 + (NSString *) stringPrityDateWithDate:(NSDate *) date;
 + (NSDate *) getHumanDate: (NSString *) strDate;
 
++ (NSString *)escapeSpecialCharactersWithString:(NSString *) string;
++ (NSString *)removeEscapeSpecialCharactersWithString:(NSString *) string;
+
 @end

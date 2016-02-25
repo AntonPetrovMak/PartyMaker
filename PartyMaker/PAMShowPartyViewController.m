@@ -70,6 +70,8 @@
             NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
         }
         
+        [PAMLocalNotification removePartyNotifications:partyObject.partyId];
+        
         NSLog(@"%lld",partyObject.partyId);
         NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
         [[PAMPartyMakerAPI standartPartyMakerAPI] deletePartyById:@(partyObject.partyId) creator_id:@(userId) callback:^(NSDictionary *response, NSError *error) {

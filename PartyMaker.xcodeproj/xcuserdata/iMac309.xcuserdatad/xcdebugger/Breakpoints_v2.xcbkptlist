@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PartyMaker/PAMCreatePartyViewController.m"
-            timestampString = "478042260.595793"
+            timestampString = "478130296.602916"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "283"
-            endingLineNumber = "283"
+            startingLineNumber = "286"
+            endingLineNumber = "286"
             landmarkName = "-actionMapCoordinate:nameLocation:"
             landmarkType = "5">
          </BreakpointContent>

@@ -32,9 +32,12 @@
     self.refreshControl = refreshControl;
     
     NSManagedObjectContext *context = [[PAMDataStore standartDataStore] mainContext];
-    NSArray *array = [[PAMDataStore standartDataStore] fetchPartiesByUserId:userId context:context];
+    NSArray *array = [PAMPartyCore fetchPartiesByUserId:userId context:context];
     if ( array ) {
         self.arrayWithParties = [[NSMutableArray alloc] initWithArray:array];
+        for (PAMPartyCore *party in self.arrayWithParties) {
+            [PAMLocalNotification notificationForRarty:party];
+        }
     }
 }
 
@@ -49,9 +52,9 @@
             partyCore.startDate = [[party objectForKey:@"start_time"] longLongValue];
             partyCore.endDate = [[party objectForKey:@"end_time"] longLongValue];
             partyCore.longitude = [party objectForKey:@"longitude"];
-            partyCore.latitude = [party objectForKey:@"latitude"];
+            partyCore.latitude = [NSString removeEscapeSpecialCharactersWithString:[party objectForKey:@"latitude"]];
             NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
-            PAMUserCore *userCore = (PAMUserCore *)[[PAMDataStore standartDataStore] fetchUserByUserId:userId context:backgroundContext];
+            PAMUserCore *userCore = (PAMUserCore *)[PAMUserCore fetchUserByUserId:userId context:backgroundContext];
             partyCore.creatorParty = userCore;
         } completion:^{
             
@@ -68,7 +71,7 @@
     [super viewWillAppear:animated];
     NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
     NSManagedObjectContext *context = [[PAMDataStore standartDataStore] mainContext];
-    NSArray *array = [[PAMDataStore standartDataStore] fetchPartiesByUserId:userId context:context];
+    NSArray *array = [PAMPartyCore fetchPartiesByUserId:userId context:context];
     if ( array ) {
         self.arrayWithParties = [[NSMutableArray alloc] initWithArray:array];
     }
@@ -83,21 +86,19 @@
 #pragma mark - Reachability
 
 - (void)updateInterfaceWithReachability:(Reachability *)reachability {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     if([self.wifiReachability currentReachabilityStatus] == ReachableViaWiFi) {
         NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
         [[PAMDataStore standartDataStore] upDateOfflinePartiesByUserId:userId];
     }
 }
 
--(void) reachabilityChanged:(NSNotification *) notification {
+- (void)reachabilityChanged:(NSNotification *) notification {
     if([self.wifiReachability currentReachabilityStatus] == ReachableViaWiFi) {
         NSLog(@"Ok");
         NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
         [[PAMDataStore standartDataStore] upDateOfflinePartiesByUserId:userId];
         [self.tableView reloadData];
     } else {
-        
         NSLog(@"Neok");
     }
     NSLog(@"%s", __PRETTY_FUNCTION__);
@@ -110,14 +111,13 @@
         PAMPartyMakerAPI *partyMakerAPI = [PAMPartyMakerAPI standartPartyMakerAPI];
         __weak PAMPartiesTableViewController *weakSelf = self;
         [partyMakerAPI partiesWithCreatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
-            //NSLog(@"response = %@",response);
             if([response objectForKey:@"response"]) {
                 NSArray *array = [response objectForKey:@"response"];
                 if(![array isEqual:[NSNull null]]){
                     [[PAMDataStore standartDataStore] clearPartiesByUserId:userId];
                     NSManagedObjectContext *context = [[PAMDataStore standartDataStore] mainContext];
                     [[PAMDataStore standartDataStore] addPartiesFromServerToCoreData:array byCreatorPartyId:userId completion:^{
-                        NSArray *array = [[PAMDataStore standartDataStore] fetchPartiesByUserId:userId context:context];
+                        NSArray *array = [PAMPartyCore fetchPartiesByUserId:userId context:context];
                         if ( array ) {
                             weakSelf.arrayWithParties = [[NSMutableArray alloc] initWithArray:array];
                         }

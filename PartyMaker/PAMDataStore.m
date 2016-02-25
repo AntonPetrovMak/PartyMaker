@@ -63,8 +63,8 @@
             partyCore.endDate = [[serverPary objectForKey:@"end_time"] longLongValue];
             partyCore.isLoaded = YES;
             partyCore.longitude = [serverPary objectForKey:@"longitude"];
-            partyCore.latitude = [serverPary objectForKey:@"latitude"];
-            PAMUserCore *userCore = (PAMUserCore *)[[PAMDataStore standartDataStore] fetchUserByUserId:creatorId context:weakSelf.backgroundContext];
+            partyCore.latitude = [NSString removeEscapeSpecialCharactersWithString:[serverPary objectForKey:@"latitude"]];
+            PAMUserCore *userCore = (PAMUserCore *)[PAMUserCore fetchUserByUserId:creatorId context:weakSelf.backgroundContext];
             partyCore.creatorParty = userCore;
         }
         if (weakSelf.backgroundContext.hasChanges) {
@@ -81,64 +81,6 @@
         });
     }];
 }
-
-- (NSArray *)fetchPartyByPartyId:(NSInteger) partyId context:(NSManagedObjectContext*) context{
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PAMPartyCore" inManagedObjectContext:context];
-    [fetchRequest setEntity:entity];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"partyId == %ld", partyId];
-    [fetchRequest setPredicate:predicate];
-    
-    NSError *error = nil;
-    NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:&error];
-    if (fetchedObjects == nil) {
-        NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
-    }
-    return [fetchedObjects lastObject];
-}
-
-- (NSArray *)fetchPartiesByUserId:(NSInteger) userId context:(NSManagedObjectContext*) context{
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PAMPartyCore" inManagedObjectContext:context];
-    [fetchRequest setEntity:entity];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"creatorParty.userId == %ld", userId];
-    [fetchRequest setPredicate:predicate];
-    
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"startDate"
-                                                                   ascending:YES];
-    [fetchRequest setSortDescriptors:[NSArray arrayWithObjects:sortDescriptor, nil]];
-    
-    NSError *error = nil;
-    NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:&error];
-    if (fetchedObjects == nil) {
-        NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
-    }
-    return fetchedObjects;
-}
-
-- (NSArray *)fetchAllPartiesInContext:(NSManagedObjectContext*) context{
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PAMPartyCore" inManagedObjectContext:context];
-    [fetchRequest setEntity:entity];
-
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"creatorParty.userId"
-                                                                   ascending:YES];
-    [fetchRequest setSortDescriptors:[NSArray arrayWithObjects:sortDescriptor, nil]];
-
-    NSError *error = nil;
-    NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:&error];
-    if (fetchedObjects == nil) {
-        NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
-    }
-    /*for (PAMPartyCore *party in fetchedObjects) {
-        NSLog(@"Creator party: %@ Name party: %@", party.creatorParty.name, party.name);
-    }*/
-    return fetchedObjects;
-}
-
-#pragma mark - Fetches User
 
 - (void)addUsersFromServerToCoreData:(NSArray *) serverUsers completion:(void(^)())completion{
      __weak PAMDataStore *weakSelf = self;
@@ -164,40 +106,6 @@
     }];
 }
 
-- (NSArray *)fetchUserByUserId:(NSInteger)userId context:(NSManagedObjectContext*)context {
-    
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PAMUserCore" inManagedObjectContext:context];
-    [fetchRequest setEntity:entity];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userId == %lld", (long long)userId];
-    [fetchRequest setPredicate:predicate];
-    
-    NSError *error = nil;
-    NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:&error];
-    if (fetchedObjects == nil) {
-        NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
-    }
-    return [fetchedObjects lastObject];
-}
-
-- (NSArray *)fetchAllUsersInContext:(NSManagedObjectContext*) context {
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"PAMUserCore" inManagedObjectContext:context];
-    [fetchRequest setEntity:entity];
-    NSError *error = nil;
-    NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:&error];
-    if (fetchedObjects == nil) {
-        NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
-    }
-    //    for (PAMUserCore *userCore in fetchedObjects) {
-    //        NSLog(@"User core name: %@",userCore.name);
-    //    }
-    return fetchedObjects;
-}
-
-#pragma mark - Synchronization with server
-
 - (void)addAllUsersWithPartiesFromServer {
     [[PAMPartyMakerAPI standartPartyMakerAPI] allUsersWithCallback:^(NSDictionary *response, NSError *error) {
         if([[response objectForKey:@"statusCode"] isEqual:@200]){
@@ -213,35 +121,8 @@
     }];
 }
 
-- (void) notificationForRarty:(PAMPartyCore *) party {
-    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-    localNotification.alertBody = @"Party time!";
-    localNotification.alertAction = @"Pool party is about to begin!";
-    localNotification.fireDate = [NSDate dateWithTimeIntervalSince1970:party.startDate];
-    localNotification.userInfo = @{ @"party_id" : @(party.partyId) };
-    localNotification.soundName = UILocalNotificationDefaultSoundName;
-    localNotification.repeatInterval = 0;
-    localNotification.category = @"LocalNotificationDefaultCategory";
-    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
-    UIMutableUserNotificationAction *doneAction = [[UIMutableUserNotificationAction alloc] init];
-    doneAction.identifier = @"doneActionIdentifier";
-    doneAction.destructive = NO;
-    doneAction.title = @"Mark done";
-    doneAction.activationMode = UIUserNotificationActivationModeBackground;
-    doneAction.authenticationRequired = NO;
-    UIMutableUserNotificationCategory *category = [[UIMutableUserNotificationCategory alloc] init];
-    category.identifier = @"LocalNotificationDefaultCategory";
-    [category setActions:@[doneAction] forContext:UIUserNotificationActionContextMinimal];
-    [category setActions:@[doneAction] forContext:UIUserNotificationActionContextDefault];
-    NSSet *categories = [[NSSet alloc] initWithArray:@[category]];
-    UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings
-                                                        settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeSound categories:categories];
-    [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
-}
-
-
 - (void)addAllPartiesFromServer {
-    for (PAMUserCore *userCore in [[PAMDataStore standartDataStore] fetchAllUsersInContext:self.backgroundContext]) {
+    for (PAMUserCore *userCore in [PAMUserCore fetchAllUsersInContext:self.backgroundContext]) {
         [[PAMPartyMakerAPI standartPartyMakerAPI] partiesWithCreatorId:@(userCore.userId) callback:^(NSDictionary *response, NSError *error) {
             if([[response objectForKey:@"statusCode"] isEqual:@200]){
                 NSArray *array = [response objectForKey:@"response"];
@@ -256,11 +137,10 @@
                             partyCore.startDate = [[serverPary objectForKey:@"start_time"] longLongValue];
                             partyCore.endDate = [[serverPary objectForKey:@"end_time"] longLongValue];
                             partyCore.longitude = [serverPary objectForKey:@"longitude"];
-                            partyCore.latitude = [serverPary objectForKey:@"latitude"];
+                            partyCore.latitude = [NSString removeEscapeSpecialCharactersWithString:[serverPary objectForKey:@"latitude"]];
                             partyCore.isLoaded = YES;
                             partyCore.creatorParty = userCore;
-                            [self notificationForRarty: partyCore];
-                            
+                            //[PAMLocalNotification notificationForRarty:partyCore];
                         }
                     } completion:^{
                         
@@ -290,10 +170,21 @@
     }];
 }
 
+- (void)upDateOfflinePartiesByUserId:(NSInteger) userId {
+    NSManagedObjectContext *context = [[PAMDataStore standartDataStore] mainContext];
+    NSArray * parties = [PAMPartyCore fetchPartiesByUserId:userId context:context];
+    for (PAMPartyCore *party in parties) {
+        if(!party.isLoaded) {
+            [[PAMPartyMakerAPI standartPartyMakerAPI] addParty:party creatorId:@(userId) callback:^(NSDictionary *response, NSError *error) { }];
+        }
+    }
+}
+
+#pragma mark - Helpers
 - (void)dropAllUsersWithPartiesOnServer {
     NSManagedObjectContext *mainContext = [[PAMDataStore standartDataStore] mainContext];
-    for (PAMUserCore *userCore in [[PAMDataStore standartDataStore] fetchAllUsersInContext:mainContext]) {
-        NSArray *arrayWithParties = [[PAMDataStore standartDataStore] fetchPartiesByUserId:userCore.userId context:mainContext];
+    for (PAMUserCore *userCore in [PAMUserCore fetchAllUsersInContext:mainContext]) {
+        NSArray *arrayWithParties = [PAMPartyCore fetchPartiesByUserId:userCore.userId context:mainContext];
         for (PAMPartyCore *partyCore in arrayWithParties) {
             [[PAMPartyMakerAPI standartPartyMakerAPI] deletePartyById:@(partyCore.partyId) creator_id:@(userCore.userId) callback:^(NSDictionary *response, NSError *error) {
                 NSLog(@"Party %@", response);
@@ -305,20 +196,9 @@
     }
 }
 
-- (void)upDateOfflinePartiesByUserId:(NSInteger) userId {
-    NSManagedObjectContext *context = [[PAMDataStore standartDataStore] mainContext];
-    NSArray * parties = [[PAMDataStore standartDataStore] fetchPartiesByUserId:userId context:context];
-    for (PAMPartyCore *party in parties) {
-        if(!party.isLoaded) {
-            [[PAMPartyMakerAPI standartPartyMakerAPI] addParty:party creatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
-            }];
-        }
-    }
-}
-
 - (void)clearPartiesByUserId:(NSInteger) userId {
     [[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *backgroundContext) {
-        NSArray * parties = [[PAMDataStore standartDataStore] fetchPartiesByUserId:userId context:backgroundContext];
+        NSArray * parties = [PAMPartyCore fetchPartiesByUserId:userId context:backgroundContext];
         for (PAMPartyCore *party in parties) {
             [backgroundContext deleteObject:party];
         }
@@ -328,19 +208,16 @@
 }
 
 - (void)clearCoreData{
-    UIApplication *application = [UIApplication sharedApplication];
-    for (UILocalNotification *notification in [application scheduledLocalNotifications]) {
-        [application cancelLocalNotification:notification];
-    }
+    [PAMLocalNotification removeAllNotifications];
 
     [[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *backgroundContext) {
-        NSArray * parties = [[PAMDataStore standartDataStore] fetchAllPartiesInContext:backgroundContext];
+        NSArray * parties = [PAMPartyCore fetchAllPartiesInContext:backgroundContext];
         NSLog(@"Will delete (%ld) paries", [parties count]);
         for (PAMPartyCore *party in parties) {
             [backgroundContext deleteObject:party];
         }
         
-        NSArray * users = [[PAMDataStore standartDataStore] fetchAllUsersInContext:backgroundContext];
+        NSArray * users = [PAMUserCore fetchAllUsersInContext:backgroundContext];
         NSLog(@"Will delete (%ld) users", [users count]);
         for (PAMUserCore *user in users) {
             [backgroundContext deleteObject:user];

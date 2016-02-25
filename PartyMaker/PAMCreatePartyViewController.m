@@ -73,7 +73,7 @@
 
 #pragma mark - Helpers
 
-- (NSInteger) countMinutesInDay:(NSDate *) date {
+- (NSInteger)countMinutesInDay:(NSDate *) date {
     NSCalendar *calendar =[NSCalendar currentCalendar];
     NSDateComponents *startComponents = [calendar components:NSCalendarUnitHour | NSCalendarUnitMinute
                                                     fromDate:[date dateByAddingTimeInterval:-7200]];
@@ -218,12 +218,15 @@
             partyCore.startDate = [[partyDate dateByAddingTimeInterval:weakSelf.startSlider.value * 60] timeIntervalSince1970];
             partyCore.endDate = [[partyDate dateByAddingTimeInterval:weakSelf.endSlider.value * 60] timeIntervalSince1970];
             partyCore.longitude = self.coordinatesSaver;
-            partyCore.latitude = [self.chooseLocation.titleLabel.text isEqualToString:NSLocalizedStringFromTable(@"CHOOSE_LOCATION", @"Language", nil)] ? @"" : self.chooseLocation.titleLabel.text;
+            NSString *locatioName = [self.chooseLocation.titleLabel.text isEqualToString:NSLocalizedStringFromTable(@"CHOOSE_LOCATION", @"Language", nil)] ? @"" : self.chooseLocation.titleLabel.text;
+            partyCore.latitude = [NSString escapeSpecialCharactersWithString:locatioName];
             partyCore.isLoaded = NO;
-            PAMUserCore *userCore = (PAMUserCore *)[[PAMDataStore standartDataStore] fetchUserByUserId:userId context:context];
+            PAMUserCore *userCore = (PAMUserCore *)[PAMUserCore fetchUserByUserId:userId context:context];
             partyCore.creatorParty = userCore;
             [[PAMPartyMakerAPI standartPartyMakerAPI] addParty:partyCore creatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
             }];
+            
+            [PAMLocalNotification notificationForRarty:partyCore];
 
         } completion:^{
             [weakSelf actionCloseButton:sender];
@@ -288,15 +291,23 @@
 }
 
 #pragma mark - UITextFieldDelegate
--(BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     [self blockControllersBesides:textField userInteractionEnabled:NO];
     return YES;
 }
 
--(BOOL)textFieldShouldReturn:(UITextField *)textField {
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [self blockControllersBesides:textField userInteractionEnabled:YES];
     [textField resignFirstResponder];
     return NO;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString:@"`~!@#$%^&*()_+-=[]{};:\'\\|/?,.<>\""];
+    NSArray *components = [string componentsSeparatedByCharactersInSet:characterSet];
+    if([components count] > 1) return NO;
+
+    return YES;
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -304,7 +315,7 @@
     [self actionMoveCursor:scrollView];
 }
 
--(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     NSInteger currentPage = scrollView.contentOffset.x/scrollView.bounds.size.width;
     [self.typeEventPageControl setCurrentPage:currentPage];
 }
@@ -335,6 +346,10 @@
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     NSString *string = [textView.text stringByReplacingCharactersInRange:range withString:text];
+    NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString:@"`~!@#$%^&*()_+-=[]{};:\'\\|/?,.<>\""];
+    NSArray *components = [string componentsSeparatedByCharactersInSet:characterSet];
+    if([components count] > 1) return NO;
+    
     return !(string.length > 500);
 }
 
