@@ -30,6 +30,8 @@
 		83D738721C7C9812004B7B19 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83D738711C7C9812004B7B19 /* MapKit.framework */; };
 		83D738741C7C981E004B7B19 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83D738731C7C981E004B7B19 /* CoreLocation.framework */; };
 		83D738781C7CA9CA004B7B19 /* PAMMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 83D738771C7CA9CA004B7B19 /* PAMMapAnnotation.m */; };
+		83EC25321C80850700F52B6D /* PAMUsersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83EC25311C80850700F52B6D /* PAMUsersTableViewController.m */; };
+		83EC25351C80A20400F52B6D /* PAMUsersPartiesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83EC25341C80A20400F52B6D /* PAMUsersPartiesViewController.m */; };
 		EA3ED6171C668B1D00CBCD45 /* logs.plist in Resources */ = {isa = PBXBuildFile; fileRef = EA3ED6161C668B1D00CBCD45 /* logs.plist */; };
 		EA7D67061C7B960E0000EA8C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA7D67051C7B960E0000EA8C /* SystemConfiguration.framework */; };
 		EA984AB41C79CDD6002BF6C5 /* PAMUserCore+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = EA984AAD1C79CDD6002BF6C5 /* PAMUserCore+CoreDataProperties.m */; };
@@ -82,6 +84,10 @@
 		83D738731C7C981E004B7B19 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		83D738761C7CA9CA004B7B19 /* PAMMapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMMapAnnotation.h; sourceTree = "<group>"; };
 		83D738771C7CA9CA004B7B19 /* PAMMapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMMapAnnotation.m; sourceTree = "<group>"; };
+		83EC25301C80850700F52B6D /* PAMUsersTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMUsersTableViewController.h; sourceTree = "<group>"; };
+		83EC25311C80850700F52B6D /* PAMUsersTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMUsersTableViewController.m; sourceTree = "<group>"; };
+		83EC25331C80A20400F52B6D /* PAMUsersPartiesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMUsersPartiesViewController.h; sourceTree = "<group>"; };
+		83EC25341C80A20400F52B6D /* PAMUsersPartiesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMUsersPartiesViewController.m; sourceTree = "<group>"; };
 		EA3ED6161C668B1D00CBCD45 /* logs.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = logs.plist; sourceTree = "<group>"; };
 		EA7D67051C7B960E0000EA8C /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		EA984AAC1C79CDD6002BF6C5 /* PAMUserCore+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PAMUserCore+CoreDataProperties.h"; sourceTree = "<group>"; };
@@ -222,8 +228,19 @@
 				83D738771C7CA9CA004B7B19 /* PAMMapAnnotation.m */,
 				83D7386E1C7C9603004B7B19 /* PAMMapViewController.h */,
 				83D7386F1C7C9603004B7B19 /* PAMMapViewController.m */,
+				83EC25331C80A20400F52B6D /* PAMUsersPartiesViewController.h */,
+				83EC25341C80A20400F52B6D /* PAMUsersPartiesViewController.m */,
 			);
 			name = "Map views";
+			sourceTree = "<group>";
+		};
+		83EC252F1C8084AC00F52B6D /* Table Users */ = {
+			isa = PBXGroup;
+			children = (
+				83EC25301C80850700F52B6D /* PAMUsersTableViewController.h */,
+				83EC25311C80850700F52B6D /* PAMUsersTableViewController.m */,
+			);
+			name = "Table Users";
 			sourceTree = "<group>";
 		};
 		EA74B41F1C6A6CF500960CE0 /* Models */ = {
@@ -263,6 +280,7 @@
 			children = (
 				83D738791C7CA9CF004B7B19 /* Map views */,
 				83A134131C6DD09600EE6097 /* Date Picker */,
+				83EC252F1C8084AC00F52B6D /* Table Users */,
 				83A134141C6DD0E800EE6097 /* Table Show Party */,
 				8342F0601C72043D000FC044 /* PAMLoginViewController.h */,
 				8342F0611C72043D000FC044 /* PAMLoginViewController.m */,
@@ -370,6 +388,7 @@
 				831231241C6A2B7100422D00 /* PAMCustomDatePiker.m in Sources */,
 				EA9F4E071C70DD8B003B683F /* NSString+PAMDateFormat.m in Sources */,
 				836F47731C6221CE007F5ECC /* main.m in Sources */,
+				83EC25351C80A20400F52B6D /* PAMUsersPartiesViewController.m in Sources */,
 				839A8ABF1C6B2BD900D715D3 /* PAMDataStore.m in Sources */,
 				EA984AB41C79CDD6002BF6C5 /* PAMUserCore+CoreDataProperties.m in Sources */,
 				EA984AB71C79CDD6002BF6C5 /* PAMPartyCore.m in Sources */,
@@ -377,6 +396,7 @@
 				8342F0621C72043D000FC044 /* PAMLoginViewController.m in Sources */,
 				839A8AC31C6B419E00D715D3 /* PAMPartiesTableViewController.m in Sources */,
 				831A74EA1C748715007BB322 /* PAMCoreData.xcdatamodeld in Sources */,
+				83EC25321C80850700F52B6D /* PAMUsersTableViewController.m in Sources */,
 				837F257A1C75B7FE0011BFA3 /* PAMCreatePartyViewController.m in Sources */,
 				EAC6D44E1C7FA0AA00166C6E /* PAMLocalNotification.m in Sources */,
 				83D738781C7CA9CA004B7B19 /* PAMMapAnnotation.m in Sources */,

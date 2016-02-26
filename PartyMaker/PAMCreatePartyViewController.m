@@ -198,7 +198,7 @@
         
         __weak PAMCreatePartyViewController *weakSelf = self;
         NSManagedObjectID *objectID = [self.partyCore.objectID copy];
-        NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] longLongValue];
+        NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
         [[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *context) {
             PAMPartyCore *partyCore;
             if (objectID) {

@@ -20,6 +20,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     isKeyboardShow = NO;
+    [self.navigationItem setHidesBackButton:NO];
+    if([[NSUserDefaults standardUserDefaults] objectForKey:@"userId"]) {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userId"];
+        NSLog(@"delete user!!!!!!!!!");
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {

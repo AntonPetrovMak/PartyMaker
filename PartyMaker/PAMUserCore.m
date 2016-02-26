@@ -28,17 +28,20 @@
 }
 
 + (NSArray *)fetchAllUsersInContext:(NSManagedObjectContext*) context {
+    
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"PAMUserCore" inManagedObjectContext:context];
     [fetchRequest setEntity:entity];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name"
+                                                                   ascending:YES];
+    [fetchRequest setSortDescriptors:[NSArray arrayWithObjects:sortDescriptor, nil]];
+    
     NSError *error = nil;
     NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:&error];
     if (fetchedObjects == nil) {
         NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
     }
-    //    for (PAMUserCore *userCore in fetchedObjects) {
-    //        NSLog(@"User core name: %@",userCore.name);
-    //    }
+    
     return fetchedObjects;
 }
 

@@ -16,7 +16,6 @@
 #import "Reachability.h"
 
 @interface PAMPartiesTableViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource>
-- (IBAction)logOffUser:(UIBarButtonItem *)sender;
 
 @property (nonatomic) Reachability *wifiReachability;
 @end

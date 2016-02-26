@@ -12,6 +12,7 @@
 @interface PAMLocalNotification : UILocalNotification
 
 + (void)notificationForRarty:(PAMPartyCore *) party;
++ (void)notificationForRarty;
 + (void)removeAllNotifications;
 + (void)removePartyNotifications:(NSInteger ) partyId;
 

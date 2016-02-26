@@ -30,25 +30,7 @@
     return dataStore;
 }
 
-#pragma mark - Fetches Party
-- (void)performWriteOperation:(void (^)(NSManagedObjectContext*))writeBlock completion:(void(^)())completion {
-    __weak PAMDataStore *weakSelf = self;
-    [self.backgroundContext performBlock:^{
-        writeBlock(weakSelf.backgroundContext);
-        if (weakSelf.backgroundContext.hasChanges) {
-            NSError *error = nil;
-            [weakSelf.backgroundContext save:&error];
-            if(error) {
-                 NSLog(@"%s, error happened - %@", __PRETTY_FUNCTION__, error);
-            }
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (completion) {
-                completion();
-            }
-        });
-    }];
-}
+
 
 - (void)addPartiesFromServerToCoreData:(NSArray *) serverParty byCreatorPartyId:(NSInteger)creatorId completion:(void(^)())completion{
     __weak PAMDataStore *weakSelf = self;
@@ -184,7 +166,7 @@
 - (void)dropAllUsersWithPartiesOnServer {
     NSManagedObjectContext *mainContext = [[PAMDataStore standartDataStore] mainContext];
     for (PAMUserCore *userCore in [PAMUserCore fetchAllUsersInContext:mainContext]) {
-        NSArray *arrayWithParties = [PAMPartyCore fetchPartiesByUserId:userCore.userId context:mainContext];
+        NSArray *arrayWithParties = [PAMPartyCore fetchPartiesByUserId:(NSInteger)userCore.userId context:mainContext];
         for (PAMPartyCore *partyCore in arrayWithParties) {
             [[PAMPartyMakerAPI standartPartyMakerAPI] deletePartyById:@(partyCore.partyId) creator_id:@(userCore.userId) callback:^(NSDictionary *response, NSError *error) {
                 NSLog(@"Party %@", response);
@@ -212,13 +194,13 @@
 
     [[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *backgroundContext) {
         NSArray * parties = [PAMPartyCore fetchAllPartiesInContext:backgroundContext];
-        NSLog(@"Will delete (%ld) paries", [parties count]);
+        NSLog(@"Will delete (%ld) paries", (unsigned long)[parties count]);
         for (PAMPartyCore *party in parties) {
             [backgroundContext deleteObject:party];
         }
         
         NSArray * users = [PAMUserCore fetchAllUsersInContext:backgroundContext];
-        NSLog(@"Will delete (%ld) users", [users count]);
+        NSLog(@"Will delete (%ld) users", (unsigned long)[users count]);
         for (PAMUserCore *user in users) {
             [backgroundContext deleteObject:user];
         }
@@ -229,6 +211,24 @@
 }
 
 #pragma mark - Core Data stack
+- (void)performWriteOperation:(void (^)(NSManagedObjectContext*))writeBlock completion:(void(^)())completion {
+    __weak PAMDataStore *weakSelf = self;
+    [self.backgroundContext performBlock:^{
+        writeBlock(weakSelf.backgroundContext);
+        if (weakSelf.backgroundContext.hasChanges) {
+            NSError *error = nil;
+            [weakSelf.backgroundContext save:&error];
+            if(error) {
+                NSLog(@"%s, error happened - %@", __PRETTY_FUNCTION__, error);
+            }
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (completion) {
+                completion();
+            }
+        });
+    }];
+}
 
 - (NSURL *)applicationDocumentsDirectory {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];

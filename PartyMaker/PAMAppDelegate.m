@@ -27,7 +27,6 @@
     self.locationManager = [CLLocationManager new];
     self.locationManager.delegate = self;
     
-    
     NSDictionary *attributes1 = @{ NSFontAttributeName:[UIFont fontWithName:@"MyriadPro-Bold" size:15],
                                    NSForegroundColorAttributeName:[UIColor whiteColor]};
     [[UINavigationBar appearance] setTitleTextAttributes:attributes1];

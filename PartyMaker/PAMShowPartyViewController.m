@@ -70,7 +70,7 @@
             NSLog(@" %s error %@", __PRETTY_FUNCTION__ ,error);
         }
         
-        [PAMLocalNotification removePartyNotifications:partyObject.partyId];
+        [PAMLocalNotification removePartyNotifications:(NSInteger)partyObject.partyId];
         
         NSLog(@"%lld",partyObject.partyId);
         NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];

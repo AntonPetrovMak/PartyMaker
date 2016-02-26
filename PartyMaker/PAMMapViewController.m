@@ -11,8 +11,6 @@
 
 @interface PAMMapViewController ()
 
-@property(strong, nonatomic) MKPinAnnotationView *pinView;
-
 @end
 
 @implementation PAMMapViewController
@@ -76,12 +74,24 @@
 
 #pragma  mark - MKMapViewDelegate
 
+- (void) zoomAnnotationOnMap {
+    MKMapRect zoomRect = MKMapRectNull;
+    
+    for (id <MKAnnotation> annotation in self.mapView.annotations) {
+        CLLocationCoordinate2D location = annotation.coordinate;
+        MKMapPoint center = MKMapPointForCoordinate(location);
+        static double delta = 20000;
+        MKMapRect rect = MKMapRectMake(center.x - delta, center.y - delta, delta * 2, delta * 2);
+        zoomRect = MKMapRectUnion(zoomRect, rect);
+    }
+    zoomRect = [self.mapView mapRectThatFits:zoomRect];
+    [self.mapView setVisibleMapRect:zoomRect
+                        edgePadding:UIEdgeInsetsMake(50, 50, 50, 50)
+                           animated:YES];
+}
+
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
-    MKCoordinateRegion theRegion = self.mapView.region;
-    theRegion.center = userLocation.location.coordinate;
-    theRegion.span.longitudeDelta /=50;
-    theRegion.span.latitudeDelta /=50;
-    [self.mapView setRegion:theRegion animated:YES];
+    [self zoomAnnotationOnMap];
 }
 
 - (void) addLocation{
@@ -128,7 +138,7 @@
     PAMMapAnnotation *customAnnotation = (PAMMapAnnotation *)view.annotation;
     [customAnnotation setAddressToSubtitle];
     
-    NSLog(@"newState: %lu oldState: %lu", newState, oldState);
+    NSLog(@"newState: %lu oldState: %lu", (unsigned long)newState, (unsigned long)oldState);
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
