@@ -37,7 +37,9 @@
     
     PAMUserCore *userCore = (PAMUserCore*)[self.arrayWithUsers objectAtIndex:indexPath.row];
     cell.textLabel.text = userCore.name;
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld parties", [userCore.parties count]];
+    NSManagedObjectContext *contex = [[PAMDataStore standartDataStore] mainContext];
+    NSArray *array = [PAMPartyCore fetchPartiesWithLocationByUserId:userCore.userId context:contex];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld parties", [array count]];
     return cell;
 }
 
@@ -50,7 +52,11 @@
         PAMUserCore *userCore = (PAMUserCore*)[self.arrayWithUsers objectAtIndex:selectedRow];
         PAMMapViewController *mapViewController = [segue destinationViewController];
         mapViewController.typeMap = PAMMapStateRead;
-        mapViewController.arrayWithParties = (NSArray*)[userCore parties];
+        NSMutableArray * arrayParties = [NSMutableArray new];
+        for(PAMPartyCore *partyCore in [userCore parties] ){
+            [arrayParties addObject:partyCore];
+        }
+        mapViewController.arrayWithParties = (NSArray *)arrayParties;
         [mapViewController.navigationItem setTitle:[userCore.name uppercaseString]];
     }
 }

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import "PAMDataStore.h"
 #import "PAMMapAnnotation.h"
 #import "PAMPartyCore.h"
 
@@ -18,7 +19,8 @@
 
 typedef NS_ENUM(NSInteger, PAMMapStateType) {
     PAMMapStateRead = 1,
-    PAMMapStateWrite = 2
+    PAMMapStateLimitedRead = 2,
+    PAMMapStateWrite = 3
 };
 
 @interface PAMMapViewController : UIViewController <MKMapViewDelegate, UIGestureRecognizerDelegate>

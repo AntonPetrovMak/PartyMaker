@@ -191,7 +191,7 @@
 
 - (void)clearCoreData{
     [PAMLocalNotification removeAllNotifications];
-
+    
     [[PAMDataStore standartDataStore] performWriteOperation:^(NSManagedObjectContext *backgroundContext) {
         NSArray * parties = [PAMPartyCore fetchAllPartiesInContext:backgroundContext];
         NSLog(@"Will delete (%ld) paries", (unsigned long)[parties count]);

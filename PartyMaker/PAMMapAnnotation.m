@@ -37,12 +37,10 @@
 - (MKAnnotationView *) annotatinView {
     MKAnnotationView *annotationView = [[MKAnnotationView alloc] initWithAnnotation:self reuseIdentifier:@"PAMMapAnnotation"];
     annotationView.enabled = YES;
-    //UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     imageView.image = [UIImage imageNamed:@"PartyLogo_Small_5"];
     [annotationView setLeftCalloutAccessoryView:imageView];
     annotationView.canShowCallout = YES;
-    annotationView.image = [self imageWithImage:[UIImage imageNamed:@"PartyLogo_Map_5"] convertToSize:CGSizeMake(30, 30)];
     annotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeContactAdd];
     return annotationView;
 }

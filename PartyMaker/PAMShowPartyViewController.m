@@ -47,7 +47,7 @@
     } else if ([segue.identifier isEqualToString:@"ChooseLocationSegue"]) {
         PAMMapViewController *mapViewController = [segue destinationViewController];
         [mapViewController.navigationItem setTitle:[@"PARTY LOCATION" uppercaseString]];
-        mapViewController.typeMap = PAMMapStateRead;
+        mapViewController.typeMap = PAMMapStateLimitedRead;
         mapViewController.arrayWithParties = @[self.party];
     }
     

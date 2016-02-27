@@ -62,7 +62,9 @@
         PAMMapViewController *mapViewController = [segue destinationViewController];
         mapViewController.delegate = self;
         mapViewController.typeMap = PAMMapStateWrite;
-        mapViewController.partyInfo = @{@"coordinate":self.coordinatesSaver,@"name":self.partyNameTextField.text};
+        mapViewController.partyInfo = @{@"coordinate":self.coordinatesSaver,
+                                        @"name":self.partyNameTextField.text,
+                                        @"type": @(self.typeEventPageControl.currentPage)};
     }
 }
 
@@ -219,6 +221,7 @@
             PAMUserCore *userCore = (PAMUserCore *)[PAMUserCore fetchUserByUserId:userId context:context];
             partyCore.creatorParty = userCore;
             [[PAMPartyMakerAPI standartPartyMakerAPI] addParty:partyCore creatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
+                partyCore.isLoaded = YES;
             }];
             
             [PAMLocalNotification notificationForRarty:partyCore];
@@ -238,24 +241,17 @@
 }
 
 - (IBAction)actionSlideChanged:(UISlider *)sender {
-    //NSLog(@"SS START: %f END:%f SENDER:%f", self.startSlider.value, self.endSlider.value, sender.value);
     if([sender isEqual:self.startSlider]) {
-        if(self.endSlider.value - sender.value <= 0) {
-            self.endSlider.value = sender.value;
-            self.startTimeLabel.text = [NSString stringHourAndMinutesWithInterval:sender.value];
-            self.endTimeLabel.text = [NSString stringHourAndMinutesWithInterval:(sender.value + 30)];
+        if(self.endSlider.value - self.startSlider.value <= 30) {
+            self.endSlider.value = self.startSlider.value + 30;
         }
-        self.startTimeLabel.text = [NSString stringHourAndMinutesWithInterval:sender.value];
     } else if([sender isEqual:self.endSlider]) {
-        if(self.startSlider.value - sender.value >= 0) {
-            self.startSlider.value = sender.value;
-            self.endTimeLabel.text = [NSString stringHourAndMinutesWithInterval:sender.value];
-            self.startTimeLabel.text = [NSString stringHourAndMinutesWithInterval:(sender.value - 30)];
+        if(self.endSlider.value - self.startSlider.value <= 30) {
+            self.startSlider.value = self.endSlider.value - 30;
         }
-        self.endTimeLabel.text = [NSString stringHourAndMinutesWithInterval:sender.value];
     }
-    //NSLog(@"PP START: %f END:%f SENDER:%f", self.startSlider.value, self.endSlider.value, sender.value);
-    
+    self.startTimeLabel.text = [NSString stringHourAndMinutesWithInterval:self.startSlider.value];
+    self.endTimeLabel.text = [NSString stringHourAndMinutesWithInterval:self.endSlider.value];
 }
 
 - (IBAction)actionPageChange:(UIPageControl *)sender {

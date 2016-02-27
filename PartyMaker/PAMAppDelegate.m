@@ -26,6 +26,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.locationManager = [CLLocationManager new];
     self.locationManager.delegate = self;
+    //[[PAMDataStore standartDataStore] addAllUsersWithPartiesFromServer];
     
     NSDictionary *attributes1 = @{ NSFontAttributeName:[UIFont fontWithName:@"MyriadPro-Bold" size:15],
                                    NSForegroundColorAttributeName:[UIColor whiteColor]};

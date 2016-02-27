@@ -14,6 +14,7 @@
 
 @property (weak, nonatomic) UIBarButtonItem *trashPartyPinItem;
 @property (assign, nonatomic) BOOL isDraggablePin;
+@property (strong, nonatomic) PAMMapAnnotation *currentAnnotation;
 
 @end
 
@@ -28,6 +29,9 @@
         case PAMMapStateWrite: {
             [self loadMapForWrite];
         } break;
+        case PAMMapStateLimitedRead: {
+            [self loadMapForLimitedRead];
+        } break;
             
         default:
             NSAssert1(NO, @"No typeMap", nil);
@@ -35,24 +39,28 @@
     }
 }
 
+- (void)loadMapForLimitedRead {
+    self.isDraggablePin = NO;
+    
+    PAMPartyCore *party = [self.arrayWithParties lastObject];
+    NSArray* coordinate = [party.longitude componentsSeparatedByString:@";"];
+    if([coordinate count] == 2) {
+        CLLocationCoordinate2D partyCoordinate = CLLocationCoordinate2DMake([coordinate[0] floatValue], [coordinate[1] floatValue]);
+        PAMMapAnnotation * annotation = [[PAMMapAnnotation alloc] initWithCoordinate:partyCoordinate andTitle:party.name.length ? party.name : @"Party name"];
+        annotation.partyId = party.partyId;
+        [annotation setAddressToSubtitle];
+        [self.mapView addAnnotation:annotation];
+    }
+}
+
+
 - (void)loadMapForRead {
     self.isDraggablePin = NO;
-    NSMutableArray *arrayWithAnnotation = [NSMutableArray new];
-    for (PAMPartyCore *party in self.arrayWithParties) {
-        NSString *coordinateString = party.longitude;
-        if(coordinateString.length) {
-            NSArray* coordinate = [coordinateString componentsSeparatedByString:@";"];
-            NSLog(@"%@", coordinate);
-            if([coordinate count] == 2) {
-                NSLog(@"%f , %f", [coordinate[0] floatValue], [coordinate[1] floatValue]);
-                CLLocationCoordinate2D partyCoordinate = CLLocationCoordinate2DMake([coordinate[0] floatValue], [coordinate[1] floatValue]);
-                PAMMapAnnotation * annotation = [[PAMMapAnnotation alloc] initWithCoordinate:partyCoordinate andTitle:party.name.length ? party.name : @"Party name"];
-                [annotation setAddressToSubtitle];
-                [arrayWithAnnotation addObject: annotation];
-            }
-        }
-    }
-    [self.mapView addAnnotations:arrayWithAnnotation];
+    
+    UIBarButtonItem *resetItem = [[UIBarButtonItem alloc] initWithTitle:@"Reset" style:UIBarButtonItemStylePlain target:self action:@selector(actionShowMyParty:)];
+    self.navigationItem.rightBarButtonItem = resetItem;
+    
+    [self addAnotationsFromArrayWithParties];
 }
 
 - (void)loadMapForWrite {
@@ -86,10 +94,31 @@
 }
 
 #pragma mark - Helpers
+- (void)addAnotationsFromArrayWithParties {
+    NSMutableArray *arrayWithAnnotation = [NSMutableArray new];
+    for (PAMPartyCore *party in self.arrayWithParties) {
+        NSString *coordinateString = party.longitude;
+        if(coordinateString.length) {
+            NSArray* coordinate = [coordinateString componentsSeparatedByString:@";"];
+            if([coordinate count] == 2) {
+                CLLocationCoordinate2D partyCoordinate = CLLocationCoordinate2DMake([coordinate[0] floatValue], [coordinate[1] floatValue]);
+                PAMMapAnnotation * annotation = [[PAMMapAnnotation alloc] initWithCoordinate:partyCoordinate andTitle:party.name.length ? party.name : @"Party name"];
+                annotation.partyType = party.partyType;
+                annotation.partyId = party.partyId;
+                [annotation setAddressToSubtitle];
+                [arrayWithAnnotation addObject: annotation];
+            }
+        }
+    }
+    [self.mapView addAnnotations:arrayWithAnnotation];
+}
+
 - (void)addAnnotationWith:(CLLocationCoordinate2D) coordinate {
     self.trashPartyPinItem.enabled = YES;
     NSString *partyName = [self.partyInfo objectForKey:@"name"];
+    NSInteger partyType = [[self.partyInfo objectForKey:@"type"] integerValue];
     PAMMapAnnotation * annotation = [[PAMMapAnnotation alloc] initWithCoordinate:coordinate andTitle:partyName.length ? partyName : @"Party name"];
+    annotation.partyType = partyType;
     [annotation setAddressToSubtitle];
     [self.mapView addAnnotation:annotation];
 }
@@ -110,7 +139,38 @@
                            animated:YES];
 }
 
+- (PAMPartyCore *) partyByCurrentAnnotation{
+    for (PAMPartyCore *party in self.arrayWithParties) {
+        if(party.partyId == self.currentAnnotation.partyId) {
+            return party;
+        }
+    }
+    return nil;
+}
+
+- (void) removeAllPins {
+    if(self.mapView.annotations.count >= 1) {
+        id userLocation = [self.mapView userLocation];
+        NSMutableArray *pins = [[NSMutableArray alloc] initWithArray:[self.mapView annotations]];
+        if ( userLocation != nil ) {
+            [pins removeObject:userLocation];
+        }
+        [self.mapView removeAnnotations:pins];
+    }
+}
+
 #pragma mark - Action
+- (void)actionShowMyParty:(UIBarButtonItem *)sender {
+    sender.enabled = NO;
+    [self removeAllPins];
+    NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
+    NSManagedObjectContext *context = [[PAMDataStore standartDataStore] mainContext];
+    [self.navigationItem setTitle:[@"My parties" uppercaseString]];
+    self.arrayWithParties = [PAMPartyCore fetchPartiesByUserId:userId context:context];
+    [self addAnotationsFromArrayWithParties];
+    [self zoomAnnotationOnMap];
+}
+
 - (void)actionTrashPartyPin:(UIBarButtonItem *)sender {
     if(self.delegate && [self.delegate respondsToSelector:@selector(actionMapCoordinate:nameLocation:)]) {
         [self.delegate performSelector:@selector(actionMapCoordinate:nameLocation:) withObject:@"" withObject:@""];
@@ -119,43 +179,33 @@
 }
 
 - (void)actionCalloutAdd {
+    if(self.typeMap == PAMMapStateWrite) {
+    NSString *locationString = [NSString stringWithFormat:@"%f;%f", self.currentAnnotation.coordinate.latitude, self.currentAnnotation.coordinate.longitude];
+    if(self.delegate && [self.delegate respondsToSelector:@selector(actionMapCoordinate:nameLocation:)]) {
+            [self.delegate performSelector:@selector(actionMapCoordinate:nameLocation:) withObject:locationString withObject:self.currentAnnotation.subtitle];
+        }
+    }
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-
-
-
-
-
 - (void)actionCalloutInfo {
-    PAMShowPartyViewController *showView = [self.storyboard instantiateViewControllerWithIdentifier:@"PAMShowPartyViewController"];
-    PAMPartyCore *party = (PAMPartyCore *)[self.arrayWithParties objectAtIndex:1];
-    showView.party = party;
-    [self.navigationController pushViewController:showView animated:YES];
+    if (self.typeMap == PAMMapStateRead) {
+        PAMShowPartyViewController *showView = [self.storyboard instantiateViewControllerWithIdentifier:@"PAMShowLimitedParty"];
+
+        showView.party = [self partyByCurrentAnnotation];
+        [self.navigationController pushViewController:showView animated:YES];
+    }
 }
 
-
-
-
-
-
-
 #pragma mark - UIGestureRecognizerDelegate
+
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     return YES;
 }
 
 - (IBAction)mapLongPress:(UITapGestureRecognizer *)recognizer {
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        if(self.mapView.annotations.count >= 1) {
-            id userLocation = [self.mapView userLocation];
-            NSMutableArray *pins = [[NSMutableArray alloc] initWithArray:[self.mapView annotations]];
-            if ( userLocation != nil ) {
-                [pins removeObject:userLocation];
-            }
-            
-            [self.mapView removeAnnotations:pins];
-        }
+        [self removeAllPins];
         CGPoint point = [recognizer locationInView:self.mapView];
         CLLocationCoordinate2D partyCoordinate = [self.mapView convertPoint:point toCoordinateFromView:self.mapView];
         [self addAnnotationWith:partyCoordinate];
@@ -177,18 +227,24 @@
             pinView.draggable = self.isDraggablePin;
             pinView.animatesDrop = YES;
             pinView.canShowCallout = YES;
+            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+            PAMMapAnnotation *customAnnotation = (PAMMapAnnotation *)annotation;
+            imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"PartyLogo_Small_%ld", customAnnotation.partyType]];
+            [pinView setLeftCalloutAccessoryView:imageView];
             UIButton *rightButton;
             switch (self.typeMap) {
                 case PAMMapStateRead: {
                     rightButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
                     [rightButton addTarget:nil action:@selector(actionCalloutInfo) forControlEvents:UIControlEventTouchUpInside];
+                    pinView.rightCalloutAccessoryView = rightButton;
                 } break;
                 case PAMMapStateWrite: {
                     rightButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
                     [rightButton addTarget:nil action:@selector(actionCalloutAdd) forControlEvents:UIControlEventTouchUpInside];
+                    pinView.rightCalloutAccessoryView = rightButton;
                 } break;
+                default: break;
             }
-            pinView.rightCalloutAccessoryView = rightButton;
         } else {
             pinView.annotation = annotation;
         }
@@ -206,14 +262,10 @@
     NSLog(@"newState: %lu oldState: %lu", (unsigned long)newState, (unsigned long)oldState);
 }
 
-- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
-    if(self.typeMap == PAMMapStateWrite) {
-        PAMMapAnnotation *customAnnotation = (PAMMapAnnotation *)view.annotation;
-        NSString *locationString = [NSString stringWithFormat:@"%f;%f", customAnnotation.coordinate.latitude, customAnnotation.coordinate.longitude];
-        if(self.delegate && [self.delegate respondsToSelector:@selector(actionMapCoordinate:nameLocation:)]) {
-            [self.delegate performSelector:@selector(actionMapCoordinate:nameLocation:) withObject:locationString withObject:customAnnotation.subtitle];
-        }
-    }
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
+    PAMMapAnnotation *customAnnotation = (PAMMapAnnotation *)view.annotation;
+    self.currentAnnotation = customAnnotation;
 }
+
 
 @end

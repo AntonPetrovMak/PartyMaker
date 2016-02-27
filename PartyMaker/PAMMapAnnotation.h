@@ -15,6 +15,8 @@
 
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *subtitle;
+@property (nonatomic, assign) NSInteger partyId;
+@property (nonatomic, assign) NSInteger partyType;
 
 
 - (instancetype) initWithCoordinate:(CLLocationCoordinate2D) coordinate andTitle:(NSString *) title;

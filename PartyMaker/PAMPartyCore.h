@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSArray *)fetchPartyByPartyId:(NSInteger) partyId context:(NSManagedObjectContext*) context;
 + (NSArray *)fetchPartiesByUserId:(NSInteger) userId context:(NSManagedObjectContext*) context;
++ (NSArray *)fetchPartiesWithLocationByUserId:(NSInteger) userId context:(NSManagedObjectContext*) context;
 + (NSArray *)fetchAllPartiesInContext:(NSManagedObjectContext*) context;
 
 @end
