@@ -10,7 +10,7 @@
 #import "PAMDataStore.h"
 #import "PAMPartyCore.h"
 #import "PAMUserCore.h"
-#import "PAMUsersPartiesViewController.h"
+#import "PAMMapViewController.h"
 
 
 @interface PAMUsersTableViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource>

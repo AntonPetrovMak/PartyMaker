@@ -60,13 +60,8 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"ChooseLocationSegue"]) {
         PAMMapViewController *mapViewController = [segue destinationViewController];
-        UIBarButtonItem *treshItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash
-                                                                                   target:mapViewController
-                                                                                   action:@selector(actionTrashPartyPin:)];
-        mapViewController.isDraggablePin = YES;
-        mapViewController.trashPartyPinItem = treshItem;
-        mapViewController.navigationItem.rightBarButtonItem = mapViewController.trashPartyPinItem;
         mapViewController.delegate = self;
+        mapViewController.typeMap = PAMMapStateWrite;
         mapViewController.partyInfo = @{@"coordinate":self.coordinatesSaver,@"name":self.partyNameTextField.text};
     }
 }

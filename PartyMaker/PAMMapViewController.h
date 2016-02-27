@@ -12,23 +12,27 @@
 #import "PAMMapAnnotation.h"
 #import "PAMPartyCore.h"
 
-
 @protocol PAMMapCoordinateDelegate <NSObject>
 - (void)actionMapCoordinate:(NSString *) location nameLocation:(NSString *) nameLocation;
 @end
+
+typedef NS_ENUM(NSInteger, PAMMapStateType) {
+    PAMMapStateRead = 1,
+    PAMMapStateWrite = 2
+};
 
 @interface PAMMapViewController : UIViewController <MKMapViewDelegate, UIGestureRecognizerDelegate>
 
 @property (weak, nonatomic) id <PAMMapCoordinateDelegate> delegate;
 
+@property (assign, nonatomic) PAMMapStateType typeMap;
+
 @property (strong, nonatomic) NSDictionary *partyInfo;
+@property (strong, nonatomic) NSArray *arrayWithParties;
 
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
-@property (weak, nonatomic) UIBarButtonItem *trashPartyPinItem;
-@property (assign, nonatomic) BOOL isDraggablePin;
 
 - (void)actionTrashPartyPin:(UIBarButtonItem *)sender;
-
 
 
 @end

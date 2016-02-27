@@ -8,8 +8,12 @@
 //
 
 #import "PAMMapViewController.h"
+#import "PAMShowPartyViewController.h"
 
 @interface PAMMapViewController ()
+
+@property (weak, nonatomic) UIBarButtonItem *trashPartyPinItem;
+@property (assign, nonatomic) BOOL isDraggablePin;
 
 @end
 
@@ -17,14 +21,53 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.mapView.showsUserLocation = YES;
-    self.mapView.delegate = self;
-    self.trashPartyPinItem.enabled = NO;
-    
+    switch (self.typeMap) {
+        case PAMMapStateRead: {
+            [self loadMapForRead];
+        } break;
+        case PAMMapStateWrite: {
+            [self loadMapForWrite];
+        } break;
+            
+        default:
+            NSAssert1(NO, @"No typeMap", nil);
+            break;
+    }
+}
+
+- (void)loadMapForRead {
+    self.isDraggablePin = NO;
+    NSMutableArray *arrayWithAnnotation = [NSMutableArray new];
+    for (PAMPartyCore *party in self.arrayWithParties) {
+        NSString *coordinateString = party.longitude;
+        if(coordinateString.length) {
+            NSArray* coordinate = [coordinateString componentsSeparatedByString:@";"];
+            NSLog(@"%@", coordinate);
+            if([coordinate count] == 2) {
+                NSLog(@"%f , %f", [coordinate[0] floatValue], [coordinate[1] floatValue]);
+                CLLocationCoordinate2D partyCoordinate = CLLocationCoordinate2DMake([coordinate[0] floatValue], [coordinate[1] floatValue]);
+                PAMMapAnnotation * annotation = [[PAMMapAnnotation alloc] initWithCoordinate:partyCoordinate andTitle:party.name.length ? party.name : @"Party name"];
+                [annotation setAddressToSubtitle];
+                [arrayWithAnnotation addObject: annotation];
+            }
+        }
+    }
+    [self.mapView addAnnotations:arrayWithAnnotation];
+}
+
+- (void)loadMapForWrite {
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(mapLongPress:)];
     longPress.minimumPressDuration = 0.5f;
     longPress.delegate = self;
     [self.mapView addGestureRecognizer:longPress];
+    
+    UIBarButtonItem *treshItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash
+                                                                               target:self
+                                                                               action:@selector(actionTrashPartyPin:)];
+    self.isDraggablePin = YES;
+    self.trashPartyPinItem = treshItem;
+    self.trashPartyPinItem.enabled = NO;
+    self.navigationItem.rightBarButtonItem = self.trashPartyPinItem;
     
     NSString *coordinateString = [self.partyInfo objectForKey:@"coordinate"];
     if(coordinateString.length) {
@@ -44,37 +87,14 @@
 
 #pragma mark - Helpers
 - (void)addAnnotationWith:(CLLocationCoordinate2D) coordinate {
+    self.trashPartyPinItem.enabled = YES;
     NSString *partyName = [self.partyInfo objectForKey:@"name"];
     PAMMapAnnotation * annotation = [[PAMMapAnnotation alloc] initWithCoordinate:coordinate andTitle:partyName.length ? partyName : @"Party name"];
     [annotation setAddressToSubtitle];
     [self.mapView addAnnotation:annotation];
-    self.trashPartyPinItem.enabled = YES;
 }
 
-#pragma mark - Action
-- (void)actionTrashPartyPin:(UIBarButtonItem *)sender {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(actionMapCoordinate:nameLocation:)]) {
-        [self.delegate performSelector:@selector(actionMapCoordinate:nameLocation:) withObject:@"" withObject:@""];
-    }
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
-#pragma mark - UIGestureRecognizerDelegate
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    return YES;
-}
-
--(IBAction)mapLongPress:(UITapGestureRecognizer *)recognizer {
-    if (recognizer.state == UIGestureRecognizerStateBegan && self.mapView.annotations.count <= 1) {
-        CGPoint point = [recognizer locationInView:self.mapView];
-        CLLocationCoordinate2D partyCoordinate = [self.mapView convertPoint:point toCoordinateFromView:self.mapView];
-        [self addAnnotationWith:partyCoordinate];
-    }
-}
-
-#pragma  mark - MKMapViewDelegate
-
-- (void) zoomAnnotationOnMap {
+- (void)zoomAnnotationOnMap {
     MKMapRect zoomRect = MKMapRectNull;
     
     for (id <MKAnnotation> annotation in self.mapView.annotations) {
@@ -86,43 +106,88 @@
     }
     zoomRect = [self.mapView mapRectThatFits:zoomRect];
     [self.mapView setVisibleMapRect:zoomRect
-                        edgePadding:UIEdgeInsetsMake(50, 50, 50, 50)
+                        edgePadding:UIEdgeInsetsMake(30, 30, 30, 30)
                            animated:YES];
 }
+
+#pragma mark - Action
+- (void)actionTrashPartyPin:(UIBarButtonItem *)sender {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(actionMapCoordinate:nameLocation:)]) {
+        [self.delegate performSelector:@selector(actionMapCoordinate:nameLocation:) withObject:@"" withObject:@""];
+    }
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)actionCalloutAdd {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+
+
+
+
+- (void)actionCalloutInfo {
+    PAMShowPartyViewController *showView = [self.storyboard instantiateViewControllerWithIdentifier:@"PAMShowPartyViewController"];
+    PAMPartyCore *party = (PAMPartyCore *)[self.arrayWithParties objectAtIndex:1];
+    showView.party = party;
+    [self.navigationController pushViewController:showView animated:YES];
+}
+
+
+
+
+
+
+
+#pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    return YES;
+}
+
+- (IBAction)mapLongPress:(UITapGestureRecognizer *)recognizer {
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        if(self.mapView.annotations.count >= 1) {
+            id userLocation = [self.mapView userLocation];
+            NSMutableArray *pins = [[NSMutableArray alloc] initWithArray:[self.mapView annotations]];
+            if ( userLocation != nil ) {
+                [pins removeObject:userLocation];
+            }
+            
+            [self.mapView removeAnnotations:pins];
+        }
+        CGPoint point = [recognizer locationInView:self.mapView];
+        CLLocationCoordinate2D partyCoordinate = [self.mapView convertPoint:point toCoordinateFromView:self.mapView];
+        [self addAnnotationWith:partyCoordinate];
+    }
+}
+
+#pragma  mark - MKMapViewDelegate
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
     [self zoomAnnotationOnMap];
 }
 
-- (void) addLocation{
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
     if([annotation isKindOfClass:[PAMMapAnnotation class]]) {
-        /*PAMMapAnnotation *myLocation = (PAMMapAnnotation *)annotation;
-        MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:@"PAMMapAnnotation"];
-        if(!annotationView) {
-            annotationView = [myLocation annotatinView];
-            annotationView.draggable = self.isDraggablePin;
-            UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
-            [rightButton addTarget:nil action:@selector(addLocation) forControlEvents:UIControlEventTouchUpInside];
-            annotationView.rightCalloutAccessoryView = rightButton;
-        } else {
-            annotationView.annotation = annotation;
-        }
-        return annotationView;*/
-        
         MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"CustomPinAnnotationView"];
-        
         if(!pinView) {
             pinView = [[MKPinAnnotationView alloc] initWithAnnotation: annotation reuseIdentifier:@"CustomPinAnnotationView"];
             pinView.pinTintColor = [MKPinAnnotationView redPinColor];
             pinView.draggable = self.isDraggablePin;
             pinView.animatesDrop = YES;
             pinView.canShowCallout = YES;
-            UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
-            [rightButton addTarget:nil action:@selector(addLocation) forControlEvents:UIControlEventTouchUpInside];
+            UIButton *rightButton;
+            switch (self.typeMap) {
+                case PAMMapStateRead: {
+                    rightButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
+                    [rightButton addTarget:nil action:@selector(actionCalloutInfo) forControlEvents:UIControlEventTouchUpInside];
+                } break;
+                case PAMMapStateWrite: {
+                    rightButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+                    [rightButton addTarget:nil action:@selector(actionCalloutAdd) forControlEvents:UIControlEventTouchUpInside];
+                } break;
+            }
             pinView.rightCalloutAccessoryView = rightButton;
         } else {
             pinView.annotation = annotation;
@@ -142,12 +207,12 @@
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
-    NSLog(@"calloutAccessoryControlTapped");
-    
-    PAMMapAnnotation *customAnnotation = (PAMMapAnnotation *)view.annotation;
-    NSString *locationString = [NSString stringWithFormat:@"%f;%f", customAnnotation.coordinate.latitude, customAnnotation.coordinate.longitude];
-    if(self.delegate && [self.delegate respondsToSelector:@selector(actionMapCoordinate:nameLocation:)]) {
-        [self.delegate performSelector:@selector(actionMapCoordinate:nameLocation:) withObject:locationString withObject:customAnnotation.subtitle];
+    if(self.typeMap == PAMMapStateWrite) {
+        PAMMapAnnotation *customAnnotation = (PAMMapAnnotation *)view.annotation;
+        NSString *locationString = [NSString stringWithFormat:@"%f;%f", customAnnotation.coordinate.latitude, customAnnotation.coordinate.longitude];
+        if(self.delegate && [self.delegate respondsToSelector:@selector(actionMapCoordinate:nameLocation:)]) {
+            [self.delegate performSelector:@selector(actionMapCoordinate:nameLocation:) withObject:locationString withObject:customAnnotation.subtitle];
+        }
     }
 }
 

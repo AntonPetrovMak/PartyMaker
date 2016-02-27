@@ -24,7 +24,6 @@
 }
 
 #pragma mark - UITableViewDataSource
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.arrayWithUsers count];
 }
@@ -47,16 +46,13 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"MapUserPartiesSegue"]) {
-        PAMUsersPartiesViewController *mapViewController = [segue destinationViewController];
-        mapViewController.arrayWithParties = (NSArray*)[[self.arrayWithUsers objectAtIndex:5] parties];
+        NSInteger selectedRow = [[self.tableView indexPathForSelectedRow] row];
+        PAMUserCore *userCore = (PAMUserCore*)[self.arrayWithUsers objectAtIndex:selectedRow];
+        PAMMapViewController *mapViewController = [segue destinationViewController];
+        mapViewController.typeMap = PAMMapStateRead;
+        mapViewController.arrayWithParties = (NSArray*)[userCore parties];
+        [mapViewController.navigationItem setTitle:[userCore.name uppercaseString]];
     }
-}
-
-- (nullable NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-//    PAMUsersPartiesViewController *mapViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"PAMUsersPartiesViewController"];
-//
-//    mapViewController.arrayWithParties = (NSArray*)[[self.arrayWithUsers objectAtIndex:indexPath.row] parties];
-    return indexPath;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
