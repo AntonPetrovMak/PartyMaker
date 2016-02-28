@@ -11,7 +11,7 @@
 
 "PASSWORD_PLACEHOLDER" = "Пароль";
 
-"PARTY_NAME_PLACEHOLDER" = "Ім'я паті";
+"PARTY_NAME_PLACEHOLDER" = "Назва вечірки";
 
 
 "PROBLEM_WITH_SERVER" = "Вибачте, за тимчасові проблеми з сервером";
@@ -25,3 +25,13 @@
 "COPY_USER" = "Користувач з таким ім'ям вже існує";
 
 "CHOOSE_LOCATION" = "ОБРАТИ МІСЦЕ";
+
+"RESET" = " Мої вечірки";
+
+"NAME_PARTY_MAP" = "Назва вечірки";
+
+"ERROR_ERROR" = "Воу-Воу!";
+
+"ERROR_NO_DATE" = "Ви повинні обрати дату вечікри!";
+
+"ERROR_NO_NAME" = "Ви повинні вказати назву вечірки!";

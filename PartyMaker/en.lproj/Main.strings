@@ -23,6 +23,12 @@
 /* Class = "UINavigationItem"; title = "CHOOSE PARTY LOCATION"; ObjectID = "7Em-Mw-hbr"; */
 "7Em-Mw-hbr.title" = "CHOOSE PARTY LOCATION";
 
+/* Class = "UIButton"; normalTitle = "SIGN OUT"; ObjectID = "9ex-0q-eHc"; */
+"9ex-0q-eHc.normalTitle" = "SIGN OUT";
+
+/* Class = "UILabel"; text = "Detail"; ObjectID = "9qf-sE-o93"; */
+"9qf-sE-o93.text" = "Detail";
+
 /* Class = "UIButton"; normalTitle = "EDIT"; ObjectID = "CyR-54-Kt7"; */
 "CyR-54-Kt7.normalTitle" = "EDIT";
 
@@ -35,14 +41,29 @@
 /* Class = "UILabel"; text = "11.20.2016"; ObjectID = "FF3-YP-vkm"; */
 "FF3-YP-vkm.text" = "11.20.2016";
 
-/* Class = "UITextField"; placeholder = "Login"; ObjectID = "J1G-4V-3Eb"; */
-"J1G-4V-3Eb.placeholder" = "Login";
+/* Class = "UILabel"; text = "00:00"; ObjectID = "G7K-DZ-24z"; */
+"G7K-DZ-24z.text" = "00:00";
+
+/* Class = "UILabel"; text = "11.20.2016"; ObjectID = "Hba-zd-Q2B"; */
+"Hba-zd-Q2B.text" = "11.20.2016";
+
+/* Class = "UILabel"; text = "DATE"; ObjectID = "KKE-37-yrO"; */
+"KKE-37-yrO.text" = "DATE";
+
+/* Class = "UILabel"; text = "Party Maker 2016(c) Version: 1.0 (1) "; ObjectID = "MMJ-iN-OtG"; */
+"MMJ-iN-OtG.text" = "Party Maker 2016(c) Version: 1.0 (1) ";
 
 /* Class = "UILabel"; text = "HELLO!"; ObjectID = "NPM-gb-xae"; */
 "NPM-gb-xae.text" = "HELLO!";
 
+/* Class = "UITabBarItem"; title = "Location"; ObjectID = "OUz-U8-Jna"; */
+"OUz-U8-Jna.title" = "Location";
+
 /* Class = "UILabel"; text = "END"; ObjectID = "PEL-Zw-a2U"; */
 "PEL-Zw-a2U.text" = "END";
+
+/* Class = "UILabel"; text = "Developed for        Softheme IOS Internship 2016                                           by Petrov Anton"; ObjectID = "PND-fZ-kCz"; */
+"PND-fZ-kCz.text" = "Developed for        Softheme IOS Internship 2016                                           by Petrov Anton";
 
 /* Class = "UIButton"; normalTitle = "SIGN IN"; ObjectID = "QZR-bx-GGK"; */
 "QZR-bx-GGK.normalTitle" = "SIGN IN";
@@ -53,8 +74,14 @@
 /* Class = "UILabel"; text = "Label"; ObjectID = "UTV-ss-AtV"; */
 "UTV-ss-AtV.text" = "Label";
 
+/* Class = "UINavigationItem"; title = "PARTY INFO"; ObjectID = "Vev-Rk-dv2"; */
+"Vev-Rk-dv2.title" = "PARTY INFO";
+
 /* Class = "UILabel"; text = "Label"; ObjectID = "XOb-XQ-BhI"; */
 "XOb-XQ-BhI.text" = "Label";
+
+/* Class = "UINavigationItem"; title = "USERS"; ObjectID = "XbY-L6-dIg"; */
+"XbY-L6-dIg.title" = "USERS";
 
 /* Class = "UILabel"; text = "DESCRIPTION"; ObjectID = "c0x-g0-CJu"; */
 "c0x-g0-CJu.text" = "DESCRIPTION";
@@ -68,6 +95,9 @@
 /* Class = "UILabel"; text = "LOCATION"; ObjectID = "e97-Bm-Z8V"; */
 "e97-Bm-Z8V.text" = "LOCATION";
 
+/* Class = "UILabel"; text = "END"; ObjectID = "ebz-A1-PhT"; */
+"ebz-A1-PhT.text" = "END";
+
 /* Class = "UIButton"; normalTitle = "DELETE"; ObjectID = "fnb-FM-n72"; */
 "fnb-FM-n72.normalTitle" = "DELETE";
 
@@ -79,6 +109,9 @@
 
 /* Class = "UIButton"; normalTitle = "CHOOSE DATE"; ObjectID = "hsF-8K-sc2"; */
 "hsF-8K-sc2.normalTitle" = "CHOOSE DATE";
+
+/* Class = "UILabel"; text = "PARTY MAKER"; ObjectID = "jA8-gb-eLu"; */
+"jA8-gb-eLu.text" = "PARTY MAKER";
 
 /* Class = "UILabel"; text = "Label"; ObjectID = "jZ5-Zu-GPo"; */
 "jZ5-Zu-GPo.text" = "Label";
@@ -92,8 +125,14 @@
 /* Class = "UIButton"; normalTitle = "REGISTER"; ObjectID = "kOs-Ll-69U"; */
 "kOs-Ll-69U.normalTitle" = "REGISTER";
 
+/* Class = "UIBarButtonItem"; title = "Back"; ObjectID = "lJp-Xz-tRY"; */
+"lJp-Xz-tRY.title" = "Back";
+
 /* Class = "UILabel"; text = "START"; ObjectID = "lpx-hc-mlk"; */
 "lpx-hc-mlk.text" = "START";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "m1x-e0-yOC"; */
+"m1x-e0-yOC.text" = "Title";
 
 /* Class = "UIButton"; normalTitle = "LOCATION"; ObjectID = "nnd-S3-yCU"; */
 "nnd-S3-yCU.normalTitle" = "LOCATION";
@@ -107,11 +146,20 @@
 /* Class = "UILabel"; text = "label label labellabelv"; ObjectID = "qUe-fQ-UDP"; */
 "qUe-fQ-UDP.text" = "label label labellabelv";
 
-/* Class = "UITextField"; placeholder = "Password"; ObjectID = "qop-EX-f6e"; */
-"qop-EX-f6e.placeholder" = "Password";
+/* Class = "UILabel"; text = "Label"; ObjectID = "qqO-cz-6yk"; */
+"qqO-cz-6yk.text" = "Label";
+
+/* Class = "UILabel"; text = "00:00"; ObjectID = "r1u-2t-YuB"; */
+"r1u-2t-YuB.text" = "00:00";
+
+/* Class = "UIBarButtonItem"; title = "Back"; ObjectID = "sBh-7D-rCq"; */
+"sBh-7D-rCq.title" = "Back";
 
 /* Class = "UIBarButtonItem"; title = "Back"; ObjectID = "u5H-XA-z63"; */
 "u5H-XA-z63.title" = "Back";
+
+/* Class = "UILabel"; text = "label label labellabelv"; ObjectID = "uTD-GR-fHv"; */
+"uTD-GR-fHv.text" = "label label labellabelv";
 
 /* Class = "UILabel"; text = "00:00"; ObjectID = "yMg-RE-V4N"; */
 "yMg-RE-V4N.text" = "00:00";
@@ -119,12 +167,8 @@
 /* Class = "UILabel"; text = "LOGO"; ObjectID = "ykZ-rq-1V2"; */
 "ykZ-rq-1V2.text" = "LOGO";
 
-/* Class = "UIBarButtonItem"; title = "Log off"; ObjectID = "ym7-cf-VjD"; */
-"ym7-cf-VjD.title" = "Log off";
+/* Class = "UILabel"; text = "START"; ObjectID = "zY2-fF-JeM"; */
+"zY2-fF-JeM.text" = "START";
 
 /* Class = "UIButton"; normalTitle = "CHOOSE LOCATION"; ObjectID = "zbf-y8-6w5"; */
 "zbf-y8-6w5.normalTitle" = "CHOOSE LOCATION";
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes

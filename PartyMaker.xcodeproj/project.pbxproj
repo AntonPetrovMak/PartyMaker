@@ -43,8 +43,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		830EA9861C7F129900F31ED3 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Main.strings; sourceTree = "<group>"; };
-		830EA9881C7F172B00F31ED3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
 		830EA98C1C7F1E0D00F31ED3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Language.strings; sourceTree = "<group>"; };
 		830EA98E1C7F1E1000F31ED3 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Language.strings; sourceTree = "<group>"; };
 		831231221C6A2B7100422D00 /* PAMCustomDatePiker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMCustomDatePiker.h; sourceTree = "<group>"; };
@@ -100,6 +98,8 @@
 		EA9F4E061C70DD8B003B683F /* NSString+PAMDateFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+PAMDateFormat.m"; sourceTree = "<group>"; };
 		EAC6D44C1C7FA0AA00166C6E /* PAMLocalNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMLocalNotification.h; sourceTree = "<group>"; };
 		EAC6D44D1C7FA0AA00166C6E /* PAMLocalNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMLocalNotification.m; sourceTree = "<group>"; };
+		EADD87D41C839F4800872711 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
+		EADD87D61C839FB900872711 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Main.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -414,8 +414,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				836F477B1C6221CE007F5ECC /* Base */,
-				830EA9861C7F129900F31ED3 /* uk */,
-				830EA9881C7F172B00F31ED3 /* en */,
+				EADD87D41C839F4800872711 /* en */,
+				EADD87D61C839FB900872711 /* uk */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";

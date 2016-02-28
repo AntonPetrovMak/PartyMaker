@@ -24,13 +24,12 @@
 + (PAMDataStore *) standartDataStore;
 - (void) performWriteOperation:(void (^)(NSManagedObjectContext*))writeBlock completion:(void(^)())completion;
 
-- (void)addPartiesFromServerToCoreData:(NSArray *) serverParty byCreatorPartyId:(NSInteger)creatorId completion:(void(^)())completion;
 - (void)upDateOfflinePartiesByUserId:(NSInteger) userId;
-
-- (void)addUsersFromServerToCoreData:(NSArray *) serverUsers completion:(void(^)())completion;
 - (void)clearPartiesByUserId:(NSInteger) userId;
 
-- (void)addAllUsersWithPartiesFromServer;
+- (void)upDateUsersWithPartiesFromServer;
+- (void)upDatePartyByUserId:(NSInteger) userId;
+
 - (void)dropAllUsersWithPartiesOnServer;
 - (void)clearCoreData;
 

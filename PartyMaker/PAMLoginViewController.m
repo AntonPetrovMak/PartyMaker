@@ -29,7 +29,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [[PAMDataStore standartDataStore] addAllUsersWithPartiesFromServer];
+    //[[PAMDataStore standartDataStore] addAllUsersWithPartiesFromServer];
     
     [self.substrateForLoginView.layer setBorderWidth:2.f];
     [self.substrateForLoginView.layer setBorderColor:[UIColor whiteColor].CGColor];

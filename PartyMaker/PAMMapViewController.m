@@ -46,7 +46,8 @@
     NSArray* coordinate = [party.longitude componentsSeparatedByString:@";"];
     if([coordinate count] == 2) {
         CLLocationCoordinate2D partyCoordinate = CLLocationCoordinate2DMake([coordinate[0] floatValue], [coordinate[1] floatValue]);
-        PAMMapAnnotation * annotation = [[PAMMapAnnotation alloc] initWithCoordinate:partyCoordinate andTitle:party.name.length ? party.name : @"Party name"];
+        NSString *nameParty = party.name.length ? party.name : NSLocalizedStringFromTable(@"NAME_PARTY_MAP", @"Language", nil);
+        PAMMapAnnotation * annotation = [[PAMMapAnnotation alloc] initWithCoordinate:partyCoordinate andTitle:nameParty];
         annotation.partyId = (NSInteger)party.partyId;
         [annotation setAddressToSubtitle];
         [self.mapView addAnnotation:annotation];
@@ -57,7 +58,8 @@
 - (void)loadMapForRead {
     self.isDraggablePin = NO;
     
-    UIBarButtonItem *resetItem = [[UIBarButtonItem alloc] initWithTitle:@"Reset" style:UIBarButtonItemStylePlain target:self action:@selector(actionShowMyParty:)];
+    UIBarButtonItem *resetItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTable(@"RESET", @"Language", nil)
+                                                                  style:UIBarButtonItemStylePlain target:self action:@selector(actionShowMyParty:)];
     self.navigationItem.rightBarButtonItem = resetItem;
     
     [self addAnotationsFromArrayWithParties];
@@ -99,7 +101,8 @@
             NSArray* coordinate = [coordinateString componentsSeparatedByString:@";"];
             if([coordinate count] == 2) {
                 CLLocationCoordinate2D partyCoordinate = CLLocationCoordinate2DMake([coordinate[0] floatValue], [coordinate[1] floatValue]);
-                PAMMapAnnotation * annotation = [[PAMMapAnnotation alloc] initWithCoordinate:partyCoordinate andTitle:party.name.length ? party.name : @"Party name"];
+                NSString *nameParty = party.name.length ? party.name : NSLocalizedStringFromTable(@"NAME_PARTY_MAP", @"Language", nil);
+                PAMMapAnnotation * annotation = [[PAMMapAnnotation alloc] initWithCoordinate:partyCoordinate andTitle:nameParty];
                 annotation.partyType = (NSInteger)party.partyType;
                 annotation.partyId = (NSInteger)party.partyId;
                 [annotation setAddressToSubtitle];
@@ -112,9 +115,9 @@
 
 - (void)addAnnotationWith:(CLLocationCoordinate2D) coordinate {
     self.trashPartyPinItem.enabled = YES;
-    NSString *partyName = [self.partyInfo objectForKey:@"name"];
     NSInteger partyType = [[self.partyInfo objectForKey:@"type"] integerValue];
-    PAMMapAnnotation * annotation = [[PAMMapAnnotation alloc] initWithCoordinate:coordinate andTitle:partyName.length ? partyName : @"Party name"];
+    NSString *nameParty = [[self.partyInfo objectForKey:@"name"] length] ? [self.partyInfo objectForKey:@"name"] : NSLocalizedStringFromTable(@"NAME_PARTY_MAP", @"Language", nil);
+    PAMMapAnnotation * annotation = [[PAMMapAnnotation alloc] initWithCoordinate:coordinate andTitle:nameParty];
     annotation.partyType = partyType;
     [annotation setAddressToSubtitle];
     [self.mapView addAnnotation:annotation];

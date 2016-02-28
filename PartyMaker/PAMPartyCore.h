@@ -15,9 +15,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PAMPartyCore : NSManagedObject
 
++ (NSArray *)fetchPartiesIsNotDownloadedInContext:(NSManagedObjectContext*) context;
 + (NSArray *)fetchPartyByPartyId:(NSInteger) partyId context:(NSManagedObjectContext*) context;
 + (NSArray *)fetchPartiesByUserId:(NSInteger) userId context:(NSManagedObjectContext*) context;
 + (NSArray *)fetchPartiesWithLocationByUserId:(NSInteger) userId context:(NSManagedObjectContext*) context;
+
 + (NSArray *)fetchAllPartiesInContext:(NSManagedObjectContext*) context;
 
 @end

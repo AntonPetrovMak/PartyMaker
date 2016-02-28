@@ -23,7 +23,6 @@
     [self creatingTextField];
     [self creatingTextView];
     self.coordinatesSaver = @"";
-    self.partyDate = [NSDate date];
     if(self.partyCore) {
         [self enterDataForEdit];
     }
@@ -151,7 +150,9 @@
     NSArray *nibContents = [[NSBundle mainBundle] loadNibNamed:NSStringFromClass([PAMCustomDatePiker class]) owner:nil options:nil];
     PAMCustomDatePiker *datePikerView = nibContents[0];
     [datePikerView.datePiker setMinimumDate:[NSDate date]];
-    [datePikerView.datePiker setDate:self.partyDate];
+    if(self.partyDate) {
+        [datePikerView.datePiker setDate:self.partyDate];
+    }
     datePikerView.delegate = self;
     datePikerView.frame = CGRectMake(0, self.view.frame.size.height,
                                      self.view.bounds.size.width, datePikerView.bounds.size.height);
@@ -168,8 +169,8 @@
 - (IBAction)actionSaveButton:(id)sender {
     if(!self.partyDate) {
         
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error!"
-                                                                       message:@"You should enter a party date!"
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTable(@"ERROR_ERROR", @"Language", nil)
+                                                                       message:NSLocalizedStringFromTable(@"ERROR_NO_DATE", @"Language", nil)
                                                                 preferredStyle:UIAlertControllerStyleAlert];
         
         UIAlertAction *actionOK = [UIAlertAction actionWithTitle:@"OK"
@@ -179,8 +180,8 @@
         [alert addAction:actionOK];
         [self presentViewController:alert animated:YES completion:nil];
     }else if(!self.partyNameTextField.text.length) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error!"
-                                                                       message:@"You should enter a party name!"
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTable(@"ERROR_ERROR", @"Language", nil)
+                                                                       message:NSLocalizedStringFromTable(@"ERROR_NO_NAME", @"Language", nil)
                                                                 preferredStyle:UIAlertControllerStyleAlert];
         
         UIAlertAction *actionOK = [UIAlertAction actionWithTitle:@"OK"
@@ -224,7 +225,11 @@
             PAMUserCore *userCore = (PAMUserCore *)[PAMUserCore fetchUserByUserId:userId context:context];
             partyCore.creatorParty = userCore;
             [[PAMPartyMakerAPI standartPartyMakerAPI] addParty:partyCore creatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
-                partyCore.isLoaded = YES;
+                if([[response objectForKey:@"statusCode"] isEqual:@200]) {
+                    NSInteger userId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"] integerValue];
+                    [[PAMDataStore standartDataStore] clearPartiesByUserId:userId];
+                    [[PAMDataStore standartDataStore] upDatePartyByUserId:userId];
+                }
             }];
             
             [PAMLocalNotification notificationForRarty:partyCore];

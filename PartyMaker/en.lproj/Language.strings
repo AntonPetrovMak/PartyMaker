@@ -25,3 +25,13 @@
 "COPY_USER" = "The user with the same name is already registered";
 
 "CHOOSE_LOCATION" = "CHOOSE LOCATION";
+
+"RESET" = "Reset";
+
+"NAME_PARTY_MAP" = "Party name";
+
+"ERROR_ERROR" = "Error!";
+
+"ERROR_NO_DATE" = "You should enter a party date!";
+
+"ERROR_NO_NAME" = "You should enter a party name!";
