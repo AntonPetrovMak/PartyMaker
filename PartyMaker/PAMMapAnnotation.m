@@ -34,17 +34,6 @@
     return destImage;
 }
 
-- (MKAnnotationView *) annotatinView {
-    MKAnnotationView *annotationView = [[MKAnnotationView alloc] initWithAnnotation:self reuseIdentifier:@"PAMMapAnnotation"];
-    annotationView.enabled = YES;
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    imageView.image = [UIImage imageNamed:@"PartyLogo_Small_5"];
-    [annotationView setLeftCalloutAccessoryView:imageView];
-    annotationView.canShowCallout = YES;
-    annotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeContactAdd];
-    return annotationView;
-}
-
 - (void) setAddressToSubtitle {
     if([self.geocoder isGeocoding]) {
         [self.geocoder cancelGeocode];
@@ -59,9 +48,6 @@
     }];
 }
 
-//- (void)setCoordinate:(CLLocationCoordinate2D)newCoordinate {
-//    self.coordinate = newCoordinate;
-//}
 
 @end
 

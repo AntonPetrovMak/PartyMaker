@@ -38,8 +38,8 @@
     PAMUserCore *userCore = (PAMUserCore*)[self.arrayWithUsers objectAtIndex:indexPath.row];
     cell.textLabel.text = userCore.name;
     NSManagedObjectContext *contex = [[PAMDataStore standartDataStore] mainContext];
-    NSArray *array = [PAMPartyCore fetchPartiesWithLocationByUserId:userCore.userId context:contex];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld parties", [array count]];
+    NSArray *array = [PAMPartyCore fetchPartiesWithLocationByUserId:(NSInteger)userCore.userId context:contex];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld parties", (unsigned long)[array count]];
     return cell;
 }
 

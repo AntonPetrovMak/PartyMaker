@@ -28,7 +28,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    
+    [super viewWillAppear:animated];
     [[PAMDataStore standartDataStore] addAllUsersWithPartiesFromServer];
     
     [self.substrateForLoginView.layer setBorderWidth:2.f];
@@ -94,7 +94,7 @@
                                     NSDictionary *answerServer = [response objectForKey:@"response"];
                                     if([[response objectForKey:@"statusCode"] isEqual:@200]) {
                                         if([[answerServer objectForKey:@"name"] isEqualToString:weakSelf.loginTextField.text]) {
-                                            NSLog(@"Login user id: %ld", [[answerServer objectForKey:@"id"] integerValue]);
+                                            NSLog(@"Login user id: %d", [[answerServer objectForKey:@"id"] intValue]);
                                             [[NSUserDefaults standardUserDefaults] setObject:@([[answerServer objectForKey:@"id"] integerValue]) forKey:@"userId"];
                                             
                                             dispatch_async(dispatch_get_main_queue(), ^{

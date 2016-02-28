@@ -30,7 +30,6 @@
 - (void)addUsersFromServerToCoreData:(NSArray *) serverUsers completion:(void(^)())completion;
 - (void)clearPartiesByUserId:(NSInteger) userId;
 
-
 - (void)addAllUsersWithPartiesFromServer;
 - (void)dropAllUsersWithPartiesOnServer;
 - (void)clearCoreData;

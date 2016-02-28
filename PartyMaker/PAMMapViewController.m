@@ -47,7 +47,7 @@
     if([coordinate count] == 2) {
         CLLocationCoordinate2D partyCoordinate = CLLocationCoordinate2DMake([coordinate[0] floatValue], [coordinate[1] floatValue]);
         PAMMapAnnotation * annotation = [[PAMMapAnnotation alloc] initWithCoordinate:partyCoordinate andTitle:party.name.length ? party.name : @"Party name"];
-        annotation.partyId = party.partyId;
+        annotation.partyId = (NSInteger)party.partyId;
         [annotation setAddressToSubtitle];
         [self.mapView addAnnotation:annotation];
     }
@@ -89,9 +89,6 @@
     }
 }
 
--(void)viewDidAppear:(BOOL)animated {
-    
-}
 
 #pragma mark - Helpers
 - (void)addAnotationsFromArrayWithParties {
@@ -103,8 +100,8 @@
             if([coordinate count] == 2) {
                 CLLocationCoordinate2D partyCoordinate = CLLocationCoordinate2DMake([coordinate[0] floatValue], [coordinate[1] floatValue]);
                 PAMMapAnnotation * annotation = [[PAMMapAnnotation alloc] initWithCoordinate:partyCoordinate andTitle:party.name.length ? party.name : @"Party name"];
-                annotation.partyType = party.partyType;
-                annotation.partyId = party.partyId;
+                annotation.partyType = (NSInteger)party.partyType;
+                annotation.partyId = (NSInteger)party.partyId;
                 [annotation setAddressToSubtitle];
                 [arrayWithAnnotation addObject: annotation];
             }
@@ -229,7 +226,7 @@
             pinView.canShowCallout = YES;
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
             PAMMapAnnotation *customAnnotation = (PAMMapAnnotation *)annotation;
-            imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"PartyLogo_Small_%ld", customAnnotation.partyType]];
+            imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"PartyLogo_Small_%ld", (long)customAnnotation.partyType]];
             [pinView setLeftCalloutAccessoryView:imageView];
             UIButton *rightButton;
             switch (self.typeMap) {
@@ -258,8 +255,6 @@
    fromOldState:(MKAnnotationViewDragState)oldState {
     PAMMapAnnotation *customAnnotation = (PAMMapAnnotation *)view.annotation;
     [customAnnotation setAddressToSubtitle];
-    
-    NSLog(@"newState: %lu oldState: %lu", (unsigned long)newState, (unsigned long)oldState);
 }
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {

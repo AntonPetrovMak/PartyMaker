@@ -23,9 +23,11 @@
     [self creatingTextField];
     [self creatingTextView];
     self.coordinatesSaver = @"";
+    self.partyDate = [NSDate date];
     if(self.partyCore) {
         [self enterDataForEdit];
     }
+    
     CGRect rect = self.typeEventScrollView.frame;
     rect.size.height = ([UIScreen mainScreen].bounds.size.height - 369)/2;
     rect.size.width = [UIScreen mainScreen].bounds.size.width - 128;
@@ -149,6 +151,7 @@
     NSArray *nibContents = [[NSBundle mainBundle] loadNibNamed:NSStringFromClass([PAMCustomDatePiker class]) owner:nil options:nil];
     PAMCustomDatePiker *datePikerView = nibContents[0];
     [datePikerView.datePiker setMinimumDate:[NSDate date]];
+    [datePikerView.datePiker setDate:self.partyDate];
     datePikerView.delegate = self;
     datePikerView.frame = CGRectMake(0, self.view.frame.size.height,
                                      self.view.bounds.size.width, datePikerView.bounds.size.height);

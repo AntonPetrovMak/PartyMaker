@@ -21,6 +21,5 @@
 
 - (instancetype) initWithCoordinate:(CLLocationCoordinate2D) coordinate andTitle:(NSString *) title;
 - (void) setAddressToSubtitle;
-- (MKAnnotationView *) annotatinView;
 
 @end
