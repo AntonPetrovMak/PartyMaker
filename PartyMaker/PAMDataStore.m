@@ -56,7 +56,6 @@
         partyCore.creatorParty = userCore;
         NSLog(@"It has been added to the party: %@ by creator: %@",[serverParty objectForKey:@"name"], userCore.name);
     } completion:nil];
-    
 }
 
 - (void)upDateUsersWithPartiesFromServer {
@@ -82,18 +81,13 @@
 }
 
 - (void)upDatePartyByUserId:(NSInteger) userId {
-    NSManagedObjectContext *weakMainContext = self.mainContext;
     [[PAMPartyMakerAPI standartPartyMakerAPI] partiesWithCreatorId:@(userId) callback:^(NSDictionary *response, NSError *error) {
         if([[response objectForKey:@"statusCode"] isEqual:@200]){
             NSArray *array = [response objectForKey:@"response"];
             if(![array isEqual:[NSNull null]]){
+                [self clearPartiesByUserId:userId];
                 for (id serverParty in array) {
-                    NSInteger partyId = [[serverParty objectForKey:@"id"] integerValue];
-                    PAMPartyCore *party = (PAMPartyCore*)[PAMPartyCore fetchPartyByPartyId:partyId context:weakMainContext];
-                    if(!party) {
-                        NSLog(@"add party by creatorId:%ld partyName: %@", (long)userId, [serverParty objectForKey:@"name"]);
-                        [self addPartyFromServerByCreatorId:userId serverParty:serverParty];
-                    }
+                     [self addPartyFromServerByCreatorId:userId serverParty:serverParty];
                 }
             }
         } else {

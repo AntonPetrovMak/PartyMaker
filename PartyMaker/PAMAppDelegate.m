@@ -31,8 +31,6 @@
     NSDictionary *attributes1 = @{ NSFontAttributeName:[UIFont fontWithName:@"MyriadPro-Bold" size:15],
                                    NSForegroundColorAttributeName:[UIColor whiteColor]};
     [[UINavigationBar appearance] setTitleTextAttributes:attributes1];
-
-    
     
     if([[NSUserDefaults standardUserDefaults] objectForKey:@"userId"]) {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
@@ -55,22 +53,6 @@
 
 - (void) application:(UIApplication *) application didReceiveLocalNotification:(nonnull UILocalNotification *)notification {
     NSLog(@"%s", __PRETTY_FUNCTION__);
-    /*if([[NSUserDefaults standardUserDefaults] objectForKey:@"userId"]) {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        
-        UITabBarController *tabBar = [storyboard instantiateViewControllerWithIdentifier:@"MainTabBarController"];
-        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        self.window.rootViewController = tabBar;
-        
-        NSDictionary *data = [notification userInfo];
-        NSInteger partyId = [[data objectForKey:@"party_id"] integerValue];
-        
-        PAMShowPartyViewController *showView = [storyboard instantiateViewControllerWithIdentifier:@"PAMShowPartyViewController"];
-        showView.party = (PAMPartyCore*)[PAMPartyCore fetchPartyByPartyId:partyId
-                                                                  context:[[PAMDataStore standartDataStore] mainContext]];
-        [tabBar.navigationController pushViewController:showView animated:YES];
-        [self.window makeKeyAndVisible];
-    }*/
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

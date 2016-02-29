@@ -53,8 +53,6 @@
     
 }
 
-
-
 #pragma mark - Action
 
 - (IBAction)actionEditParty:(UIButton *)sender {

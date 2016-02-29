@@ -18,6 +18,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.arrayWithUsers = [NSArray new];
     NSManagedObjectContext *contex = [[PAMDataStore standartDataStore] mainContext];
     self.arrayWithUsers = [PAMUserCore fetchAllUsersInContext:contex];
@@ -64,6 +65,5 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
-
 
 @end

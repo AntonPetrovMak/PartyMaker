@@ -41,35 +41,6 @@
     }
 }
 
-+ (void)notificationForRarty {
-
-    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-    localNotification.alertBody = @"Party time!";
-    localNotification.alertAction = [NSString stringWithFormat:@" is about to begin!"];
-    localNotification.fireDate = [[NSDate date] dateByAddingTimeInterval:10];
-    localNotification.userInfo = @{ @"party_id" : @(22222) };
-    localNotification.soundName = UILocalNotificationDefaultSoundName;
-    localNotification.repeatInterval = 0;
-    localNotification.category = @"LocalNotificationDefaultCategory";
-    
-    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
-    UIMutableUserNotificationAction *doneAction = [[UIMutableUserNotificationAction alloc] init];
-    doneAction.identifier = @"doneActionIdentifier";
-    doneAction.destructive = NO;
-    doneAction.title = @"Mark done";
-    doneAction.activationMode = UIUserNotificationActivationModeBackground;
-    doneAction.authenticationRequired = NO;
-    
-    UIMutableUserNotificationCategory *category = [[UIMutableUserNotificationCategory alloc] init];
-    category.identifier = @"LocalNotificationDefaultCategory";
-    [category setActions:@[doneAction] forContext:UIUserNotificationActionContextMinimal];
-    [category setActions:@[doneAction] forContext:UIUserNotificationActionContextDefault];
-    NSSet *categories = [[NSSet alloc] initWithArray:@[category]];
-    UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings
-                                                        settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeSound categories:categories];
-    [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
-}
-
 + (void)removeAllNotifications {
     UIApplication *application = [UIApplication sharedApplication];
     for (UILocalNotification *notification in [application scheduledLocalNotifications]) {

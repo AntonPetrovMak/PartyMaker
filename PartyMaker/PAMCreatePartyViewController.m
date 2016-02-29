@@ -19,20 +19,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //self.title = @"CREATE PARTY";
     [self creatingTextField];
     [self creatingTextView];
     self.coordinatesSaver = @"";
-    if(self.partyCore) {
-        [self enterDataForEdit];
-    }
-    
     CGRect rect = self.typeEventScrollView.frame;
     rect.size.height = ([UIScreen mainScreen].bounds.size.height - 369)/2;
     rect.size.width = [UIScreen mainScreen].bounds.size.width - 128;
     self.typeEventScrollView.frame = rect;
     [self creatingScrollView];
-
+    if(self.partyCore) {
+        [self enterDataForEdit];
+    }
 }
 
 - (void)enterDataForEdit {
@@ -373,6 +370,4 @@
     self.partyDate = sender.datePiker.date;
     [self actionCancelDatePiker:sender];
 }
-
-
 @end
